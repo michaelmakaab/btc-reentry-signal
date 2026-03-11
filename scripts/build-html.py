@@ -241,6 +241,23 @@ body{{min-height:100vh;background:#060911;color:#E2E8F0;font-family:'DM Sans',sa
 .zone-ptr{{height:10px;position:relative}}
 .zone-needle{{position:absolute;top:-14px;width:2px;height:14px;background:#F8FAFC;border-radius:1px}}
 
+/* Behind the Score — collapsible */
+.methodology{{border-top:1px solid #1E293B;padding:16px 0}}
+.methodology summary{{cursor:pointer;list-style:none;display:flex;align-items:center;gap:8px;font-size:13px;font-weight:600;color:#94A3B8;padding:8px 0;user-select:none}}
+.methodology summary::-webkit-details-marker{{display:none}}
+.methodology summary::before{{content:'';display:inline-block;width:0;height:0;border-left:5px solid #64748B;border-top:4px solid transparent;border-bottom:4px solid transparent;transition:transform .2s}}
+.methodology[open] summary::before{{transform:rotate(90deg)}}
+.methodology summary:hover{{color:#CBD5E1}}
+.method-body{{padding:12px 0 4px;font-size:13px;color:#94A3B8;line-height:1.7}}
+.method-body h4{{font-size:12px;color:#F59E0B;font-weight:700;letter-spacing:1px;text-transform:uppercase;margin:16px 0 6px}}
+.method-body h4:first-child{{margin-top:4px}}
+.method-body p{{margin-bottom:10px}}
+.method-body ul{{margin:0 0 12px 18px}}
+.method-body li{{margin-bottom:4px}}
+.method-body .domain-row{{display:flex;justify-content:space-between;padding:3px 0;border-bottom:1px solid #111827}}
+.method-body .domain-row span:first-child{{color:#CBD5E1}}
+.method-body .domain-row span:last-child{{color:#64748B;font-family:'Space Mono',monospace;font-size:12px}}
+
 /* Flow: How score is calculated */
 .flow-sec{{padding:20px 0;border-top:1px solid #1E293B}}
 .flow-title{{font-size:12px;color:#64748B;letter-spacing:1px;text-transform:uppercase;margin-bottom:10px}}
@@ -359,6 +376,40 @@ body{{min-height:100vh;background:#060911;color:#E2E8F0;font-family:'DM Sans',sa
 
     </div>
   </section>
+
+  <!-- Behind the Score -->
+  <details class="methodology">
+    <summary>Behind the Score &mdash; Why These Metrics?</summary>
+    <div class="method-body">
+      <h4>The Problem</h4>
+      <p>No single indicator reliably calls a Bitcoin cycle bottom. MVRV-Z can stay depressed for months. Fear &amp; Greed can flash extreme fear during a mid-cycle correction. The Puell Multiple can mislead during hash rate shifts. Every metric has blind spots.</p>
+
+      <h4>The Approach</h4>
+      <p>Instead of relying on any one signal, this model combines 26 indicators across 6 independent domains. The idea is simple: when enough unrelated metrics all say &ldquo;bottom,&rdquo; the signal is far more reliable than any individual reading. We&rsquo;re looking for <strong>confluence</strong> &mdash; the rare moments when on-chain, technical, sentiment, miner, exchange, and cycle data all align.</p>
+
+      <h4>How Indicators Were Chosen</h4>
+      <ul>
+        <li><strong>On-Chain Valuation (30%)</strong> &mdash; MVRV-Z, NUPL, Realized Price, Reserve Risk, and others that compare market price to aggregate cost basis. These have marked every major cycle bottom in Bitcoin history.</li>
+        <li><strong>Miner Health (15%)</strong> &mdash; Hash Ribbons and Puell Multiple track miner stress. When weak miners capitulate and sell pressure drops, bottoms tend to form.</li>
+        <li><strong>Technical / Price (20%)</strong> &mdash; Mayer Multiple, 200-week MA, Pi Cycle, Rainbow Chart, and drawdown depth. These measure how far price has deviated from long-term means.</li>
+        <li><strong>Sentiment &amp; Positioning (15%)</strong> &mdash; Fear &amp; Greed, SOPR, LTH-SOPR, and funding rates. Extreme fear and sellers realizing losses are classic contrarian signals.</li>
+        <li><strong>Exchange &amp; Liquidity (10%)</strong> &mdash; Exchange reserves, netflow, open interest, and stablecoin ratios. Coins leaving exchanges and stablecoin dry powder signal accumulation.</li>
+        <li><strong>Cycle Timing (10%)</strong> &mdash; Days since ATH, RHODL ratio, and historical cycle patterns. Context for whether we&rsquo;re in the typical bottoming window.</li>
+      </ul>
+
+      <h4>How the Score Works</h4>
+      <p>Each indicator is scored 0&ndash;10 based on where its current value sits relative to historically confirmed bottom levels (10 = textbook bottom signal, 0 = nowhere near). Indicators within each domain are weighted by reliability, then domains are combined using the weights above. The final 0&ndash;100 composite maps to four zones:</p>
+      <ul>
+        <li><strong>0&ndash;25 No Entry</strong> &mdash; Not enough bottom signals. Patience.</li>
+        <li><strong>25&ndash;50 Watching</strong> &mdash; Signals building, not enough confluence yet.</li>
+        <li><strong>50&ndash;75 Accumulate</strong> &mdash; Multiple domains in value territory. DCA territory.</li>
+        <li><strong>75&ndash;100 Strong Buy</strong> &mdash; Rare cross-domain confluence. Historically marks cycle bottoms.</li>
+      </ul>
+
+      <h4>Important Caveats</h4>
+      <p>This is a framework, not financial advice. Past cycles don&rsquo;t guarantee future patterns. The model is designed for macro cycle bottoms &mdash; it won&rsquo;t help with short-term trading. Some BGeometrics indicators rotate through a cache due to API rate limits, so not all 26 indicators may be live at any given time. The score will become more accurate as all data populates.</p>
+    </div>
+  </details>
 
   <!-- How Score is Built (standalone section) -->
   <div class="flow-sec">
