@@ -1,0 +1,12 @@
+{
+  "name": "bitcoin-reentry-dashboard",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Bitcoin Re-Entry Signal Dashboard — composite multi-domain bottom detection model",
+  "scripts": {
+    "build": "bash build.sh",
+    "fetch": "node scripts/fetch-data.mjs",
+    "refresh": "node scripts/fetch-data.mjs && bash build.sh"
+  }
+}

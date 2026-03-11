@@ -1,0 +1,4 @@
+data/bg_cache.json
+data/cron.log
+.claude/
+node_modules/

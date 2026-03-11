@@ -1,0 +1,1062 @@
+{
+  "mvrvZScore": {
+    "value": 0.4104,
+    "live": true,
+    "thresholds": {
+      "deepBottom": -1.0,
+      "bottom": 0,
+      "neutral": 2.0,
+      "danger": 7.0
+    },
+    "desc": "Below 0 = undervalued. Below -1 = deep bottom zone"
+  },
+  "nupl": {
+    "value": 0.1806,
+    "zone": "Hope / Fear",
+    "live": true,
+    "thresholds": {
+      "capitulation": 0,
+      "hopeFear": 0.25,
+      "optimism": 0.5,
+      "euphoria": 0.75
+    },
+    "desc": "Below 0 = network at unrealized loss = capitulation"
+  },
+  "realizedPrice": {
+    "value": null,
+    "ratio": null,
+    "percentAbove": null,
+    "live": false,
+    "desc": "Price below realized price = market at aggregate loss = bottom zone"
+  },
+  "supplyInProfit": {
+    "value": null,
+    "absolute": null,
+    "live": false,
+    "thresholds": {
+      "deepBottom": 45,
+      "bottom": 50,
+      "stress": 60
+    },
+    "desc": "Below 50% = more supply at loss than profit = cycle bottom signal"
+  },
+  "reserveRisk": {
+    "value": 0.0006007538,
+    "live": true,
+    "thresholds": {
+      "greenZone": 0.002,
+      "neutral": 0.008,
+      "redZone": 0.02
+    },
+    "desc": "Below 0.002 = high conviction, low risk = ideal accumulation"
+  },
+  "ssr": {
+    "value": 5.37,
+    "live": true,
+    "thresholds": {
+      "highBuyingPower": 5,
+      "neutral": 10,
+      "lowBuyingPower": 20
+    },
+    "desc": "Low SSR = stablecoins have high buying power vs BTC = dry powder"
+  },
+  "rhodlRatio": {
+    "value": null,
+    "live": false,
+    "desc": "Low = long-term holders dominate = bottom zone. Avoids false positives"
+  },
+  "thermocapMultiple": {
+    "value": null,
+    "live": false,
+    "thresholds": {
+      "bottom": 4,
+      "neutral": 8,
+      "top": 32
+    },
+    "desc": "Market cap vs cumulative miner revenue. Below 5 = deep value"
+  },
+  "hashRibbon": {
+    "signal": "RECOVERY",
+    "ma30d": 1028357971.0,
+    "ma60d": 992617333.0,
+    "live": true,
+    "desc": "Buy signal = 30d hash MA crosses above 60d after capitulation"
+  },
+  "puellMultiple": {
+    "value": 0.6701,
+    "live": true,
+    "thresholds": {
+      "deepGreen": 0.3,
+      "green": 0.5,
+      "neutral": 1.0,
+      "red": 3.0
+    },
+    "desc": "Below 0.5 = miner capitulation = accumulation zone"
+  },
+  "mayerMultiple": {
+    "value": 0.7329,
+    "sma200d": 94965.0,
+    "live": true,
+    "thresholds": {
+      "deepBottom": 0.6,
+      "bottom": 0.8,
+      "neutral": 1.0,
+      "top": 2.4
+    },
+    "desc": "Price / 200-day MA. Below 0.8 = oversold"
+  },
+  "wma200": {
+    "value": 58612.0,
+    "ratio": 1.1875,
+    "percentAbove": 18.8,
+    "live": true,
+    "desc": "Historic cycle floor. Price at or below = major buy zone"
+  },
+  "piCycleBottom": {
+    "signal": "ABOVE",
+    "ema150": 85505.0,
+    "threshold": 46524.0,
+    "live": true,
+    "desc": "150d EMA below 471d SMA x 0.475 = cycle bottom"
+  },
+  "cycleTiming": {
+    "daysSinceATH": 156,
+    "avgDaysToBottom": 383,
+    "cycleProgress": 0.407,
+    "estimatedBottom": "2026-10-24",
+    "drawdownPct": -44.9,
+    "athPrice": 126296,
+    "live": true,
+    "desc": "Day 156 of ~383. Est. bottom: Oct 2026"
+  },
+  "rainbowChart": {
+    "currentBand": "Accumulate",
+    "bands": {
+      "Fire Sale": 19738,
+      "BUY!": 32075,
+      "Accumulate": 50579,
+      "Still Cheap": 77103,
+      "HODL!": 114112,
+      "Is this a bubble?": 169626,
+      "FOMO intensifies": 246728,
+      "Sell. Seriously.": 357756,
+      "Max Bubble": 524298
+    },
+    "live": true,
+    "desc": "Logarithmic regression bands. Lower = deeper value"
+  },
+  "sopr": {
+    "value": null,
+    "live": false,
+    "desc": "Below 1.0 = sellers at a loss = capitulation"
+  },
+  "lthSopr": {
+    "value": null,
+    "live": false,
+    "desc": "Long-term holders selling at loss = extreme capitulation"
+  },
+  "fearGreed": {
+    "current": 15,
+    "label": "Extreme Fear",
+    "avg30d": 10.7,
+    "extremeFearDays": 41,
+    "live": true,
+    "desc": "Sustained extreme fear (< 25) = contrarian buy"
+  },
+  "fundingRates": {
+    "current": -0.000111,
+    "avg10d": -6e-06,
+    "negativePeriods": 16,
+    "live": true,
+    "desc": "Negative = shorts paying longs = bearish positioning"
+  },
+  "nvtSignal": {
+    "value": null,
+    "live": false,
+    "desc": "Network Value to Transactions. Low = undervalued network"
+  },
+  "exchangeReserves": {
+    "value": null,
+    "live": false,
+    "desc": "Coins on exchanges. Declining = accumulation (bullish)"
+  },
+  "exchangeNetflow": {
+    "value": null,
+    "live": false,
+    "desc": "Negative = outflows = coins leaving exchanges = accumulation"
+  },
+  "openInterest": {
+    "value": null,
+    "live": false,
+    "desc": "Total derivatives positions. Low after unwind = reset complete"
+  },
+  "_meta": {
+    "computedAt": "2026-03-11T03:41:12.217906+00:00",
+    "currentPrice": 69602.72,
+    "currentDate": "2026-03-11",
+    "priceSource": "Binance",
+    "priceSources": {
+      "Binance": 69602.72,
+      "CoinGecko": 69593.0
+    }
+  },
+  "_priceHistory": [
+    {
+      "d": "2025-09-13",
+      "p": 116105
+    },
+    {
+      "d": "2025-09-14",
+      "p": 115965
+    },
+    {
+      "d": "2025-09-15",
+      "p": 115385
+    },
+    {
+      "d": "2025-09-16",
+      "p": 115402
+    },
+    {
+      "d": "2025-09-17",
+      "p": 116798
+    },
+    {
+      "d": "2025-09-18",
+      "p": 116453
+    },
+    {
+      "d": "2025-09-19",
+      "p": 117129
+    },
+    {
+      "d": "2025-09-20",
+      "p": 115691
+    },
+    {
+      "d": "2025-09-21",
+      "p": 115751
+    },
+    {
+      "d": "2025-09-22",
+      "p": 115317
+    },
+    {
+      "d": "2025-09-23",
+      "p": 112752
+    },
+    {
+      "d": "2025-09-24",
+      "p": 112010
+    },
+    {
+      "d": "2025-09-25",
+      "p": 113317
+    },
+    {
+      "d": "2025-09-26",
+      "p": 109037
+    },
+    {
+      "d": "2025-09-27",
+      "p": 109699
+    },
+    {
+      "d": "2025-09-28",
+      "p": 109689
+    },
+    {
+      "d": "2025-09-29",
+      "p": 112177
+    },
+    {
+      "d": "2025-09-30",
+      "p": 114404
+    },
+    {
+      "d": "2025-10-01",
+      "p": 114035
+    },
+    {
+      "d": "2025-10-02",
+      "p": 118618
+    },
+    {
+      "d": "2025-10-03",
+      "p": 120628
+    },
+    {
+      "d": "2025-10-04",
+      "p": 122283
+    },
+    {
+      "d": "2025-10-05",
+      "p": 122433
+    },
+    {
+      "d": "2025-10-06",
+      "p": 123519
+    },
+    {
+      "d": "2025-10-07",
+      "p": 124777
+    },
+    {
+      "d": "2025-10-08",
+      "p": 121425
+    },
+    {
+      "d": "2025-10-09",
+      "p": 123341
+    },
+    {
+      "d": "2025-10-10",
+      "p": 121684
+    },
+    {
+      "d": "2025-10-11",
+      "p": 113139
+    },
+    {
+      "d": "2025-10-12",
+      "p": 110788
+    },
+    {
+      "d": "2025-10-13",
+      "p": 115105
+    },
+    {
+      "d": "2025-10-14",
+      "p": 115216
+    },
+    {
+      "d": "2025-10-15",
+      "p": 113093
+    },
+    {
+      "d": "2025-10-16",
+      "p": 110785
+    },
+    {
+      "d": "2025-10-17",
+      "p": 108193
+    },
+    {
+      "d": "2025-10-18",
+      "p": 106466
+    },
+    {
+      "d": "2025-10-19",
+      "p": 107210
+    },
+    {
+      "d": "2025-10-20",
+      "p": 108688
+    },
+    {
+      "d": "2025-10-21",
+      "p": 110577
+    },
+    {
+      "d": "2025-10-22",
+      "p": 108448
+    },
+    {
+      "d": "2025-10-23",
+      "p": 107614
+    },
+    {
+      "d": "2025-10-24",
+      "p": 110083
+    },
+    {
+      "d": "2025-10-25",
+      "p": 111021
+    },
+    {
+      "d": "2025-10-26",
+      "p": 111638
+    },
+    {
+      "d": "2025-10-27",
+      "p": 114532
+    },
+    {
+      "d": "2025-10-28",
+      "p": 114121
+    },
+    {
+      "d": "2025-10-29",
+      "p": 112924
+    },
+    {
+      "d": "2025-10-30",
+      "p": 110069
+    },
+    {
+      "d": "2025-10-31",
+      "p": 108303
+    },
+    {
+      "d": "2025-11-01",
+      "p": 109553
+    },
+    {
+      "d": "2025-11-02",
+      "p": 110047
+    },
+    {
+      "d": "2025-11-03",
+      "p": 110602
+    },
+    {
+      "d": "2025-11-04",
+      "p": 106533
+    },
+    {
+      "d": "2025-11-05",
+      "p": 101523
+    },
+    {
+      "d": "2025-11-06",
+      "p": 103884
+    },
+    {
+      "d": "2025-11-07",
+      "p": 101283
+    },
+    {
+      "d": "2025-11-08",
+      "p": 103329
+    },
+    {
+      "d": "2025-11-09",
+      "p": 102280
+    },
+    {
+      "d": "2025-11-10",
+      "p": 104712
+    },
+    {
+      "d": "2025-11-11",
+      "p": 105962
+    },
+    {
+      "d": "2025-11-12",
+      "p": 103018
+    },
+    {
+      "d": "2025-11-13",
+      "p": 101659
+    },
+    {
+      "d": "2025-11-14",
+      "p": 99675
+    },
+    {
+      "d": "2025-11-15",
+      "p": 94399
+    },
+    {
+      "d": "2025-11-16",
+      "p": 95534
+    },
+    {
+      "d": "2025-11-17",
+      "p": 94188
+    },
+    {
+      "d": "2025-11-18",
+      "p": 92093
+    },
+    {
+      "d": "2025-11-19",
+      "p": 92979
+    },
+    {
+      "d": "2025-11-20",
+      "p": 91453
+    },
+    {
+      "d": "2025-11-21",
+      "p": 86467
+    },
+    {
+      "d": "2025-11-22",
+      "p": 85097
+    },
+    {
+      "d": "2025-11-23",
+      "p": 84678
+    },
+    {
+      "d": "2025-11-24",
+      "p": 86787
+    },
+    {
+      "d": "2025-11-25",
+      "p": 88276
+    },
+    {
+      "d": "2025-11-26",
+      "p": 87331
+    },
+    {
+      "d": "2025-11-27",
+      "p": 90518
+    },
+    {
+      "d": "2025-11-28",
+      "p": 91305
+    },
+    {
+      "d": "2025-11-29",
+      "p": 90915
+    },
+    {
+      "d": "2025-11-30",
+      "p": 90831
+    },
+    {
+      "d": "2025-12-01",
+      "p": 90376
+    },
+    {
+      "d": "2025-12-02",
+      "p": 86316
+    },
+    {
+      "d": "2025-12-03",
+      "p": 91320
+    },
+    {
+      "d": "2025-12-04",
+      "p": 93468
+    },
+    {
+      "d": "2025-12-05",
+      "p": 92142
+    },
+    {
+      "d": "2025-12-06",
+      "p": 89343
+    },
+    {
+      "d": "2025-12-07",
+      "p": 89231
+    },
+    {
+      "d": "2025-12-08",
+      "p": 90455
+    },
+    {
+      "d": "2025-12-09",
+      "p": 90644
+    },
+    {
+      "d": "2025-12-10",
+      "p": 92704
+    },
+    {
+      "d": "2025-12-11",
+      "p": 91985
+    },
+    {
+      "d": "2025-12-12",
+      "p": 92498
+    },
+    {
+      "d": "2025-12-13",
+      "p": 90270
+    },
+    {
+      "d": "2025-12-14",
+      "p": 90281
+    },
+    {
+      "d": "2025-12-15",
+      "p": 88166
+    },
+    {
+      "d": "2025-12-16",
+      "p": 86423
+    },
+    {
+      "d": "2025-12-17",
+      "p": 87835
+    },
+    {
+      "d": "2025-12-18",
+      "p": 86133
+    },
+    {
+      "d": "2025-12-19",
+      "p": 85458
+    },
+    {
+      "d": "2025-12-20",
+      "p": 88099
+    },
+    {
+      "d": "2025-12-21",
+      "p": 88337
+    },
+    {
+      "d": "2025-12-22",
+      "p": 88616
+    },
+    {
+      "d": "2025-12-23",
+      "p": 88485
+    },
+    {
+      "d": "2025-12-24",
+      "p": 87425
+    },
+    {
+      "d": "2025-12-25",
+      "p": 87608
+    },
+    {
+      "d": "2025-12-26",
+      "p": 87224
+    },
+    {
+      "d": "2025-12-27",
+      "p": 87300
+    },
+    {
+      "d": "2025-12-28",
+      "p": 87790
+    },
+    {
+      "d": "2025-12-29",
+      "p": 87835
+    },
+    {
+      "d": "2025-12-30",
+      "p": 87123
+    },
+    {
+      "d": "2025-12-31",
+      "p": 88424
+    },
+    {
+      "d": "2026-01-01",
+      "p": 87494
+    },
+    {
+      "d": "2026-01-02",
+      "p": 88735
+    },
+    {
+      "d": "2026-01-03",
+      "p": 89944
+    },
+    {
+      "d": "2026-01-04",
+      "p": 90591
+    },
+    {
+      "d": "2026-01-05",
+      "p": 91468
+    },
+    {
+      "d": "2026-01-06",
+      "p": 93882
+    },
+    {
+      "d": "2026-01-07",
+      "p": 93739
+    },
+    {
+      "d": "2026-01-08",
+      "p": 91273
+    },
+    {
+      "d": "2026-01-09",
+      "p": 91030
+    },
+    {
+      "d": "2026-01-10",
+      "p": 90496
+    },
+    {
+      "d": "2026-01-11",
+      "p": 90379
+    },
+    {
+      "d": "2026-01-12",
+      "p": 90818
+    },
+    {
+      "d": "2026-01-13",
+      "p": 91194
+    },
+    {
+      "d": "2026-01-14",
+      "p": 95334
+    },
+    {
+      "d": "2026-01-15",
+      "p": 96932
+    },
+    {
+      "d": "2026-01-16",
+      "p": 95560
+    },
+    {
+      "d": "2026-01-17",
+      "p": 95528
+    },
+    {
+      "d": "2026-01-18",
+      "p": 95098
+    },
+    {
+      "d": "2026-01-19",
+      "p": 93665
+    },
+    {
+      "d": "2026-01-20",
+      "p": 92553
+    },
+    {
+      "d": "2026-01-21",
+      "p": 88325
+    },
+    {
+      "d": "2026-01-22",
+      "p": 89375
+    },
+    {
+      "d": "2026-01-23",
+      "p": 89462
+    },
+    {
+      "d": "2026-01-24",
+      "p": 89506
+    },
+    {
+      "d": "2026-01-25",
+      "p": 89082
+    },
+    {
+      "d": "2026-01-26",
+      "p": 86571
+    },
+    {
+      "d": "2026-01-27",
+      "p": 88246
+    },
+    {
+      "d": "2026-01-28",
+      "p": 89117
+    },
+    {
+      "d": "2026-01-29",
+      "p": 89160
+    },
+    {
+      "d": "2026-01-30",
+      "p": 84563
+    },
+    {
+      "d": "2026-01-31",
+      "p": 84120
+    },
+    {
+      "d": "2026-02-01",
+      "p": 78586
+    },
+    {
+      "d": "2026-02-02",
+      "p": 76880
+    },
+    {
+      "d": "2026-02-03",
+      "p": 78680
+    },
+    {
+      "d": "2026-02-04",
+      "p": 75632
+    },
+    {
+      "d": "2026-02-05",
+      "p": 73004
+    },
+    {
+      "d": "2026-02-06",
+      "p": 62812
+    },
+    {
+      "d": "2026-02-07",
+      "p": 70520
+    },
+    {
+      "d": "2026-02-08",
+      "p": 69283
+    },
+    {
+      "d": "2026-02-09",
+      "p": 70285
+    },
+    {
+      "d": "2026-02-10",
+      "p": 70131
+    },
+    {
+      "d": "2026-02-11",
+      "p": 68794
+    },
+    {
+      "d": "2026-02-12",
+      "p": 66980
+    },
+    {
+      "d": "2026-02-13",
+      "p": 66206
+    },
+    {
+      "d": "2026-02-14",
+      "p": 68852
+    },
+    {
+      "d": "2026-02-15",
+      "p": 69755
+    },
+    {
+      "d": "2026-02-16",
+      "p": 68785
+    },
+    {
+      "d": "2026-02-17",
+      "p": 68840
+    },
+    {
+      "d": "2026-02-18",
+      "p": 67460
+    },
+    {
+      "d": "2026-02-19",
+      "p": 66428
+    },
+    {
+      "d": "2026-02-20",
+      "p": 66957
+    },
+    {
+      "d": "2026-02-21",
+      "p": 67995
+    },
+    {
+      "d": "2026-02-22",
+      "p": 67966
+    },
+    {
+      "d": "2026-02-23",
+      "p": 67615
+    },
+    {
+      "d": "2026-02-24",
+      "p": 64620
+    },
+    {
+      "d": "2026-02-25",
+      "p": 64043
+    },
+    {
+      "d": "2026-02-26",
+      "p": 67985
+    },
+    {
+      "d": "2026-02-27",
+      "p": 67471
+    },
+    {
+      "d": "2026-02-28",
+      "p": 65867
+    },
+    {
+      "d": "2026-03-01",
+      "p": 67006
+    },
+    {
+      "d": "2026-03-02",
+      "p": 65762
+    },
+    {
+      "d": "2026-03-03",
+      "p": 68776
+    },
+    {
+      "d": "2026-03-04",
+      "p": 68265
+    },
+    {
+      "d": "2026-03-05",
+      "p": 72758
+    },
+    {
+      "d": "2026-03-06",
+      "p": 70887
+    },
+    {
+      "d": "2026-03-07",
+      "p": 68129
+    },
+    {
+      "d": "2026-03-08",
+      "p": 67280
+    },
+    {
+      "d": "2026-03-09",
+      "p": 65941
+    },
+    {
+      "d": "2026-03-10",
+      "p": 68453
+    },
+    {
+      "d": "2026-03-11",
+      "p": 69922
+    }
+  ],
+  "_composite": {
+    "score": 54.3,
+    "zone": "ACCUMULATE",
+    "zoneLabel": "ACCUMULATE",
+    "zoneColor": "#EAB308",
+    "domains": {
+      "onChain": {
+        "score": 6.2,
+        "weight": 0.3,
+        "items": [
+          {
+            "name": "MVRV-Z Score",
+            "score": 5,
+            "weight": 2.5
+          },
+          {
+            "name": "NUPL",
+            "score": 5,
+            "weight": 2
+          },
+          {
+            "name": "Reserve Risk",
+            "score": 9,
+            "weight": 2
+          },
+          {
+            "name": "Stablecoin Ratio",
+            "score": 6,
+            "weight": 1.5
+          }
+        ],
+        "label": "On-Chain Valuation",
+        "effectiveWeight": 0.3333,
+        "contribution": 20.7
+      },
+      "miner": {
+        "score": 4.4,
+        "weight": 0.15,
+        "items": [
+          {
+            "name": "Hash Ribbon",
+            "score": 4,
+            "weight": 2
+          },
+          {
+            "name": "Puell Multiple",
+            "score": 5,
+            "weight": 1.5
+          }
+        ],
+        "label": "Miner Health",
+        "effectiveWeight": 0.1667,
+        "contribution": 7.3
+      },
+      "technical": {
+        "score": 3.9,
+        "weight": 0.2,
+        "items": [
+          {
+            "name": "Mayer Multiple",
+            "score": 6,
+            "weight": 2
+          },
+          {
+            "name": "200-Week MA",
+            "score": 3,
+            "weight": 2
+          },
+          {
+            "name": "Pi Cycle Bottom",
+            "score": 1,
+            "weight": 1.5
+          },
+          {
+            "name": "Drawdown Depth",
+            "score": 4,
+            "weight": 1
+          },
+          {
+            "name": "Rainbow Chart",
+            "score": 6,
+            "weight": 1
+          }
+        ],
+        "label": "Technical / Price",
+        "effectiveWeight": 0.2222,
+        "contribution": 8.7
+      },
+      "sentiment": {
+        "score": 7.9,
+        "weight": 0.15,
+        "items": [
+          {
+            "name": "Fear & Greed",
+            "score": 9,
+            "weight": 1.5
+          },
+          {
+            "name": "Fear Duration",
+            "score": 10,
+            "weight": 1
+          },
+          {
+            "name": "Funding Rates",
+            "score": 4,
+            "weight": 1
+          }
+        ],
+        "label": "Sentiment & Positioning",
+        "effectiveWeight": 0.1667,
+        "contribution": 13.2
+      },
+      "exchange": {
+        "score": 0,
+        "weight": 0.1,
+        "items": [],
+        "label": "Exchange & Liquidity",
+        "effectiveWeight": 0,
+        "contribution": 0,
+        "noData": true
+      },
+      "cycle": {
+        "score": 4.0,
+        "weight": 0.1,
+        "items": [
+          {
+            "name": "Cycle Progress",
+            "score": 4,
+            "weight": 2
+          }
+        ],
+        "label": "Cycle Timing",
+        "effectiveWeight": 0.1111,
+        "contribution": 4.4
+      }
+    }
+  }
+}
