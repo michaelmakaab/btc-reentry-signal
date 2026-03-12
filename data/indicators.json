@@ -107,7 +107,7 @@
   },
   "wma200": {
     "value": 58582.0,
-    "ratio": 1.186,
+    "ratio": 1.1859,
     "percentAbove": 18.6,
     "live": true,
     "desc": "Historic cycle floor. Price at or below = major buy zone"
@@ -133,14 +133,14 @@
     "currentBand": "Accumulate",
     "bands": {
       "Fire Sale": 19759,
-      "BUY!": 32108,
+      "BUY!": 32109,
       "Accumulate": 50633,
-      "Still Cheap": 77184,
-      "HODL!": 114232,
-      "Is this a bubble?": 169805,
-      "FOMO intensifies": 246988,
-      "Sell. Seriously.": 358133,
-      "Max Bubble": 524850
+      "Still Cheap": 77185,
+      "HODL!": 114233,
+      "Is this a bubble?": 169806,
+      "FOMO intensifies": 246991,
+      "Sell. Seriously.": 358137,
+      "Max Bubble": 524856
     },
     "live": true,
     "desc": "Logarithmic regression bands. Lower = deeper value"
@@ -191,13 +191,13 @@
     "desc": "Total derivatives positions. Low after unwind = reset complete"
   },
   "_meta": {
-    "computedAt": "2026-03-12T06:55:51.675130+00:00",
-    "currentPrice": 69475.64,
+    "computedAt": "2026-03-12T07:12:17.181106+00:00",
+    "currentPrice": 69469.18,
     "currentDate": "2026-03-12",
     "priceSource": "Binance",
     "priceSources": {
-      "Binance": 69475.64,
-      "CoinGecko": 69439.0
+      "Binance": 69469.18,
+      "CoinGecko": 69441.0
     }
   },
   "_priceHistory": [
