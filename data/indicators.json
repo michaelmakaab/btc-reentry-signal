@@ -94,7 +94,7 @@
     "desc": "Below 0.5 = miner capitulation = accumulation zone"
   },
   "mayerMultiple": {
-    "value": 0.7777,
+    "value": 0.7776,
     "sma200d": 94524.0,
     "live": true,
     "thresholds": {
@@ -107,7 +107,7 @@
   },
   "wma200": {
     "value": 58666.0,
-    "ratio": 1.253,
+    "ratio": 1.2529,
     "percentAbove": 25.3,
     "live": true,
     "desc": "Historic cycle floor. Price at or below = major buy zone"
@@ -136,7 +136,7 @@
       "BUY!": 32148,
       "Accumulate": 50695,
       "Still Cheap": 77279,
-      "HODL!": 114372,
+      "HODL!": 114373,
       "Is this a bubble?": 170013,
       "FOMO intensifies": 247292,
       "Sell. Seriously.": 358573,
@@ -191,13 +191,13 @@
     "desc": "Total derivatives positions. Low after unwind = reset complete"
   },
   "_meta": {
-    "computedAt": "2026-03-13T14:41:05.301732+00:00",
-    "currentPrice": 73509.7,
+    "computedAt": "2026-03-13T14:41:49.575228+00:00",
+    "currentPrice": 73502.71,
     "currentDate": "2026-03-13",
     "priceSource": "Binance",
     "priceSources": {
-      "Binance": 73509.7,
-      "CoinGecko": 73520.0
+      "Binance": 73502.71,
+      "CoinGecko": 73503.0
     }
   },
   "_priceHistory": [
