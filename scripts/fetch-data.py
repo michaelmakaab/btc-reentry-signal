@@ -23,17 +23,26 @@ CACHE_FILE = DATA_DIR / "bg_cache.json"
 
 # ─── Helpers ────────────────────────────────────────────
 
+class RateLimited(Exception):
+    """Raised when an API returns 429 Too Many Requests."""
+    pass
+
 def fetch_json(url, label, timeout=30):
     try:
         req = Request(url, headers={"User-Agent": "BTC-ReEntry/2.0", "Accept": "application/json"})
         with urlopen(req, timeout=timeout) as resp:
-            data = json.loads(resp.read().decode())
+            raw = resp.read().decode()
+            if not raw.strip():
+                print(f"  ✗ {label}: empty response")
+                return None
+            data = json.loads(raw)
         print(f"  ✓ {label}")
         return data
     except Exception as e:
         msg = str(e)
         if "429" in msg or "Rate limit" in msg or "Too Many" in msg:
             print(f"  ⏳ {label}: rate limited (using cache)")
+            raise RateLimited(label)
         else:
             print(f"  ✗ {label}: {msg}")
         return None
@@ -91,26 +100,73 @@ def save_cache(cache):
         json.dump(cache, f, indent=2)
 
 def fetch_bgeometrics():
-    """Fetch BGeometrics data with smart caching and rate limit awareness."""
+    """Fetch BGeometrics data with smart caching and rate limit awareness.
+
+    Strategy: Prioritize endpoints that have NEVER been cached (no data at all)
+    over refreshing already-cached values. This ensures all domains eventually
+    get data instead of the same Priority 1 endpoints hogging every run.
+    """
     print("\n🔗 Fetching BGeometrics on-chain data...")
     cache = load_cache()
     now = time.time()
     calls_made = 0
 
+    # Split endpoints into: never cached (urgent), stale (need refresh), fresh (skip)
+    never_cached = []
+    never_cached_failing = []  # Never cached AND has consecutive failures
+    stale = []
+    fresh = []
+
     for key, path, field in BG_ENDPOINTS:
-        # Check cache freshness
         cached = cache.get(key)
-        if cached and (now - cached.get("fetched_at", 0)) < CACHE_MAX_AGE:
-            print(f"  ● {key}: cached ({cached.get('value')})")
+        if not cached or cached.get("value") is None:
+            fails = cache.get(key, {}).get("consecutive_failures", 0)
+            if fails >= 3:
+                never_cached_failing.append((key, path, field))
+            else:
+                never_cached.append((key, path, field))
+        elif (now - cached.get("fetched_at", 0)) >= CACHE_MAX_AGE:
+            stale.append((key, path, field))
+        else:
+            fresh.append((key, path, field))
+
+    # Log fresh (skipped) endpoints
+    for key, path, field in fresh:
+        print(f"  ● {key}: cached ({cache[key].get('value')})")
+
+    # Fetch order: never-cached first, then stale, then chronically failing (low priority)
+    fetch_queue = never_cached + stale + never_cached_failing
+    if never_cached:
+        print(f"  → {len(never_cached)} endpoints never cached — fetching first")
+    if never_cached_failing:
+        print(f"  → {len(never_cached_failing)} endpoints failing repeatedly — deprioritized")
+
+    rate_limited = False
+    for key, path, field in fetch_queue:
+        # Rate limit check (our own budget)
+        if calls_made >= BG_MAX_CALLS:
+            if cache.get(key) and cache[key].get("value") is not None:
+                print(f"  ⏸ {key}: budget used (stale cache available)")
+            else:
+                print(f"  ⏸ {key}: budget used (will fetch next run)")
             continue
 
-        # Rate limit check
-        if calls_made >= BG_MAX_CALLS:
-            print(f"  ⏸ {key}: skipping (rate limit budget, will fetch next run)")
+        # If API already rate-limited us, don't bother trying more
+        if rate_limited:
+            if not (cache.get(key) and cache[key].get("value") is not None):
+                print(f"  ⏸ {key}: API rate limited (will fetch next run)")
             continue
 
         # Fetch
-        data = fetch_json(f"https://bitcoin-data.com{path}", key)
+        try:
+            data = fetch_json(f"https://bitcoin-data.com{path}", key)
+        except RateLimited:
+            rate_limited = True
+            # Track failure but don't count against budget
+            prev = cache.get(key, {})
+            cache[key] = {**prev, "consecutive_failures": prev.get("consecutive_failures", 0) + 1}
+            continue
+
         if data and field in data:
             val = data[field]
             # Parse numeric strings
@@ -119,22 +175,40 @@ def fetch_bgeometrics():
             cache[key] = {
                 "value": val,
                 "date": data.get("d", ""),
-                "fetched_at": now
+                "fetched_at": now,
+                "consecutive_failures": 0
             }
             calls_made += 1
-            time.sleep(0.3)  # Small delay between calls
+            time.sleep(0.5)  # Delay to avoid triggering API rate limits
         elif data and "Rate limit" not in str(data):
             # API returned but field missing - try to find the value
+            found = False
             for k, v in data.items():
                 if k not in ("d", "unixTs"):
                     try:
-                        cache[key] = {"value": float(v), "date": data.get("d", ""), "fetched_at": now}
+                        cache[key] = {"value": float(v), "date": data.get("d", ""), "fetched_at": now, "consecutive_failures": 0}
+                        found = True
                     except: pass
                     break
+            if not found:
+                # Track failure — endpoint returns data but not in expected format
+                prev = cache.get(key, {})
+                cache[key] = {**prev, "consecutive_failures": prev.get("consecutive_failures", 0) + 1}
             calls_made += 1
+            time.sleep(0.5)
+        elif data is None:
+            # fetch_json returned None — parse error or network error (not rate limit)
+            prev = cache.get(key, {})
+            fails = prev.get("consecutive_failures", 0) + 1
+            cache[key] = {**prev, "consecutive_failures": fails}
+            if fails >= 3:
+                print(f"    ↳ {key} has failed {fails} times in a row")
+            calls_made += 1  # Count failed requests against budget (they still hit the API)
+            time.sleep(0.5)
 
     save_cache(cache)
-    print(f"  → Made {calls_made} API calls, {len(cache)} values cached")
+    cached_count = sum(1 for v in cache.values() if v.get("value") is not None)
+    print(f"  → Made {calls_made} API calls, {cached_count}/{len(BG_ENDPOINTS)} endpoints cached")
     return cache
 
 
