@@ -33,11 +33,19 @@ def fetch_json(url, label, timeout=30):
         with urlopen(req, timeout=timeout) as resp:
             raw = resp.read().decode()
             if not raw.strip():
-                print(f"  ✗ {label}: empty response")
+                print(f"  ✗ {label}: empty response (HTTP {resp.status})")
                 return None
             data = json.loads(raw)
-        print(f"  ✓ {label}")
+        # Debug: log full response for endpoints that have been failing
+        if label in ("realized_price", "lth_sopr", "rhodl_ratio", "sth_sopr", "exchange_netflow"):
+            print(f"  ✓ {label}: {json.dumps(data)}")
+        else:
+            print(f"  ✓ {label}")
         return data
+    except json.JSONDecodeError as e:
+        print(f"  ✗ {label}: bad JSON — {str(e)[:60]}")
+        print(f"    ↳ raw response: {raw[:200] if raw else '(empty)'}")
+        return None
     except Exception as e:
         msg = str(e)
         if "429" in msg or "Rate limit" in msg or "Too Many" in msg:
@@ -80,11 +88,10 @@ BG_ENDPOINTS = [
     ("exchange_reserve", "/v1/exchange-reserve-btc/1","exchangeReserveBtc"),
     ("rhodl_ratio",      "/v1/rhodl-ratio/1",        "rhodlRatio1m"),
     ("nvts",             "/v1/nvts/1",               "nvts"),
-    ("open_interest",    "/v1/open-interest-futures/1","openInterest"),
     ("thermocap_mult",   "/v1/thermocap-multiple/1", "thermocapMultiple"),
-    ("nupl_zone",        "/v1/nupl-zone/1",          "nuplZone"),
     ("sth_sopr",         "/v1/sth-sopr/1",           "sthSopr"),
     ("exchange_netflow", "/v1/exchange-netflow-btc/1","exchangeNetflowBtc"),
+    # Removed: open_interest (now from Binance), nupl_zone (redundant, we compute from nupl)
 ]
 
 CACHE_MAX_AGE = 20 * 3600  # 20 hours (data is daily resolution)
@@ -283,6 +290,23 @@ def fetch_spot_price():
     print(f"  → Spot price: ${primary[1]:,.0f} ({primary[0]})")
     return {"price": primary[1], "source": primary[0], "all": {n: p for n, p in sources}}
 
+def fetch_open_interest():
+    """Fetch BTC open interest from Binance Futures (free, no rate limit issues)."""
+    print("\n📊 Fetching open interest from Binance...")
+    data = fetch_json("https://fapi.binance.com/fapi/v1/openInterest?symbol=BTCUSDT", "Binance OI (current)")
+    if not data or "openInterest" not in data:
+        return None
+    oi_btc = float(data["openInterest"])
+
+    # Get 30-day history for trend analysis
+    time.sleep(0.3)
+    hist = fetch_json("https://fapi.binance.com/futures/data/openInterestHist?symbol=BTCUSDT&period=1d&limit=30", "Binance OI (30d history)")
+    oi_history = []
+    if hist:
+        oi_history = [{"ts": d["timestamp"], "oi": float(d["sumOpenInterest"]), "oiUsd": float(d["sumOpenInterestValue"])} for d in hist]
+
+    return {"current": oi_btc, "history": oi_history}
+
 def fetch_hash_rate():
     print("\n⛏️  Fetching hash rate...")
     data = fetch_json("https://api.blockchain.info/charts/hash-rate?timespan=2years&format=json&rollingAverage=1days", "Hash rate (2yr)")
@@ -305,7 +329,7 @@ def bg(cache, key, default=None):
         return entry["value"]
     return default
 
-def compute_indicators(price_hist, fear_greed, funding, hash_rate, miner_rev, bg_cache, spot=None):
+def compute_indicators(price_hist, fear_greed, funding, hash_rate, miner_rev, bg_cache, spot=None, oi_data=None):
     prices = price_hist["prices"]
     daily_prices = [p["price"] for p in prices]
     bc_price = daily_prices[-1]
@@ -499,9 +523,10 @@ def compute_indicators(price_hist, fear_greed, funding, hash_rate, miner_rev, bg
         "desc": "150d EMA below 471d SMA x 0.475 = cycle bottom"
     }
 
-    # Cycle Timing
-    ath_date = datetime(2025, 10, 6, tzinfo=timezone.utc)
-    ath_price = 126296
+    # Cycle Timing — auto-detect ATH from price history
+    ath_price = max(p["price"] for p in prices)
+    ath_idx = next(i for i, p in enumerate(prices) if p["price"] == ath_price)
+    ath_date = datetime.strptime(prices[ath_idx]["date"], "%Y-%m-%d").replace(tzinfo=timezone.utc)
     days_since_ath = (datetime.now(tz=timezone.utc) - ath_date).days
     avg_bottom = 383
     drawdown = ((current_price - ath_price) / ath_price) * 100
@@ -618,20 +643,37 @@ def compute_indicators(price_hist, fear_greed, funding, hash_rate, miner_rev, bg
         "desc": "Coins on exchanges. Declining = accumulation (bullish)"
     }
 
-    # Exchange Netflow — from BGeometrics (NEW)
-    exch_netflow = bg(bg_cache, "exchange_netflow")
+    # Exchange Netflow — computed from reserve changes, or from BGeometrics
+    exch_netflow_bg = bg(bg_cache, "exchange_netflow")
+    # Also compute netflow from reserve history if available
+    reserve_prev = bg_cache.get("exchange_reserve_prev", {}).get("value")
+    computed_netflow = None
+    if exch_reserve is not None and reserve_prev is not None:
+        computed_netflow = exch_reserve - reserve_prev  # positive = inflow, negative = outflow
+    netflow_val = exch_netflow_bg if exch_netflow_bg is not None else computed_netflow
     ind["exchangeNetflow"] = {
-        "value": r(exch_netflow, 2) if exch_netflow else None,
-        "live": exch_netflow is not None,
+        "value": r(netflow_val, 2) if netflow_val is not None else None,
+        "live": netflow_val is not None,
+        "source": "BGeometrics" if exch_netflow_bg is not None else "computed" if computed_netflow is not None else None,
         "desc": "Negative = outflows = coins leaving exchanges = accumulation"
     }
 
-    # Open Interest — from BGeometrics (NEW)
-    oi = bg(bg_cache, "open_interest")
+    # Open Interest — from Binance Futures (reliable, free)
+    oi_current = None
+    oi_change_pct = None
+    if oi_data:
+        oi_current = oi_data.get("current")
+        hist = oi_data.get("history", [])
+        if hist and oi_current:
+            oi_30d_ago = hist[0]["oi"] if hist else None
+            if oi_30d_ago and oi_30d_ago > 0:
+                oi_change_pct = ((oi_current - oi_30d_ago) / oi_30d_ago) * 100
     ind["openInterest"] = {
-        "value": r(oi, 0) if oi else None,
-        "live": oi is not None,
-        "desc": "Total derivatives positions. Low after unwind = reset complete"
+        "value": r(oi_current, 0) if oi_current else None,
+        "changePct30d": r(oi_change_pct, 1) if oi_change_pct is not None else None,
+        "live": oi_current is not None,
+        "source": "Binance",
+        "desc": "Total derivatives positions. Large decline = leverage reset = healthier market"
     }
 
     # ═══════════════════════════════════════════
@@ -802,14 +844,19 @@ def compute_composite(ind):
     # SSR already in D1, NVT here
     v = ind["nvtSignal"]["value"]
     if v is not None:
-        # Low NVT = undervalued. Signal varies, but sub-45 is often oversold
-        s = score_val(v, [(20, 10), (30, 8), (45, 5), (60, 3), (999, 1)])
+        # NVT Signal typical range: 20-200+. Low = undervalued network, High = overvalued
+        # Historically: <45 oversold, 45-80 neutral, >100 overvalued
+        s = score_val(v, [(30, 10), (45, 9), (60, 7), (80, 5), (100, 3), (150, 1), (999, 0)])
         d5.append(("NVT Signal", s, 1.5))
 
-    # Open interest: after massive unwind = lower OI = reset
-    # Hard to score without historical context, give moderate weight
-    if ind["openInterest"]["value"] is not None:
-        d5.append(("Open Interest", 5, 1))  # neutral placeholder
+    # Open Interest: score based on 30d change — decline = leverage unwind = healthier
+    oi_chg = ind["openInterest"].get("changePct30d")
+    if oi_chg is not None:
+        # Big decline in OI = leverage flushed = bullish setup
+        s = score_val(oi_chg, [(-40, 10), (-25, 8), (-15, 6), (-5, 4), (5, 2), (999, 0)])
+        d5.append(("Open Interest", s, 1))
+    elif ind["openInterest"]["value"] is not None:
+        d5.append(("Open Interest", 5, 1))  # have data but no trend yet
 
     # ── Domain 6: Cycle Timing (10%) ──
     d6 = []
@@ -877,8 +924,30 @@ def main():
 
     DATA_DIR.mkdir(parents=True, exist_ok=True)
 
+    # Log rotation: keep last 500 lines to prevent cron.log from growing forever
+    log_file = DATA_DIR / "cron.log"
+    if log_file.exists():
+        try:
+            lines = log_file.read_text().splitlines()
+            if len(lines) > 2000:
+                log_file.write_text("\n".join(lines[-500:]) + "\n")
+                print(f"  ↳ Trimmed cron.log from {len(lines)} to 500 lines")
+        except: pass
+
     # Fetch BGeometrics (cached, rate-limited)
     bg_cache = fetch_bgeometrics()
+
+    # Store exchange reserve history for netflow computation
+    exch_reserve_entry = bg_cache.get("exchange_reserve")
+    if exch_reserve_entry and exch_reserve_entry.get("value") is not None:
+        prev = bg_cache.get("exchange_reserve_prev")
+        # Only update prev if the current value is from a different date
+        if not prev or prev.get("date") != exch_reserve_entry.get("date"):
+            bg_cache["exchange_reserve_prev"] = {
+                "value": exch_reserve_entry["value"],
+                "date": exch_reserve_entry.get("date", ""),
+            }
+            save_cache(bg_cache)
 
     # Fetch real-time spot price first
     spot = fetch_spot_price()
@@ -895,12 +964,14 @@ def main():
     time.sleep(1)
     funding = fetch_funding_rates()
     time.sleep(1)
+    oi_data = fetch_open_interest()
+    time.sleep(1)
     hash_rate = fetch_hash_rate()
     time.sleep(1)
     miner_rev = fetch_miner_revenue()
 
     # Compute
-    indicators = compute_indicators(price_hist, fear_greed, funding, hash_rate, miner_rev, bg_cache, spot)
+    indicators = compute_indicators(price_hist, fear_greed, funding, hash_rate, miner_rev, bg_cache, spot, oi_data)
 
     # Save
     out = DATA_DIR / "indicators.json"
