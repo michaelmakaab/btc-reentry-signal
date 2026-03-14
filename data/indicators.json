@@ -94,8 +94,8 @@
     "desc": "Below 0.5 = miner capitulation = accumulation zone"
   },
   "mayerMultiple": {
-    "value": 0.7488,
-    "sma200d": 94524.0,
+    "value": 0.7539,
+    "sma200d": 94328.0,
     "live": true,
     "thresholds": {
       "deepBottom": 0.6,
@@ -107,15 +107,15 @@
   },
   "wma200": {
     "value": 58817.0,
-    "ratio": 1.2034,
-    "percentAbove": 20.3,
+    "ratio": 1.2091,
+    "percentAbove": 20.9,
     "live": true,
     "desc": "Historic cycle floor. Price at or below = major buy zone"
   },
   "piCycleBottom": {
     "signal": "ABOVE",
-    "ema150": 85106.0,
-    "threshold": 46479.0,
+    "ema150": 84919.0,
+    "threshold": 46454.0,
     "live": true,
     "desc": "150d EMA below 471d SMA x 0.475 = cycle bottom"
   },
@@ -124,7 +124,7 @@
     "avgDaysToBottom": 383,
     "cycleProgress": 0.413,
     "estimatedBottom": "2026-10-25",
-    "drawdownPct": -43.3,
+    "drawdownPct": -43.0,
     "athPrice": 124776.68,
     "live": true,
     "desc": "Day 158 of ~383. Est. bottom: Oct 2026"
@@ -132,15 +132,15 @@
   "rainbowChart": {
     "currentBand": "Accumulate",
     "bands": {
-      "Fire Sale": 19792,
-      "BUY!": 32161,
-      "Accumulate": 50716,
-      "Still Cheap": 77311,
-      "HODL!": 114420,
-      "Is this a bubble?": 170084,
-      "FOMO intensifies": 247395,
-      "Sell. Seriously.": 358723,
-      "Max Bubble": 525715
+      "Fire Sale": 19794,
+      "BUY!": 32165,
+      "Accumulate": 50721,
+      "Still Cheap": 77319,
+      "HODL!": 114432,
+      "Is this a bubble?": 170101,
+      "FOMO intensifies": 247420,
+      "Sell. Seriously.": 358759,
+      "Max Bubble": 525768
     },
     "live": true,
     "desc": "Logarithmic regression bands. Lower = deeper value"
@@ -187,27 +187,23 @@
     "desc": "Negative = outflows = coins leaving exchanges = accumulation"
   },
   "openInterest": {
-    "value": 82888.0,
-    "changePct30d": 6.6,
+    "value": 83311.0,
+    "changePct30d": 7.1,
     "live": true,
     "source": "Binance",
     "desc": "Total derivatives positions. Large decline = leverage reset = healthier market"
   },
   "_meta": {
-    "computedAt": "2026-03-14T01:30:46.999228+00:00",
-    "currentPrice": 70780.49,
-    "currentDate": "2026-03-13",
+    "computedAt": "2026-03-14T04:06:08.011697+00:00",
+    "currentPrice": 71115.96,
+    "currentDate": "2026-03-14",
     "priceSource": "Binance",
     "priceSources": {
-      "Binance": 70780.49,
-      "CoinGecko": 70794.0
+      "Binance": 71115.96,
+      "CoinGecko": 71089.0
     }
   },
   "_priceHistory": [
-    {
-      "d": "2025-09-15",
-      "p": 115385
-    },
     {
       "d": "2025-09-16",
       "p": 115402
@@ -923,6 +919,10 @@
     {
       "d": "2026-03-13",
       "p": 70494
+    },
+    {
+      "d": "2026-03-14",
+      "p": 70966
     }
   ],
   "_composite": {
