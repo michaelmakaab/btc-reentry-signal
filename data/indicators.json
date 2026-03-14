@@ -77,13 +77,13 @@
   },
   "hashRibbon": {
     "signal": "RECOVERY",
-    "ma30d": 1028740527.0,
-    "ma60d": 990358076.0,
+    "ma30d": 1025077479.0,
+    "ma60d": 987666262.0,
     "live": true,
     "desc": "Buy signal = 30d hash MA crosses above 60d after capitulation"
   },
   "puellMultiple": {
-    "value": 0.6152,
+    "value": 0.6217,
     "live": true,
     "thresholds": {
       "deepGreen": 0.3,
@@ -94,7 +94,7 @@
     "desc": "Below 0.5 = miner capitulation = accumulation zone"
   },
   "mayerMultiple": {
-    "value": 0.7501,
+    "value": 0.7488,
     "sma200d": 94524.0,
     "live": true,
     "thresholds": {
@@ -106,9 +106,9 @@
     "desc": "Price / 200-day MA. Below 0.8 = oversold"
   },
   "wma200": {
-    "value": 58666.0,
-    "ratio": 1.2086,
-    "percentAbove": 20.9,
+    "value": 58817.0,
+    "ratio": 1.2034,
+    "percentAbove": 20.3,
     "live": true,
     "desc": "Historic cycle floor. Price at or below = major buy zone"
   },
@@ -124,7 +124,7 @@
     "avgDaysToBottom": 383,
     "cycleProgress": 0.413,
     "estimatedBottom": "2026-10-25",
-    "drawdownPct": -43.2,
+    "drawdownPct": -43.3,
     "athPrice": 124776.68,
     "live": true,
     "desc": "Day 158 of ~383. Est. bottom: Oct 2026"
@@ -132,15 +132,15 @@
   "rainbowChart": {
     "currentBand": "Accumulate",
     "bands": {
-      "Fire Sale": 19791,
-      "BUY!": 32160,
-      "Accumulate": 50713,
-      "Still Cheap": 77307,
-      "HODL!": 114414,
-      "Is this a bubble?": 170075,
-      "FOMO intensifies": 247381,
-      "Sell. Seriously.": 358703,
-      "Max Bubble": 525685
+      "Fire Sale": 19792,
+      "BUY!": 32161,
+      "Accumulate": 50716,
+      "Still Cheap": 77311,
+      "HODL!": 114420,
+      "Is this a bubble?": 170084,
+      "FOMO intensifies": 247395,
+      "Sell. Seriously.": 358723,
+      "Max Bubble": 525715
     },
     "live": true,
     "desc": "Logarithmic regression bands. Lower = deeper value"
@@ -156,16 +156,16 @@
     "desc": "Long-term holders selling at loss = extreme capitulation"
   },
   "fearGreed": {
-    "current": 15,
+    "current": 16,
     "label": "Extreme Fear",
-    "avg30d": 11.1,
-    "extremeFearDays": 43,
+    "avg30d": 11.5,
+    "extremeFearDays": 44,
     "live": true,
     "desc": "Sustained extreme fear (< 25) = contrarian buy"
   },
   "fundingRates": {
-    "current": -6e-06,
-    "avg10d": -1.9e-05,
+    "current": -4e-06,
+    "avg10d": -1.7e-05,
     "negativePeriods": 19,
     "live": true,
     "desc": "Negative = shorts paying longs = bearish positioning"
@@ -187,20 +187,20 @@
     "desc": "Negative = outflows = coins leaving exchanges = accumulation"
   },
   "openInterest": {
-    "value": null,
-    "changePct30d": null,
-    "live": false,
+    "value": 82888.0,
+    "changePct30d": 6.6,
+    "live": true,
     "source": "Binance",
     "desc": "Total derivatives positions. Large decline = leverage reset = healthier market"
   },
   "_meta": {
-    "computedAt": "2026-03-14T00:02:41.413658+00:00",
-    "currentPrice": 70904.12,
+    "computedAt": "2026-03-14T01:30:46.999228+00:00",
+    "currentPrice": 70780.49,
     "currentDate": "2026-03-13",
     "priceSource": "Binance",
     "priceSources": {
-      "Binance": 70904.12,
-      "CoinGecko": 70907.0
+      "Binance": 70780.49,
+      "CoinGecko": 70794.0
     }
   },
   "_priceHistory": [
@@ -926,7 +926,7 @@
     }
   ],
   "_composite": {
-    "score": 52.2,
+    "score": 50.7,
     "zone": "ACCUMULATE",
     "zoneLabel": "ACCUMULATE",
     "zoneColor": "#EAB308",
@@ -1024,7 +1024,7 @@
         "contribution": 7.8
       },
       "sentiment": {
-        "score": 6.8,
+        "score": 6.5,
         "weight": 0.15,
         "items": [
           {
@@ -1034,7 +1034,7 @@
           },
           {
             "name": "Fear & Greed",
-            "score": 9,
+            "score": 8,
             "weight": 1.5
           },
           {
@@ -1050,10 +1050,10 @@
         ],
         "label": "Sentiment & Positioning",
         "effectiveWeight": 0.15,
-        "contribution": 10.2
+        "contribution": 9.8
       },
       "exchange": {
-        "score": 5.0,
+        "score": 3.9,
         "weight": 0.1,
         "items": [
           {
@@ -1065,11 +1065,16 @@
             "name": "NVT Signal",
             "score": 1,
             "weight": 1.5
+          },
+          {
+            "name": "Open Interest",
+            "score": 0,
+            "weight": 1
           }
         ],
         "label": "Exchange & Liquidity",
         "effectiveWeight": 0.1,
-        "contribution": 5.0
+        "contribution": 3.9
       },
       "cycle": {
         "score": 4.0,
