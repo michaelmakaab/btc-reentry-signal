@@ -94,7 +94,7 @@
     "desc": "Below 0.5 = miner capitulation = accumulation zone"
   },
   "mayerMultiple": {
-    "value": 0.7513,
+    "value": 0.7501,
     "sma200d": 94524.0,
     "live": true,
     "thresholds": {
@@ -107,8 +107,8 @@
   },
   "wma200": {
     "value": 58666.0,
-    "ratio": 1.2105,
-    "percentAbove": 21.0,
+    "ratio": 1.2086,
+    "percentAbove": 20.9,
     "live": true,
     "desc": "Historic cycle floor. Price at or below = major buy zone"
   },
@@ -120,27 +120,27 @@
     "desc": "150d EMA below 471d SMA x 0.475 = cycle bottom"
   },
   "cycleTiming": {
-    "daysSinceATH": 157,
+    "daysSinceATH": 158,
     "avgDaysToBottom": 383,
-    "cycleProgress": 0.41,
+    "cycleProgress": 0.413,
     "estimatedBottom": "2026-10-25",
-    "drawdownPct": -43.1,
+    "drawdownPct": -43.2,
     "athPrice": 124776.68,
     "live": true,
-    "desc": "Day 157 of ~383. Est. bottom: Oct 2026"
+    "desc": "Day 158 of ~383. Est. bottom: Oct 2026"
   },
   "rainbowChart": {
     "currentBand": "Accumulate",
     "bands": {
-      "Fire Sale": 19787,
-      "BUY!": 32153,
-      "Accumulate": 50704,
-      "Still Cheap": 77292,
-      "HODL!": 114392,
-      "Is this a bubble?": 170042,
-      "FOMO intensifies": 247334,
-      "Sell. Seriously.": 358635,
-      "Max Bubble": 525586
+      "Fire Sale": 19791,
+      "BUY!": 32160,
+      "Accumulate": 50713,
+      "Still Cheap": 77307,
+      "HODL!": 114414,
+      "Is this a bubble?": 170075,
+      "FOMO intensifies": 247381,
+      "Sell. Seriously.": 358703,
+      "Max Bubble": 525685
     },
     "live": true,
     "desc": "Logarithmic regression bands. Lower = deeper value"
@@ -187,20 +187,20 @@
     "desc": "Negative = outflows = coins leaving exchanges = accumulation"
   },
   "openInterest": {
-    "value": 85031.0,
-    "changePct30d": 7.4,
-    "live": true,
+    "value": null,
+    "changePct30d": null,
+    "live": false,
     "source": "Binance",
     "desc": "Total derivatives positions. Large decline = leverage reset = healthier market"
   },
   "_meta": {
-    "computedAt": "2026-03-13T19:08:25.026822+00:00",
-    "currentPrice": 71014.46,
+    "computedAt": "2026-03-14T00:02:41.413658+00:00",
+    "currentPrice": 70904.12,
     "currentDate": "2026-03-13",
     "priceSource": "Binance",
     "priceSources": {
-      "Binance": 71014.46,
-      "CoinGecko": 71051.0
+      "Binance": 70904.12,
+      "CoinGecko": 70907.0
     }
   },
   "_priceHistory": [
@@ -926,7 +926,7 @@
     }
   ],
   "_composite": {
-    "score": 51.1,
+    "score": 52.2,
     "zone": "ACCUMULATE",
     "zoneLabel": "ACCUMULATE",
     "zoneColor": "#EAB308",
@@ -1053,7 +1053,7 @@
         "contribution": 10.2
       },
       "exchange": {
-        "score": 3.9,
+        "score": 5.0,
         "weight": 0.1,
         "items": [
           {
@@ -1065,16 +1065,11 @@
             "name": "NVT Signal",
             "score": 1,
             "weight": 1.5
-          },
-          {
-            "name": "Open Interest",
-            "score": 0,
-            "weight": 1
           }
         ],
         "label": "Exchange & Liquidity",
         "effectiveWeight": 0.1,
-        "contribution": 3.9
+        "contribution": 5.0
       },
       "cycle": {
         "score": 4.0,
