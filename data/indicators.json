@@ -24,8 +24,8 @@
   },
   "realizedPrice": {
     "value": 53833.0,
-    "ratio": 1.3282,
-    "percentAbove": 32.8,
+    "ratio": 1.3289,
+    "percentAbove": 32.9,
     "live": true,
     "desc": "Price below realized price = market at aggregate loss = bottom zone"
   },
@@ -94,7 +94,7 @@
     "desc": "Below 0.5 = miner capitulation = accumulation zone"
   },
   "mayerMultiple": {
-    "value": 0.7597,
+    "value": 0.76,
     "sma200d": 94125.0,
     "live": true,
     "thresholds": {
@@ -107,7 +107,7 @@
   },
   "wma200": {
     "value": 58728.0,
-    "ratio": 1.2175,
+    "ratio": 1.2181,
     "percentAbove": 21.8,
     "live": true,
     "desc": "Historic cycle floor. Price at or below = major buy zone"
@@ -132,15 +132,15 @@
   "rainbowChart": {
     "currentBand": "Accumulate",
     "bands": {
-      "Fire Sale": 19819,
-      "BUY!": 32206,
-      "Accumulate": 50786,
-      "Still Cheap": 77418,
-      "HODL!": 114578,
-      "Is this a bubble?": 170319,
-      "FOMO intensifies": 247736,
-      "Sell. Seriously.": 359218,
-      "Max Bubble": 526440
+      "Fire Sale": 19821,
+      "BUY!": 32209,
+      "Accumulate": 50792,
+      "Still Cheap": 77426,
+      "HODL!": 114591,
+      "Is this a bubble?": 170338,
+      "FOMO intensifies": 247764,
+      "Sell. Seriously.": 359258,
+      "Max Bubble": 526499
     },
     "live": true,
     "desc": "Logarithmic regression bands. Lower = deeper value"
@@ -164,8 +164,8 @@
     "desc": "Sustained extreme fear (< 25) = contrarian buy"
   },
   "fundingRates": {
-    "current": -6.5e-05,
-    "avg10d": -2.8e-05,
+    "current": 2.7e-05,
+    "avg10d": -2.7e-05,
     "negativePeriods": 23,
     "live": true,
     "desc": "Negative = shorts paying longs = bearish positioning"
@@ -187,20 +187,20 @@
     "desc": "Negative = outflows = coins leaving exchanges = accumulation"
   },
   "openInterest": {
-    "value": 81824.0,
-    "changePct30d": 6.1,
+    "value": 82370.0,
+    "changePct30d": 6.8,
     "live": true,
     "source": "Binance",
     "desc": "Total derivatives positions. Large decline = leverage reset = healthier market"
   },
   "_meta": {
-    "computedAt": "2026-03-15T13:09:13.526399+00:00",
-    "currentPrice": 71503.19,
+    "computedAt": "2026-03-15T16:04:47.953911+00:00",
+    "currentPrice": 71537.79,
     "currentDate": "2026-03-15",
     "priceSource": "Binance",
     "priceSources": {
-      "Binance": 71503.19,
-      "CoinGecko": 71641.0
+      "Binance": 71537.79,
+      "CoinGecko": 71489.0
     }
   },
   "_priceHistory": [
