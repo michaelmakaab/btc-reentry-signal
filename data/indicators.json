@@ -94,7 +94,7 @@
     "desc": "Below 0.5 = miner capitulation = accumulation zone"
   },
   "mayerMultiple": {
-    "value": 0.7609,
+    "value": 0.7592,
     "sma200d": 94125.0,
     "live": true,
     "thresholds": {
@@ -107,8 +107,8 @@
   },
   "wma200": {
     "value": 58728.0,
-    "ratio": 1.2196,
-    "percentAbove": 22.0,
+    "ratio": 1.2168,
+    "percentAbove": 21.7,
     "live": true,
     "desc": "Historic cycle floor. Price at or below = major buy zone"
   },
@@ -124,7 +124,7 @@
     "avgDaysToBottom": 383,
     "cycleProgress": 0.415,
     "estimatedBottom": "2026-10-25",
-    "drawdownPct": -42.6,
+    "drawdownPct": -42.7,
     "athPrice": 124776.68,
     "live": true,
     "desc": "Day 159 of ~383. Est. bottom: Oct 2026"
@@ -132,15 +132,15 @@
   "rainbowChart": {
     "currentBand": "Accumulate",
     "bands": {
-      "Fire Sale": 19812,
-      "BUY!": 32195,
-      "Accumulate": 50769,
-      "Still Cheap": 77391,
-      "HODL!": 114539,
-      "Is this a bubble?": 170260,
-      "FOMO intensifies": 247651,
-      "Sell. Seriously.": 359094,
-      "Max Bubble": 526259
+      "Fire Sale": 19814,
+      "BUY!": 32198,
+      "Accumulate": 50773,
+      "Still Cheap": 77398,
+      "HODL!": 114549,
+      "Is this a bubble?": 170275,
+      "FOMO intensifies": 247673,
+      "Sell. Seriously.": 359126,
+      "Max Bubble": 526305
     },
     "live": true,
     "desc": "Logarithmic regression bands. Lower = deeper value"
@@ -187,20 +187,20 @@
     "desc": "Negative = outflows = coins leaving exchanges = accumulation"
   },
   "openInterest": {
-    "value": 83044.0,
-    "changePct30d": 7.7,
+    "value": 82876.0,
+    "changePct30d": 7.5,
     "live": true,
     "source": "Binance",
     "desc": "Total derivatives positions. Large decline = leverage reset = healthier market"
   },
   "_meta": {
-    "computedAt": "2026-03-15T04:15:58.447304+00:00",
-    "currentPrice": 71624.41,
+    "computedAt": "2026-03-15T06:32:41.371440+00:00",
+    "currentPrice": 71459.37,
     "currentDate": "2026-03-15",
     "priceSource": "Binance",
     "priceSources": {
-      "Binance": 71624.41,
-      "CoinGecko": 71582.0
+      "Binance": 71459.37,
+      "CoinGecko": 71461.0
     }
   },
   "_priceHistory": [

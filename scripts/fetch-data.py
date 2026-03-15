@@ -36,9 +36,13 @@ def fetch_json(url, label, timeout=30):
                 print(f"  ✗ {label}: empty response (HTTP {resp.status})")
                 return None
             data = json.loads(raw)
-        # Debug: log full response for endpoints that have been failing
-        if label in ("realized_price", "lth_sopr", "rhodl_ratio", "sth_sopr", "exchange_netflow"):
-            print(f"  ✓ {label}: {json.dumps(data)}")
+        # Check for rate limit error in JSON response
+        if isinstance(data, dict) and data.get("error", {}).get("code") in ("RATE_LIMIT_HOUR_EXCEEDED", "RATE_LIMIT_DAY_EXCEEDED"):
+            print(f"  ⏳ {label}: rate limited (using cache)")
+            raise RateLimited(label)
+        # For array responses, just log the count; for single objects, log the value
+        if isinstance(data, list):
+            print(f"  ✓ {label}: {len(data)} entries")
         else:
             print(f"  ✓ {label}")
         return data
@@ -76,21 +80,21 @@ def r(val, decimals=2):
 # Priority order: most critical for bottom detection first
 BG_ENDPOINTS = [
     # Priority 1: Core on-chain (replace all manual data)
-    ("mvrv_zscore",      "/v1/mvrv-zscore/1",       "mvrvZscore"),
-    ("nupl",             "/v1/nupl/1",               "nupl"),
-    ("sopr",             "/v1/sopr/1",               "sopr"),
-    ("reserve_risk",     "/v1/reserve-risk/1",       "reserveRisk"),
-    ("realized_price",   "/v1/realized-price/1",     "realizedPrice"),
-    ("supply_profit",    "/v1/supply-profit/1",      "supplyProfit"),
-    ("lth_sopr",         "/v1/lth-sopr/1",           "lthSopr"),
-    ("ssr",              "/v1/ssr/1",                 "ssrStablecoin"),
+    ("mvrv_zscore",      "/v1/mvrv-zscore",       "mvrvZscore"),
+    ("nupl",             "/v1/nupl",               "nupl"),
+    ("sopr",             "/v1/sopr",               "sopr"),
+    ("reserve_risk",     "/v1/reserve-risk",       "reserveRisk"),
+    ("realized_price",   "/v1/realized-price",     "realizedPrice"),
+    ("supply_profit",    "/v1/supply-profit",      "supplyProfit"),
+    ("lth_sopr",         "/v1/lth-sopr",           "lthSopr"),
+    ("ssr",              "/v1/ssr",                 "ssrStablecoin"),
     # Priority 2: Additional indicators
-    ("exchange_reserve", "/v1/exchange-reserve-btc/1","exchangeReserveBtc"),
-    ("rhodl_ratio",      "/v1/rhodl-ratio/1",        "rhodlRatio1m"),
-    ("nvts",             "/v1/nvts/1",               "nvts"),
-    ("thermocap_mult",   "/v1/thermocap-multiple/1", "thermocapMultiple"),
-    ("sth_sopr",         "/v1/sth-sopr/1",           "sthSopr"),
-    ("exchange_netflow", "/v1/exchange-netflow-btc/1","exchangeNetflowBtc"),
+    ("exchange_reserve", "/v1/exchange-reserve-btc","exchangeReserveBtc"),
+    ("rhodl_ratio",      "/v1/rhodl-ratio",        "rhodlRatio1m"),
+    ("nvts",             "/v1/nvts",               "nvts"),
+    ("thermocap_mult",   "/v1/thermocap-multiple", "thermocapMultiple"),
+    ("sth_sopr",         "/v1/sth-sopr",           "sthSopr"),
+    ("exchange_netflow", "/v1/exchange-netflow-btc","exchangeNetflowBtc"),
     # Removed: open_interest (now from Binance), nupl_zone (redundant, we compute from nupl)
 ]
 
@@ -112,11 +116,19 @@ def fetch_bgeometrics():
     Strategy: Prioritize endpoints that have NEVER been cached (no data at all)
     over refreshing already-cached values. This ensures all domains eventually
     get data instead of the same Priority 1 endpoints hogging every run.
+
+    Uses ?startday= date filter to get recent data as a small array,
+    then takes the latest entry. This works for all endpoints (unlike /1 suffix
+    which returns empty for some endpoints on bitcoin-data.com).
     """
     print("\n🔗 Fetching BGeometrics on-chain data...")
     cache = load_cache()
     now = time.time()
     calls_made = 0
+
+    # Date filter: last 14 days to keep response small
+    from datetime import timedelta
+    start_date = (datetime.now(tz=timezone.utc) - timedelta(days=14)).strftime("%Y-%m-%d")
 
     # Split endpoints into: never cached (urgent), stale (need refresh), fresh (skip)
     never_cached = []
@@ -164,54 +176,71 @@ def fetch_bgeometrics():
                 print(f"  ⏸ {key}: API rate limited (will fetch next run)")
             continue
 
-        # Fetch
+        # Fetch with date filter — returns array of recent entries
+        url = f"https://bitcoin-data.com{path}?startday={start_date}"
         try:
-            data = fetch_json(f"https://bitcoin-data.com{path}", key)
+            data = fetch_json(url, key, timeout=45)
         except RateLimited:
             rate_limited = True
-            # Track failure but don't count against budget
             prev = cache.get(key, {})
             cache[key] = {**prev, "consecutive_failures": prev.get("consecutive_failures", 0) + 1}
             continue
 
-        if data and field in data:
-            val = data[field]
-            # Parse numeric strings
-            try: val = float(val)
-            except (ValueError, TypeError): pass
-            cache[key] = {
-                "value": val,
-                "date": data.get("d", ""),
-                "fetched_at": now,
-                "consecutive_failures": 0
-            }
-            calls_made += 1
-            time.sleep(0.5)  # Delay to avoid triggering API rate limits
-        elif data and "Rate limit" not in str(data):
-            # API returned but field missing - try to find the value
-            found = False
-            for k, v in data.items():
-                if k not in ("d", "unixTs"):
-                    try:
-                        cache[key] = {"value": float(v), "date": data.get("d", ""), "fetched_at": now, "consecutive_failures": 0}
-                        found = True
-                    except: pass
-                    break
-            if not found:
-                # Track failure — endpoint returns data but not in expected format
-                prev = cache.get(key, {})
-                cache[key] = {**prev, "consecutive_failures": prev.get("consecutive_failures", 0) + 1}
-            calls_made += 1
-            time.sleep(0.5)
-        elif data is None:
-            # fetch_json returned None — parse error or network error (not rate limit)
+        calls_made += 1
+
+        if data is None:
+            # fetch_json returned None — parse error or network error
             prev = cache.get(key, {})
             fails = prev.get("consecutive_failures", 0) + 1
             cache[key] = {**prev, "consecutive_failures": fails}
             if fails >= 3:
                 print(f"    ↳ {key} has failed {fails} times in a row")
-            calls_made += 1  # Count failed requests against budget (they still hit the API)
             time.sleep(0.5)
+            continue
+
+        # Handle response: could be array (from date filter) or single object
+        entry = None
+        if isinstance(data, list) and len(data) > 0:
+            # Sort by date and take the latest entry
+            # Endpoints use either "d" or "theDay" for date field
+            def get_date(item):
+                return item.get("d") or item.get("theDay") or ""
+            data.sort(key=get_date)
+            entry = data[-1]
+        elif isinstance(data, dict) and not data.get("error"):
+            entry = data
+
+        if entry and field in entry:
+            val = entry[field]
+            try: val = float(val)
+            except (ValueError, TypeError): pass
+            if val is not None:
+                date_str = entry.get("d") or entry.get("theDay") or ""
+                cache[key] = {
+                    "value": val,
+                    "date": date_str,
+                    "fetched_at": now,
+                    "consecutive_failures": 0
+                }
+                time.sleep(0.5)
+                continue
+
+        # Field not found in entry — try to find any numeric value
+        if entry:
+            for k, v in entry.items():
+                if k not in ("d", "theDay", "unixTs"):
+                    try:
+                        date_str = entry.get("d") or entry.get("theDay") or ""
+                        cache[key] = {"value": float(v), "date": date_str, "fetched_at": now, "consecutive_failures": 0}
+                    except (ValueError, TypeError):
+                        prev = cache.get(key, {})
+                        cache[key] = {**prev, "consecutive_failures": prev.get("consecutive_failures", 0) + 1}
+                    break
+        else:
+            # Empty response
+            prev = cache.get(key, {})
+            cache[key] = {**prev, "consecutive_failures": prev.get("consecutive_failures", 0) + 1}
+        time.sleep(0.5)
 
     save_cache(cache)
     cached_count = sum(1 for v in cache.values() if v.get("value") is not None)
