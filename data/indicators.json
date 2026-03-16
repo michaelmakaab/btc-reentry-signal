@@ -24,8 +24,8 @@
   },
   "realizedPrice": {
     "value": 53833.0,
-    "ratio": 1.3484,
-    "percentAbove": 34.8,
+    "ratio": 1.3712,
+    "percentAbove": 37.1,
     "live": true,
     "desc": "Price below realized price = market at aggregate loss = bottom zone"
   },
@@ -94,7 +94,7 @@
     "desc": "Below 0.5 = miner capitulation = accumulation zone"
   },
   "mayerMultiple": {
-    "value": 0.7728,
+    "value": 0.7859,
     "sma200d": 93933.0,
     "live": true,
     "thresholds": {
@@ -107,8 +107,8 @@
   },
   "wma200": {
     "value": 59013.0,
-    "ratio": 1.23,
-    "percentAbove": 23.0,
+    "ratio": 1.2509,
+    "percentAbove": 25.1,
     "live": true,
     "desc": "Historic cycle floor. Price at or below = major buy zone"
   },
@@ -124,7 +124,7 @@
     "avgDaysToBottom": 383,
     "cycleProgress": 0.418,
     "estimatedBottom": "2026-10-25",
-    "drawdownPct": -41.8,
+    "drawdownPct": -40.8,
     "athPrice": 124776.68,
     "live": true,
     "desc": "Day 160 of ~383. Est. bottom: Oct 2026"
@@ -132,15 +132,15 @@
   "rainbowChart": {
     "currentBand": "Accumulate",
     "bands": {
-      "Fire Sale": 19830,
-      "BUY!": 32224,
-      "Accumulate": 50814,
-      "Still Cheap": 77461,
-      "HODL!": 114642,
-      "Is this a bubble?": 170414,
-      "FOMO intensifies": 247874,
-      "Sell. Seriously.": 359418,
-      "Max Bubble": 526733
+      "Fire Sale": 19831,
+      "BUY!": 32225,
+      "Accumulate": 50816,
+      "Still Cheap": 77464,
+      "HODL!": 114647,
+      "Is this a bubble?": 170420,
+      "FOMO intensifies": 247884,
+      "Sell. Seriously.": 359432,
+      "Max Bubble": 526754
     },
     "live": true,
     "desc": "Logarithmic regression bands. Lower = deeper value"
@@ -164,9 +164,9 @@
     "desc": "Sustained extreme fear (< 25) = contrarian buy"
   },
   "fundingRates": {
-    "current": null,
-    "avg10d": null,
-    "negativePeriods": 0,
+    "current": 2.5e-05,
+    "avg10d": -2.7e-05,
+    "negativePeriods": 23,
     "live": true,
     "desc": "Negative = shorts paying longs = bearish positioning"
   },
@@ -187,20 +187,20 @@
     "desc": "Negative = outflows = coins leaving exchanges = accumulation"
   },
   "openInterest": {
-    "value": 83453.0,
-    "changePct30d": 10.2,
-    "live": true,
+    "value": null,
+    "changePct30d": null,
+    "live": false,
     "source": "Binance",
     "desc": "Total derivatives positions. Large decline = leverage reset = healthier market"
   },
   "_meta": {
-    "computedAt": "2026-03-16T03:33:24.475977+00:00",
-    "currentPrice": 72587.99,
+    "computedAt": "2026-03-16T04:36:05.148759+00:00",
+    "currentPrice": 73818.63,
     "currentDate": "2026-03-16",
     "priceSource": "Binance",
     "priceSources": {
-      "Binance": 72587.99,
-      "CoinGecko": 72622.0
+      "Binance": 73818.63,
+      "CoinGecko": 73816.0
     }
   },
   "_priceHistory": [
@@ -926,7 +926,7 @@
     }
   ],
   "_composite": {
-    "score": 51.8,
+    "score": 52.3,
     "zone": "ACCUMULATE",
     "zoneLabel": "ACCUMULATE",
     "zoneColor": "#EAB308",
@@ -1029,7 +1029,7 @@
         "contribution": 7.8
       },
       "sentiment": {
-        "score": 7.3,
+        "score": 6.9,
         "weight": 0.15,
         "items": [
           {
@@ -1051,14 +1051,19 @@
             "name": "Fear Duration",
             "score": 10,
             "weight": 1
+          },
+          {
+            "name": "Funding Rates",
+            "score": 4,
+            "weight": 1
           }
         ],
         "label": "Sentiment & Positioning",
         "effectiveWeight": 0.15,
-        "contribution": 11.0
+        "contribution": 10.4
       },
       "exchange": {
-        "score": 3.9,
+        "score": 5.0,
         "weight": 0.1,
         "items": [
           {
@@ -1070,16 +1075,11 @@
             "name": "NVT Signal",
             "score": 1,
             "weight": 1.5
-          },
-          {
-            "name": "Open Interest",
-            "score": 0,
-            "weight": 1
           }
         ],
         "label": "Exchange & Liquidity",
         "effectiveWeight": 0.1,
-        "contribution": 3.9
+        "contribution": 5.0
       },
       "cycle": {
         "score": 6.6,
