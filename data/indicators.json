@@ -24,14 +24,14 @@
   },
   "realizedPrice": {
     "value": 54236.0,
-    "ratio": 1.3606,
-    "percentAbove": 36.1,
+    "ratio": 1.3597,
+    "percentAbove": 36.0,
     "live": true,
     "desc": "Price below realized price = market at aggregate loss = bottom zone"
   },
   "supplyInProfit": {
-    "value": 49.4,
-    "absolute": 9778945.0,
+    "value": 51.1,
+    "absolute": 10127182.0,
     "live": true,
     "thresholds": {
       "deepBottom": 45,
@@ -51,7 +51,7 @@
     "desc": "Below 0.002 = high conviction, low risk = ideal accumulation"
   },
   "ssr": {
-    "value": 5.45,
+    "value": 5.56,
     "live": true,
     "thresholds": {
       "highBuyingPower": 5,
@@ -94,7 +94,7 @@
     "desc": "Below 0.5 = miner capitulation = accumulation zone"
   },
   "mayerMultiple": {
-    "value": 0.7856,
+    "value": 0.7851,
     "sma200d": 93933.0,
     "live": true,
     "thresholds": {
@@ -107,7 +107,7 @@
   },
   "wma200": {
     "value": 59013.0,
-    "ratio": 1.2505,
+    "ratio": 1.2497,
     "percentAbove": 25.0,
     "live": true,
     "desc": "Historic cycle floor. Price at or below = major buy zone"
@@ -132,15 +132,15 @@
   "rainbowChart": {
     "currentBand": "Accumulate",
     "bands": {
-      "Fire Sale": 19833,
-      "BUY!": 32229,
-      "Accumulate": 50822,
-      "Still Cheap": 77473,
-      "HODL!": 114659,
-      "Is this a bubble?": 170440,
-      "FOMO intensifies": 247912,
-      "Sell. Seriously.": 359472,
-      "Max Bubble": 526813
+      "Fire Sale": 19836,
+      "BUY!": 32233,
+      "Accumulate": 50830,
+      "Still Cheap": 77484,
+      "HODL!": 114677,
+      "Is this a bubble?": 170465,
+      "FOMO intensifies": 247950,
+      "Sell. Seriously.": 359527,
+      "Max Bubble": 526893
     },
     "live": true,
     "desc": "Logarithmic regression bands. Lower = deeper value"
@@ -164,9 +164,9 @@
     "desc": "Sustained extreme fear (< 25) = contrarian buy"
   },
   "fundingRates": {
-    "current": 2.5e-05,
-    "avg10d": -2.7e-05,
-    "negativePeriods": 23,
+    "current": 7.1e-05,
+    "avg10d": -2.4e-05,
+    "negativePeriods": 22,
     "live": true,
     "desc": "Negative = shorts paying longs = bearish positioning"
   },
@@ -187,20 +187,20 @@
     "desc": "Negative = outflows = coins leaving exchanges = accumulation"
   },
   "openInterest": {
-    "value": 87433.0,
-    "changePct30d": 15.4,
-    "live": true,
+    "value": null,
+    "changePct30d": null,
+    "live": false,
     "source": "Binance",
     "desc": "Total derivatives positions. Large decline = leverage reset = healthier market"
   },
   "_meta": {
-    "computedAt": "2026-03-16T07:29:19.783890+00:00",
-    "currentPrice": 73793.91,
+    "computedAt": "2026-03-16T11:24:56.529185+00:00",
+    "currentPrice": 73745.68,
     "currentDate": "2026-03-16",
     "priceSource": "Binance",
     "priceSources": {
-      "Binance": 73793.91,
-      "CoinGecko": 73735.0
+      "Binance": 73745.68,
+      "CoinGecko": 73710.0
     }
   },
   "_priceHistory": [
@@ -926,13 +926,13 @@
     }
   ],
   "_composite": {
-    "score": 49.7,
+    "score": 49.9,
     "zone": "WATCHING",
     "zoneLabel": "WATCHING",
     "zoneColor": "#FB923C",
     "domains": {
       "onChain": {
-        "score": 5.3,
+        "score": 5.0,
         "weight": 0.3,
         "items": [
           {
@@ -952,7 +952,7 @@
           },
           {
             "name": "Supply in Profit",
-            "score": 9,
+            "score": 7,
             "weight": 2
           },
           {
@@ -973,7 +973,7 @@
         ],
         "label": "On-Chain Valuation",
         "effectiveWeight": 0.3,
-        "contribution": 15.9
+        "contribution": 15.0
       },
       "miner": {
         "score": 4.4,
@@ -1063,7 +1063,7 @@
         "contribution": 8.9
       },
       "exchange": {
-        "score": 3.9,
+        "score": 5.0,
         "weight": 0.1,
         "items": [
           {
@@ -1075,16 +1075,11 @@
             "name": "NVT Signal",
             "score": 1,
             "weight": 1.5
-          },
-          {
-            "name": "Open Interest",
-            "score": 0,
-            "weight": 1
           }
         ],
         "label": "Exchange & Liquidity",
         "effectiveWeight": 0.1,
-        "contribution": 3.9
+        "contribution": 5.0
       },
       "cycle": {
         "score": 6.6,
