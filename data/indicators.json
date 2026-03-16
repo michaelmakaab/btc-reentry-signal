@@ -24,8 +24,8 @@
   },
   "realizedPrice": {
     "value": 54236.0,
-    "ratio": 1.3618,
-    "percentAbove": 36.2,
+    "ratio": 1.3538,
+    "percentAbove": 35.4,
     "live": true,
     "desc": "Price below realized price = market at aggregate loss = bottom zone"
   },
@@ -94,7 +94,7 @@
     "desc": "Below 0.5 = miner capitulation = accumulation zone"
   },
   "mayerMultiple": {
-    "value": 0.7863,
+    "value": 0.7817,
     "sma200d": 93933.0,
     "live": true,
     "thresholds": {
@@ -107,8 +107,8 @@
   },
   "wma200": {
     "value": 59013.0,
-    "ratio": 1.2516,
-    "percentAbove": 25.2,
+    "ratio": 1.2442,
+    "percentAbove": 24.4,
     "live": true,
     "desc": "Historic cycle floor. Price at or below = major buy zone"
   },
@@ -124,7 +124,7 @@
     "avgDaysToBottom": 383,
     "cycleProgress": 0.418,
     "estimatedBottom": "2026-10-25",
-    "drawdownPct": -40.8,
+    "drawdownPct": -41.2,
     "athPrice": 124776.68,
     "live": true,
     "desc": "Day 160 of ~383. Est. bottom: Oct 2026"
@@ -132,15 +132,15 @@
   "rainbowChart": {
     "currentBand": "Accumulate",
     "bands": {
-      "Fire Sale": 19837,
-      "BUY!": 32235,
-      "Accumulate": 50833,
-      "Still Cheap": 77489,
-      "HODL!": 114684,
-      "Is this a bubble?": 170476,
-      "FOMO intensifies": 247965,
-      "Sell. Seriously.": 359549,
-      "Max Bubble": 526925
+      "Fire Sale": 19840,
+      "BUY!": 32240,
+      "Accumulate": 50840,
+      "Still Cheap": 77500,
+      "HODL!": 114700,
+      "Is this a bubble?": 170500,
+      "FOMO intensifies": 248000,
+      "Sell. Seriously.": 359600,
+      "Max Bubble": 527001
     },
     "live": true,
     "desc": "Logarithmic regression bands. Lower = deeper value"
@@ -156,17 +156,17 @@
     "desc": "Long-term holders selling at loss = extreme capitulation"
   },
   "fearGreed": {
-    "current": 23,
-    "label": "Extreme Fear",
-    "avg30d": 12.2,
-    "extremeFearDays": 46,
+    "current": null,
+    "label": null,
+    "avg30d": null,
+    "extremeFearDays": 0,
     "live": true,
     "desc": "Sustained extreme fear (< 25) = contrarian buy"
   },
   "fundingRates": {
-    "current": 7.1e-05,
-    "avg10d": -2.4e-05,
-    "negativePeriods": 22,
+    "current": 2e-05,
+    "avg10d": -2.2e-05,
+    "negativePeriods": 21,
     "live": true,
     "desc": "Negative = shorts paying longs = bearish positioning"
   },
@@ -187,20 +187,20 @@
     "desc": "Negative = outflows = coins leaving exchanges = accumulation"
   },
   "openInterest": {
-    "value": 87624.0,
-    "changePct30d": 15.7,
+    "value": 87999.0,
+    "changePct30d": 16.2,
     "live": true,
     "source": "Binance",
     "desc": "Total derivatives positions. Large decline = leverage reset = healthier market"
   },
   "_meta": {
-    "computedAt": "2026-03-16T13:00:34.838341+00:00",
-    "currentPrice": 73861.27,
+    "computedAt": "2026-03-16T16:42:03.252887+00:00",
+    "currentPrice": 73425.12,
     "currentDate": "2026-03-16",
     "priceSource": "Binance",
     "priceSources": {
-      "Binance": 73861.27,
-      "CoinGecko": 73850.0
+      "Binance": 73425.12,
+      "CoinGecko": 73334.0
     }
   },
   "_priceHistory": [
@@ -926,7 +926,7 @@
     }
   ],
   "_composite": {
-    "score": 48.8,
+    "score": 45.5,
     "zone": "WATCHING",
     "zoneLabel": "WATCHING",
     "zoneColor": "#FB923C",
@@ -1029,7 +1029,7 @@
         "contribution": 7.8
       },
       "sentiment": {
-        "score": 5.9,
+        "score": 3.7,
         "weight": 0.15,
         "items": [
           {
@@ -1043,13 +1043,8 @@
             "weight": 1.5
           },
           {
-            "name": "Fear & Greed",
-            "score": 7,
-            "weight": 1.5
-          },
-          {
             "name": "Fear Duration",
-            "score": 10,
+            "score": 0,
             "weight": 1
           },
           {
@@ -1060,7 +1055,7 @@
         ],
         "label": "Sentiment & Positioning",
         "effectiveWeight": 0.15,
-        "contribution": 8.9
+        "contribution": 5.6
       },
       "exchange": {
         "score": 3.9,
