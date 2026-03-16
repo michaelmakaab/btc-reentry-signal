@@ -24,8 +24,8 @@
   },
   "realizedPrice": {
     "value": 53833.0,
-    "ratio": 1.3262,
-    "percentAbove": 32.6,
+    "ratio": 1.3335,
+    "percentAbove": 33.4,
     "live": true,
     "desc": "Price below realized price = market at aggregate loss = bottom zone"
   },
@@ -94,7 +94,7 @@
     "desc": "Below 0.5 = miner capitulation = accumulation zone"
   },
   "mayerMultiple": {
-    "value": 0.7585,
+    "value": 0.7627,
     "sma200d": 94125.0,
     "live": true,
     "thresholds": {
@@ -107,8 +107,8 @@
   },
   "wma200": {
     "value": 58728.0,
-    "ratio": 1.2156,
-    "percentAbove": 21.6,
+    "ratio": 1.2224,
+    "percentAbove": 22.2,
     "live": true,
     "desc": "Historic cycle floor. Price at or below = major buy zone"
   },
@@ -120,27 +120,27 @@
     "desc": "150d EMA below 471d SMA x 0.475 = cycle bottom"
   },
   "cycleTiming": {
-    "daysSinceATH": 159,
+    "daysSinceATH": 160,
     "avgDaysToBottom": 383,
-    "cycleProgress": 0.415,
+    "cycleProgress": 0.418,
     "estimatedBottom": "2026-10-25",
-    "drawdownPct": -42.8,
+    "drawdownPct": -42.5,
     "athPrice": 124776.68,
     "live": true,
-    "desc": "Day 159 of ~383. Est. bottom: Oct 2026"
+    "desc": "Day 160 of ~383. Est. bottom: Oct 2026"
   },
   "rainbowChart": {
     "currentBand": "Accumulate",
     "bands": {
-      "Fire Sale": 19824,
-      "BUY!": 32213,
-      "Accumulate": 50798,
-      "Still Cheap": 77436,
-      "HODL!": 114605,
-      "Is this a bubble?": 170358,
-      "FOMO intensifies": 247794,
-      "Sell. Seriously.": 359301,
-      "Max Bubble": 526562
+      "Fire Sale": 19828,
+      "BUY!": 32220,
+      "Accumulate": 50808,
+      "Still Cheap": 77452,
+      "HODL!": 114628,
+      "Is this a bubble?": 170394,
+      "FOMO intensifies": 247845,
+      "Sell. Seriously.": 359376,
+      "Max Bubble": 526671
     },
     "live": true,
     "desc": "Logarithmic regression bands. Lower = deeper value"
@@ -187,20 +187,20 @@
     "desc": "Negative = outflows = coins leaving exchanges = accumulation"
   },
   "openInterest": {
-    "value": 82075.0,
-    "changePct30d": 6.4,
+    "value": 83105.0,
+    "changePct30d": 7.7,
     "live": true,
     "source": "Binance",
     "desc": "Total derivatives positions. Large decline = leverage reset = healthier market"
   },
   "_meta": {
-    "computedAt": "2026-03-15T19:10:41.366576+00:00",
-    "currentPrice": 71392.07,
+    "computedAt": "2026-03-16T00:31:22.463353+00:00",
+    "currentPrice": 71787.81,
     "currentDate": "2026-03-15",
     "priceSource": "Binance",
     "priceSources": {
-      "Binance": 71392.07,
-      "CoinGecko": 71432.0
+      "Binance": 71787.81,
+      "CoinGecko": 71790.0
     }
   },
   "_priceHistory": [
