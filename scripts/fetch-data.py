@@ -946,6 +946,24 @@ def compute_composite(ind):
 
 # ─── Main ───────────────────────────────────────────────
 
+def wait_for_network(max_wait=90):
+    """Wait for network connectivity after Mac wakes from sleep.
+    Tries to reach a reliable host every 5 seconds for up to max_wait seconds.
+    """
+    import socket
+    for attempt in range(max_wait // 5):
+        try:
+            socket.create_connection(("1.1.1.1", 53), timeout=3).close()
+            if attempt > 0:
+                print(f"  ✓ Network ready (waited {attempt * 5}s)")
+            return True
+        except OSError:
+            if attempt == 0:
+                print("  ⏳ Waiting for network...")
+            time.sleep(5)
+    print("  ✗ No network after {}s — aborting".format(max_wait))
+    return False
+
 def main():
     print("╔══════════════════════════════════════════╗")
     print("║  Bitcoin Re-Entry Signal v2 — Engine     ║")
@@ -962,6 +980,10 @@ def main():
                 log_file.write_text("\n".join(lines[-500:]) + "\n")
                 print(f"  ↳ Trimmed cron.log from {len(lines)} to 500 lines")
         except: pass
+
+    # Wait for network (Mac may have just woken from sleep)
+    if not wait_for_network():
+        sys.exit(1)
 
     # Fetch BGeometrics (cached, rate-limited)
     bg_cache = fetch_bgeometrics()
