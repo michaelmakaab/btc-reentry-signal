@@ -24,8 +24,8 @@
   },
   "realizedPrice": {
     "value": 54236.0,
-    "ratio": 1.3787,
-    "percentAbove": 37.9,
+    "ratio": 1.3871,
+    "percentAbove": 38.7,
     "live": true,
     "desc": "Price below realized price = market at aggregate loss = bottom zone"
   },
@@ -77,13 +77,13 @@
   },
   "hashRibbon": {
     "signal": "RECOVERY",
-    "ma30d": 1017475258.0,
-    "ma60d": 986638313.0,
+    "ma30d": 1012896526.0,
+    "ma60d": 984791232.0,
     "live": true,
     "desc": "Buy signal = 30d hash MA crosses above 60d after capitulation"
   },
   "puellMultiple": {
-    "value": 0.6195,
+    "value": 0.6777,
     "live": true,
     "thresholds": {
       "deepGreen": 0.3,
@@ -94,7 +94,7 @@
     "desc": "Below 0.5 = miner capitulation = accumulation zone"
   },
   "mayerMultiple": {
-    "value": 0.796,
+    "value": 0.8009,
     "sma200d": 93933.0,
     "live": true,
     "thresholds": {
@@ -106,9 +106,9 @@
     "desc": "Price / 200-day MA. Below 0.8 = oversold"
   },
   "wma200": {
-    "value": 59013.0,
-    "ratio": 1.2671,
-    "percentAbove": 26.7,
+    "value": 58810.0,
+    "ratio": 1.2792,
+    "percentAbove": 27.9,
     "live": true,
     "desc": "Historic cycle floor. Price at or below = major buy zone"
   },
@@ -120,27 +120,27 @@
     "desc": "150d EMA below 471d SMA x 0.475 = cycle bottom"
   },
   "cycleTiming": {
-    "daysSinceATH": 160,
+    "daysSinceATH": 161,
     "avgDaysToBottom": 383,
-    "cycleProgress": 0.418,
+    "cycleProgress": 0.42,
     "estimatedBottom": "2026-10-25",
-    "drawdownPct": -40.1,
+    "drawdownPct": -39.7,
     "athPrice": 124776.68,
     "live": true,
-    "desc": "Day 160 of ~383. Est. bottom: Oct 2026"
+    "desc": "Day 161 of ~383. Est. bottom: Oct 2026"
   },
   "rainbowChart": {
     "currentBand": "Accumulate",
     "bands": {
-      "Fire Sale": 19846,
-      "BUY!": 32249,
-      "Accumulate": 50854,
-      "Still Cheap": 77522,
-      "HODL!": 114732,
-      "Is this a bubble?": 170548,
-      "FOMO intensifies": 248070,
-      "Sell. Seriously.": 359701,
-      "Max Bubble": 527148
+      "Fire Sale": 19847,
+      "BUY!": 32251,
+      "Accumulate": 50857,
+      "Still Cheap": 77525,
+      "HODL!": 114738,
+      "Is this a bubble?": 170556,
+      "FOMO intensifies": 248081,
+      "Sell. Seriously.": 359718,
+      "Max Bubble": 527173
     },
     "live": true,
     "desc": "Logarithmic regression bands. Lower = deeper value"
@@ -156,15 +156,15 @@
     "desc": "Long-term holders selling at loss = extreme capitulation"
   },
   "fearGreed": {
-    "current": 23,
-    "label": "Extreme Fear",
-    "avg30d": 12.2,
-    "extremeFearDays": 46,
+    "current": 28,
+    "label": "Fear",
+    "avg30d": 12.8,
+    "extremeFearDays": 0,
     "live": true,
     "desc": "Sustained extreme fear (< 25) = contrarian buy"
   },
   "fundingRates": {
-    "current": 2e-05,
+    "current": 2e-06,
     "avg10d": -2.2e-05,
     "negativePeriods": 21,
     "live": true,
@@ -187,20 +187,20 @@
     "desc": "Negative = outflows = coins leaving exchanges = accumulation"
   },
   "openInterest": {
-    "value": 88393.0,
-    "changePct30d": 16.7,
+    "value": 89489.0,
+    "changePct30d": 13.2,
     "live": true,
     "source": "Binance",
     "desc": "Total derivatives positions. Large decline = leverage reset = healthier market"
   },
   "_meta": {
-    "computedAt": "2026-03-16T23:57:01.231486+00:00",
-    "currentPrice": 74773.57,
+    "computedAt": "2026-03-17T01:09:33.128308+00:00",
+    "currentPrice": 75228.35,
     "currentDate": "2026-03-16",
     "priceSource": "Binance",
     "priceSources": {
-      "Binance": 74773.57,
-      "CoinGecko": 74753.0
+      "Binance": 75228.35,
+      "CoinGecko": 75294.0
     }
   },
   "_priceHistory": [
@@ -926,7 +926,7 @@
     }
   ],
   "_composite": {
-    "score": 48.8,
+    "score": 44.6,
     "zone": "WATCHING",
     "zoneLabel": "WATCHING",
     "zoneColor": "#FB923C",
@@ -995,12 +995,12 @@
         "contribution": 6.6
       },
       "technical": {
-        "score": 3.9,
+        "score": 3.4,
         "weight": 0.2,
         "items": [
           {
             "name": "Mayer Multiple",
-            "score": 6,
+            "score": 4,
             "weight": 2
           },
           {
@@ -1026,10 +1026,10 @@
         ],
         "label": "Technical / Price",
         "effectiveWeight": 0.2,
-        "contribution": 7.8
+        "contribution": 6.8
       },
       "sentiment": {
-        "score": 5.9,
+        "score": 3.8,
         "weight": 0.15,
         "items": [
           {
@@ -1044,12 +1044,12 @@
           },
           {
             "name": "Fear & Greed",
-            "score": 7,
+            "score": 4,
             "weight": 1.5
           },
           {
             "name": "Fear Duration",
-            "score": 10,
+            "score": 0,
             "weight": 1
           },
           {
@@ -1060,7 +1060,7 @@
         ],
         "label": "Sentiment & Positioning",
         "effectiveWeight": 0.15,
-        "contribution": 8.9
+        "contribution": 5.7
       },
       "exchange": {
         "score": 3.9,
