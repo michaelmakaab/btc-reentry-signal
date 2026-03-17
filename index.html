@@ -249,56 +249,36 @@ body{min-height:100vh;background:#060911;color:#E2E8F0;font-family:'DM Sans',san
 
   <!-- Why This Score -->
   <details class="methodology">
-    <summary>Why This Score &mdash; What It Tells You (and What It Can&rsquo;t)</summary>
+    <summary>How It Works</summary>
     <div class="method-body">
-      <h4>This Is a GPS, Not a Traffic Light</h4>
-      <p>This score tells you <strong>where you are in the Bitcoin cycle</strong> relative to historical tops and bottoms. It does not tell you when to buy or sell. It measures how much simultaneous stress exists across 23 indicators spanning 6 different domains. Higher score = more stress = historically closer to a cycle bottom.</p>
-      <p>Think of it as a map with two landmarks: <strong>Tops scored 4&ndash;8. Bottoms scored 67&ndash;79.</strong> The score tells you where you are between those landmarks.</p>
+      <h4>The Idea</h4>
+      <p>Bitcoin moves in cycles. At the top, everything looks euphoric &mdash; valuations stretched, miners printing money, sentiment greedy, funding rates sky-high. At the bottom, the opposite &mdash; holders underwater, miners capitulating, markets fearful, leverage flushed.</p>
+      <p>This score measures that shift across 23 indicators in 6 domains. Each indicator scores 0&ndash;10 based on where its current reading sits relative to its full historical range. A 0 means conditions last seen at cycle peaks. A 10 means conditions last seen at cycle lows. The weighted average gives a single composite from 0 to 100.</p>
 
-      <h4>What the Score Has Proven &mdash; Top Detection (3 for 3)</h4>
-      <p>At every major cycle peak, the score was in single digits:</p>
+      <h4>Historical Reference Points</h4>
+      <p>Three cycle tops. Three cycle bottoms. The score landed in consistent ranges each time:</p>
       <ul>
-        <li><strong>Dec 2017</strong> &mdash; Bitcoin at $19,280 &mdash; Score: <strong>4.1</strong></li>
-        <li><strong>Nov 2021</strong> &mdash; Bitcoin at $66,954 &mdash; Score: <strong>7.4</strong></li>
-        <li><strong>Oct 2025</strong> &mdash; Bitcoin at $124,777 &mdash; Score: <strong>8.1</strong></li>
+        <li><strong>Cycle tops scored 4&ndash;8</strong> &mdash; Dec 2017 (4.1), Nov 2021 (7.4), Oct 2025 (8.1). When almost nothing in the market is stressed, the score is near zero.</li>
+        <li><strong>Cycle bottoms scored 67&ndash;79</strong> &mdash; Dec 2018 (79.0), Nov 2022 (67.4). When stress is extreme across most domains, the score is high.</li>
       </ul>
-      <p>Every time the score was below 10, Bitcoin was at or near its cycle high. This is the model&rsquo;s strongest, most proven result. <strong>If the score is in single digits, the market is likely near a top.</strong></p>
-
-      <h4>What the Score Shows in Bear Markets &mdash; A Depth Gauge</h4>
-      <p>As a bear market deepens, the score rises. It tracks the progression of pain across the market:</p>
-      <ul>
-        <li><strong>Score 10&ndash;25:</strong> Early bear. Price falling but most indicators haven&rsquo;t reached stressed levels yet.</li>
-        <li><strong>Score 25&ndash;45:</strong> Mid-bear. Stress building across multiple domains. Bear markets have spent months in this range.</li>
-        <li><strong>Score 45&ndash;65:</strong> Deep bear. Stress is widespread. Getting closer to historical bottoming territory but not there yet. The Jun 2022 crash reached score 68 at $19.8K — but the actual bottom came 5 months later at $15.7K with a similar score of 67.</li>
-        <li><strong>Score 65+:</strong> Historical bottom territory. The 2022 bottom scored 67.4 ($16,260). The 2018 bottom peaked at 79.0 ($3,485). When the score reaches this range, previous cycles were at or near their lows.</li>
-      </ul>
-      <p>The score does <strong>not</strong> pinpoint the exact bottom. In 2022, the score gave ~67&ndash;68 both in July ($19.8K) and at the actual November bottom ($16.3K). It cannot distinguish an intermediate crash from the final capitulation. But it reliably tells you how deep in the bear market you are.</p>
-
-      <h4>What This Score Cannot Do</h4>
-      <ul>
-        <li><strong>It cannot time the exact bottom.</strong> The score reached similar levels months apart in 2022, at very different prices.</li>
-        <li><strong>Score 50 is not a buy signal.</strong> In every bear market, the score crossed 50 while prices were still 69&ndash;84% above the eventual bottom.</li>
-        <li><strong>It won&rsquo;t tell you the bear market is over.</strong> The score measures current stress, not whether stress has peaked. You need price action for that.</li>
-      </ul>
+      <p>The current score tells you where you sit relative to those reference points.</p>
 
       <h4>The 6 Domains</h4>
       <ul>
-        <li><strong>On-Chain Valuation (30%)</strong> &mdash; MVRV-Z, NUPL, Realized Price, Supply in Profit, Reserve Risk, Stablecoin Supply Ratio, Thermocap Multiple. Compares price to aggregate cost basis. Note: partially correlated (all derive from the realized cap).</li>
-        <li><strong>Technical / Price (20%)</strong> &mdash; Mayer Multiple, 200-Week MA, Pi Cycle Bottom, Rainbow Chart, drawdown depth. How far price has deviated from long-term statistical norms.</li>
-        <li><strong>Miner Health (15%)</strong> &mdash; Hash Ribbons, Puell Multiple. Miner capitulation removes persistent sell pressure.</li>
-        <li><strong>Sentiment (15%)</strong> &mdash; SOPR, LTH-SOPR, Fear &amp; Greed, Fear Duration, Funding Rates. Market panic and loss realisation.</li>
-        <li><strong>Exchange &amp; Liquidity (10%)</strong> &mdash; NVT Signal, Open Interest, Exchange Netflow.</li>
-        <li><strong>Cycle Timing (10%)</strong> &mdash; Days since ATH, RHODL Ratio. Context only &mdash; no guarantee future cycles follow past timing.</li>
+        <li><strong>On-Chain Valuation (30%)</strong> &mdash; MVRV-Z, NUPL, Realized Price, Supply in Profit, Reserve Risk, SSR, Thermocap. Is Bitcoin cheap or expensive relative to its aggregate cost basis?</li>
+        <li><strong>Technical / Price (20%)</strong> &mdash; Mayer Multiple, 200-Week MA, Pi Cycle Bottom, Rainbow Chart, Drawdown. How far has price deviated from long-term norms?</li>
+        <li><strong>Miner Health (15%)</strong> &mdash; Hash Ribbons, Puell Multiple. Are miners under enough pressure to capitulate?</li>
+        <li><strong>Sentiment (15%)</strong> &mdash; SOPR, LTH-SOPR, Fear &amp; Greed, Fear Duration, Funding Rates. Is the market panicking and realising losses?</li>
+        <li><strong>Exchange &amp; Liquidity (10%)</strong> &mdash; NVT Signal, Open Interest, Exchange Netflow. How is capital flowing?</li>
+        <li><strong>Cycle Timing (10%)</strong> &mdash; Days since ATH, RHODL Ratio. Where are we in the typical halving cycle?</li>
       </ul>
-      <p>Each indicator scores 0&ndash;10 (10 = levels only seen at previous cycle bottoms). Domain averages are weighted and summed to a 0&ndash;100 composite.</p>
 
-      <h4>Honest Limitations</h4>
+      <h4>Limitations</h4>
       <ul>
-        <li><strong>Tiny sample (n=3 cycles).</strong> Three data points is not statistically significant. The model could be overfit.</li>
-        <li><strong>Retroactive backtest.</strong> Thresholds were tuned on historical data. This is not out-of-sample.</li>
-        <li><strong>Correlated indicators.</strong> On-chain metrics share underlying data. It is not 23 truly independent signals.</li>
-        <li><strong>Regime change.</strong> ETFs and institutional adoption have fundamentally changed market structure.</li>
-        <li><strong>Not financial advice.</strong> This is a research tool for cycle positioning, not a trading system.</li>
+        <li><strong>Small sample.</strong> Three completed cycles. The patterns could break.</li>
+        <li><strong>Correlated inputs.</strong> On-chain metrics share underlying data &mdash; this is not 23 independent signals.</li>
+        <li><strong>Backward-looking.</strong> Thresholds are calibrated on past cycles. ETFs and institutional flows have changed the market.</li>
+        <li><strong>Not financial advice.</strong> A research tool for cycle positioning, not a trading system.</li>
       </ul>
     </div>
   </details>
