@@ -393,11 +393,13 @@ def main():
                     dd_pct = round((btm_day["price"] - ath_price) / ath_price * 100)
                     phases.append(("Bottom", _dt.strptime(bottom_date, "%Y-%m-%d").strftime("%b %Y"), int(btm_day["price"]), round(btm_day["score"], 1), f"{dd_pct}%"))
             else:
-                # Current cycle — show where we are now
-                now_day = daily[-1]
-                dd_pct = round((now_day["price"] - ath_price) / ath_price * 100)
-                dt = _dt.strptime(now_day["date"], "%Y-%m-%d")
-                phases.append(("You are here", dt.strftime("%b %Y"), int(now_day["price"]), round(now_day["score"], 1), f"{dd_pct}%"))
+                # Current cycle — use LIVE score (more complete than backtest)
+                live_price = meta.get("currentPrice") or daily[-1]["price"]
+                live_score = score_val  # from the live composite at top of file
+                dd_pct = round((live_price - ath_price) / ath_price * 100)
+                now_date = meta.get("computedAt", daily[-1]["date"])[:10]
+                dt = _dt.strptime(now_date, "%Y-%m-%d")
+                phases.append(("You are here", dt.strftime("%b %Y"), int(live_price), round(live_score, 1), f"{dd_pct}%"))
 
             journeys.append((cyc_label, phases))
         for cycle_name, phases in journeys:
