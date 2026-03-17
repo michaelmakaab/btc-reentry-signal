@@ -348,6 +348,20 @@ def fetch_miner_revenue():
     if not data or "values" not in data: return None
     return [{"ts": d["x"]*1000, "revenue": d["y"]} for d in data["values"]]
 
+def fetch_block_height():
+    """Fetch current Bitcoin block height from blockchain.info."""
+    print("\n📦 Fetching block height...")
+    try:
+        req = Request("https://blockchain.info/q/getblockcount",
+                       headers={"User-Agent": "BTC-ReEntry/2.0"})
+        with urlopen(req, timeout=15) as resp:
+            height = int(resp.read().decode().strip())
+            print(f"  ✓ Block height: {height:,}")
+            return height
+    except Exception as e:
+        print(f"  ✗ Block height: {e}")
+        return None
+
 
 # ─── Indicator Computation ──────────────────────────────
 
@@ -358,7 +372,7 @@ def bg(cache, key, default=None):
         return entry["value"]
     return default
 
-def compute_indicators(price_hist, fear_greed, funding, hash_rate, miner_rev, bg_cache, spot=None, oi_data=None):
+def compute_indicators(price_hist, fear_greed, funding, hash_rate, miner_rev, bg_cache, spot=None, oi_data=None, block_height=None):
     prices = price_hist["prices"]
     daily_prices = [p["price"] for p in prices]
     bc_price = daily_prices[-1]
@@ -706,6 +720,76 @@ def compute_indicators(price_hist, fear_greed, funding, hash_rate, miner_rev, bg
     }
 
     # ═══════════════════════════════════════════
+    # EXTRAS: Halving Countdown + Cycle Comparison
+    # ═══════════════════════════════════════════
+
+    from datetime import timedelta
+
+    # ── Halving Countdown ──
+    HALVING_INTERVAL = 210_000
+    LAST_HALVING_BLOCK = 840_000
+    NEXT_HALVING_BLOCK = 1_050_000
+    CURRENT_REWARD = 3.125
+
+    if block_height and block_height > LAST_HALVING_BLOCK:
+        blocks_left = NEXT_HALVING_BLOCK - block_height
+        est_days = round(blocks_left * 10 / (60 * 24))  # ~10 min/block
+        est_date = (datetime.now(tz=timezone.utc) + timedelta(days=est_days)).strftime("%Y-%m-%d")
+        progress = (block_height - LAST_HALVING_BLOCK) / HALVING_INTERVAL
+        ind["_halving"] = {
+            "blockHeight": block_height,
+            "nextBlock": NEXT_HALVING_BLOCK,
+            "blocksLeft": blocks_left,
+            "estDays": est_days,
+            "estDate": est_date,
+            "progress": round(progress, 4),
+            "reward": CURRENT_REWARD,
+            "nextReward": CURRENT_REWARD / 2,
+        }
+
+    # ── Cycle Comparison (drawdown curves) ──
+    # Current cycle: compute from price data
+    current_dd = []
+    for i in range(ath_idx, len(prices)):
+        day = i - ath_idx
+        dd = round(((prices[i]["price"] - ath_price) / ath_price) * 100, 1)
+        current_dd.append([day, dd])
+    # Sample every 3 days to reduce size
+    sampled = current_dd[::3]
+    if current_dd[-1] != sampled[-1]:
+        sampled.append(current_dd[-1])
+
+    ind["_cycleComparison"] = {
+        "current": sampled,
+        "athDate": ath_date.strftime("%Y-%m-%d"),
+        "daysSinceATH": days_since_ath,
+        # Historical cycles (ATH → bottom → recovery, key inflection points)
+        "cycles": {
+            "2013": {
+                "label": "2013-15",
+                "ath": "$1,163",
+                "bottom": "$164 (-86%)",
+                "bottomDay": 407,
+                "points": [[0,0],[14,-40],[30,-30],[60,-50],[90,-58],[120,-55],[150,-60],[180,-68],[210,-65],[240,-63],[270,-72],[300,-78],[330,-75],[360,-73],[407,-86],[450,-77],[500,-72],[550,-68],[600,-65],[700,-50]]
+            },
+            "2017": {
+                "label": "2017-18",
+                "ath": "$19,764",
+                "bottom": "$3,128 (-84%)",
+                "bottomDay": 363,
+                "points": [[0,0],[14,-28],[30,-40],[45,-50],[60,-55],[90,-65],[120,-55],[150,-48],[180,-55],[210,-60],[240,-67],[270,-68],[300,-55],[330,-65],[363,-84],[400,-75],[450,-65],[500,-55],[550,-50],[600,-45],[700,-35]]
+            },
+            "2021": {
+                "label": "2021-22",
+                "ath": "$69,000",
+                "bottom": "$15,476 (-78%)",
+                "bottomDay": 378,
+                "points": [[0,0],[14,-18],[30,-25],[45,-30],[60,-35],[90,-35],[120,-40],[150,-50],[180,-52],[210,-56],[240,-72],[270,-70],[300,-68],[330,-72],[378,-77],[400,-75],[450,-60],[500,-55],[550,-50],[600,-40],[700,-35]]
+            }
+        }
+    }
+
+    # ═══════════════════════════════════════════
     # META
     # ═══════════════════════════════════════════
 
@@ -1020,9 +1104,11 @@ def main():
     hash_rate = fetch_hash_rate()
     time.sleep(1)
     miner_rev = fetch_miner_revenue()
+    time.sleep(0.5)
+    block_height = fetch_block_height()
 
     # Compute
-    indicators = compute_indicators(price_hist, fear_greed, funding, hash_rate, miner_rev, bg_cache, spot, oi_data)
+    indicators = compute_indicators(price_hist, fear_greed, funding, hash_rate, miner_rev, bg_cache, spot, oi_data, block_height)
 
     # Save
     out = DATA_DIR / "indicators.json"

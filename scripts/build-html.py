@@ -199,6 +199,66 @@ def main():
     if has_empty:
         flow_items += '<div class="flow-note">* Weight from empty domains is redistributed to active domains</div>'
 
+    # ── Halving Countdown ──
+    halving = data.get("_halving")
+    halving_html = ""
+    if halving:
+        h_pct = round(halving["progress"] * 100, 1)
+        halving_html = f'''
+    <section class="extras-sec">
+      <div class="sec-hdr">Extras</div>
+      <div class="extras-grid">
+        <div class="halving-card">
+          <div class="halving-top">
+            <span class="halving-icon">&#9201;</span>
+            <span class="halving-label">NEXT HALVING</span>
+          </div>
+          <div class="halving-big mono">{halving["blocksLeft"]:,} <span class="halving-unit">blocks</span></div>
+          <div class="halving-sub mono">~{halving["estDays"]:,} days &bull; Est. {halving["estDate"][:7].replace("-"," ")}</div>
+          <div class="halving-bar-wrap">
+            <div class="halving-bar"><div class="halving-fill" style="width:{h_pct}%"></div></div>
+            <div class="halving-bar-labels mono">
+              <span>Block {halving["blockHeight"]:,}</span>
+              <span>{h_pct}%</span>
+              <span>{halving["nextBlock"]:,}</span>
+            </div>
+          </div>
+          <div class="halving-reward mono">
+            <span>{halving["reward"]} BTC</span>
+            <span class="halving-arrow">&#8594;</span>
+            <span style="color:#F59E0B">{halving["nextReward"]} BTC</span>
+          </div>
+        </div>'''
+    else:
+        halving_html = '''
+    <section class="extras-sec">
+      <div class="sec-hdr">Extras</div>
+      <div class="extras-grid">'''
+
+    # ── Cycle Comparison ──
+    cc = data.get("_cycleComparison")
+    cycle_json = ""
+    if cc:
+        cycle_json = json.dumps(cc)
+
+    cycle_html = f'''
+        <div class="cycle-card">
+          <div class="cycle-top">
+            <span class="halving-icon">&#128200;</span>
+            <span class="halving-label">CYCLE COMPARISON</span>
+          </div>
+          <div class="cycle-sub">Drawdown from ATH &mdash; Day {cc["daysSinceATH"]} of current cycle</div>
+          <div class="cycle-chart-box"><canvas id="cycleChart"></canvas></div>
+          <div class="cycle-legend">
+            <span class="cl-item"><span class="cl-dot" style="background:#F59E0B"></span>Current</span>
+            <span class="cl-item"><span class="cl-dot" style="background:#6366F1"></span>2021-22</span>
+            <span class="cl-item"><span class="cl-dot" style="background:#06B6D4"></span>2017-18</span>
+            <span class="cl-item"><span class="cl-dot" style="background:#475569"></span>2013-15</span>
+          </div>
+        </div>
+      </div>
+    </section>''' if cc else "</div></section>"
+
     # ── Compose HTML ──
     html = f'''<!DOCTYPE html>
 <html lang="en">
@@ -312,6 +372,29 @@ body{{min-height:100vh;background:#060911;color:#E2E8F0;font-family:'DM Sans',sa
 
 /* Section headers */
 .sec-hdr{{font-size:12px;color:#64748B;letter-spacing:1px;text-transform:uppercase;padding-top:20px}}
+
+/* Extras Section */
+.extras-sec{{padding:20px 0}}
+.extras-grid{{display:grid;grid-template-columns:repeat(auto-fit,minmax(340px,1fr));gap:14px;padding-top:10px}}
+.halving-card,.cycle-card{{background:#0F172A;border:1px solid #1E293B;border-radius:10px;padding:20px}}
+.halving-top,.cycle-top{{display:flex;align-items:center;gap:8px;margin-bottom:12px}}
+.halving-icon{{font-size:20px}}
+.halving-label{{font-size:11px;color:#F59E0B;font-weight:700;letter-spacing:2px}}
+.halving-big{{font-size:32px;font-weight:700;color:#F8FAFC;line-height:1}}
+.halving-unit{{font-size:14px;color:#64748B;font-weight:400}}
+.halving-sub{{font-size:13px;color:#94A3B8;margin-top:6px}}
+.halving-bar-wrap{{margin-top:16px}}
+.halving-bar{{height:8px;background:#1E293B;border-radius:4px;overflow:hidden}}
+.halving-fill{{height:100%;background:linear-gradient(90deg,#F59E0B,#EF4444);border-radius:4px}}
+.halving-bar-labels{{display:flex;justify-content:space-between;font-size:10px;color:#475569;margin-top:4px}}
+.halving-reward{{display:flex;align-items:center;gap:8px;margin-top:14px;font-size:14px;color:#94A3B8;justify-content:center}}
+.halving-arrow{{color:#475569}}
+.cycle-sub{{font-size:12px;color:#94A3B8;margin-bottom:10px}}
+.cycle-chart-box{{background:#080D17;border:1px solid #1E293B;border-radius:8px;height:220px;position:relative;overflow:hidden}}
+.cycle-chart-box canvas{{display:block}}
+.cycle-legend{{display:flex;gap:16px;justify-content:center;margin-top:10px;flex-wrap:wrap}}
+.cl-item{{font-size:11px;color:#94A3B8;display:flex;align-items:center;gap:4px}}
+.cl-dot{{width:10px;height:3px;border-radius:2px;display:inline-block}}
 
 /* Footer */
 .footer{{border-top:1px solid #1E293B;margin-top:24px;padding:24px 0;font-size:11px;color:#475569;text-align:center;line-height:1.8}}
@@ -437,6 +520,10 @@ body{{min-height:100vh;background:#060911;color:#E2E8F0;font-family:'DM Sans',sa
     <div class="kv-grid">{readings}</div>
   </section>
 
+  <!-- Extras: Halving + Cycle Comparison -->
+  {halving_html}
+  {cycle_html}
+
 </div>
 
 <footer class="footer"><div class="wrap">
@@ -534,6 +621,113 @@ cv.addEventListener('mousemove',e=>{{
 cv.addEventListener('mouseleave',()=>{{
   tip.style.display='none'; vl.style.display='none'; hd.style.display='none';
 }});
+}}
+
+/* Cycle Comparison Chart */
+const ccData={cycle_json if cycle_json else "null"};
+const ccv=document.getElementById('cycleChart');
+if(ccv&&ccData){{
+const cbox=ccv.parentElement;
+const cctx=ccv.getContext('2d');
+const cdpr=window.devicePixelRatio||1;
+const cpad=12;
+const cw=cbox.clientWidth-cpad*2, ch=cbox.clientHeight-cpad*2;
+ccv.width=cw*cdpr; ccv.height=ch*cdpr;
+ccv.style.width=cw+'px'; ccv.style.height=ch+'px';
+cctx.scale(cdpr,cdpr);
+
+const maxDay=700, minDD=-90, btm=20, lpad=40;
+const plotH=ch-btm, plotW=cw-lpad;
+function cx(d){{return lpad+(d/maxDay)*plotW}}
+function cy(dd){{return plotH*(dd/minDD)}}
+
+/* Grid */
+cctx.strokeStyle='#1E293B'; cctx.lineWidth=1;
+for(let pct=0;pct>=-80;pct-=20){{
+  const y=cy(pct);
+  cctx.beginPath(); cctx.moveTo(lpad,y); cctx.lineTo(cw,y); cctx.stroke();
+  cctx.fillStyle='#475569'; cctx.font='10px Space Mono'; cctx.textAlign='left';
+  cctx.fillText(pct+'%',2,y+12);
+}}
+/* X labels */
+cctx.textAlign='center'; cctx.fillStyle='#475569'; cctx.font='10px Space Mono';
+for(let d=0;d<=700;d+=100){{
+  if(d===0){{cctx.textAlign='left';cctx.fillText('ATH',cx(d),plotH+14);cctx.textAlign='center'}}
+  else if(d===700){{cctx.textAlign='right';cctx.fillText('D'+d,cx(d),plotH+14)}}
+  else{{cctx.fillText('D'+d,cx(d),plotH+14)}}
+}}
+
+/* Draw cycle lines */
+function drawLine(points,color,width,dash){{
+  cctx.beginPath(); cctx.strokeStyle=color; cctx.lineWidth=width;
+  if(dash)cctx.setLineDash(dash); else cctx.setLineDash([]);
+  cctx.lineJoin='round';
+  points.forEach((p,i)=>{{const x=cx(p[0]),y=cy(p[1]); i===0?cctx.moveTo(x,y):cctx.lineTo(x,y)}});
+  cctx.stroke(); cctx.setLineDash([]);
+}}
+/* Historical cycles */
+const hcycles=[
+  {{k:'2013',color:'#475569',dash:[4,4]}},
+  {{k:'2017',color:'#06B6D4',dash:[6,3]}},
+  {{k:'2021',color:'#6366F1',dash:[]}},
+];
+hcycles.forEach(hc=>{{
+  const pts=ccData.cycles[hc.k].points;
+  drawLine(pts,hc.color,1.5,hc.dash);
+  /* Bottom marker */
+  const bd=ccData.cycles[hc.k].bottomDay;
+  const bp=pts.find(p=>p[0]===bd);
+  if(bp){{
+    cctx.beginPath();cctx.arc(cx(bp[0]),cy(bp[1]),3,0,Math.PI*2);cctx.fillStyle=hc.color;cctx.fill();
+  }}
+}});
+/* Current cycle (bold, on top) */
+drawLine(ccData.current,'#F59E0B',2.5,[]);
+/* "You are here" dot */
+const last=ccData.current[ccData.current.length-1];
+cctx.beginPath();cctx.arc(cx(last[0]),cy(last[1]),5,0,Math.PI*2);cctx.fillStyle='#F59E0B';cctx.fill();
+cctx.beginPath();cctx.arc(cx(last[0]),cy(last[1]),5,0,Math.PI*2);cctx.strokeStyle='#0F172A';cctx.lineWidth=2;cctx.stroke();
+/* Label */
+cctx.font='bold 10px Space Mono';cctx.fillStyle='#F59E0B';cctx.textAlign='right';
+cctx.fillText('Day '+last[0]+' ('+last[1]+'%)',cx(last[0])-8,cy(last[1])+4);
+
+/* Hover */
+const ctip=document.createElement('div');
+ctip.style.cssText='position:absolute;display:none;background:#1E293B;border:1px solid #334155;border-radius:6px;padding:6px 10px;font:11px Space Mono;color:#E2E8F0;pointer-events:none;z-index:10;white-space:nowrap';
+cbox.appendChild(ctip);
+const cvl=document.createElement('div');
+cvl.style.cssText='position:absolute;display:none;width:1px;background:#334155;pointer-events:none;z-index:5';
+cbox.appendChild(cvl);
+ccv.addEventListener('mousemove',e=>{{
+  const r=ccv.getBoundingClientRect();
+  const mx=e.clientX-r.left;
+  const day=Math.round((mx/cw)*maxDay);
+  if(day>=0&&day<=maxDay){{
+    /* Find closest current cycle point */
+    let closest=ccData.current[0];
+    for(const p of ccData.current){{if(Math.abs(p[0]-day)<Math.abs(closest[0]-day))closest=p}}
+    let txt='Day '+day+': Current '+closest[1]+'%';
+    hcycles.forEach(hc=>{{
+      const pts=ccData.cycles[hc.k].points;
+      /* Interpolate */
+      for(let i=0;i<pts.length-1;i++){{
+        if(day>=pts[i][0]&&day<=pts[i+1][0]){{
+          const t=(day-pts[i][0])/(pts[i+1][0]-pts[i][0]);
+          const v=Math.round(pts[i][1]+t*(pts[i+1][1]-pts[i][1]));
+          txt+=' | '+ccData.cycles[hc.k].label+' '+v+'%';
+          break;
+        }}
+      }}
+    }});
+    ctip.textContent=txt;
+    ctip.style.display='block';
+    cvl.style.left=(mx+cpad)+'px';cvl.style.top=cpad+'px';cvl.style.height=plotH+'px';cvl.style.display='block';
+    const tw=ctip.offsetWidth;
+    ctip.style.left=Math.min(Math.max(mx+cpad-tw/2,cpad),cw+cpad-tw)+'px';
+    ctip.style.top=(cpad-20)+'px';
+  }}
+}});
+ccv.addEventListener('mouseleave',()=>{{ctip.style.display='none';cvl.style.display='none'}});
 }}
 </script>
 </body>
