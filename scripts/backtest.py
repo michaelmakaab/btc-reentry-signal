@@ -557,6 +557,183 @@ def run_backtest():
         if fwd is not None:
             print(f"      180d return: {fwd:+.1f}%")
 
+    # ── Signal Cluster Analysis ──
+    # Identify clusters of 75+ days (merge if gap <= 14 days)
+    print("\n  Signal Cluster Analysis:")
+    clusters = []
+    current_cluster = []
+    for r in results:
+        if r["score"] >= 75:
+            current_cluster.append(r)
+        else:
+            if current_cluster:
+                clusters.append(current_cluster)
+                current_cluster = []
+    if current_cluster:
+        clusters.append(current_cluster)
+
+    # Merge clusters within 14 days of each other
+    merged_clusters = []
+    if clusters:
+        merged_clusters = [clusters[0]]
+        for c in clusters[1:]:
+            last_end = merged_clusters[-1][-1]["date"]
+            this_start = c[0]["date"]
+            gap = (datetime.strptime(this_start, "%Y-%m-%d") - datetime.strptime(last_end, "%Y-%m-%d")).days
+            if gap <= 14:
+                merged_clusters[-1] = merged_clusters[-1] + c
+            else:
+                merged_clusters.append(c)
+
+    # Also find first Accumulate (50+) entries per cycle
+    # A new cycle starts after score drops below 25 for 30+ days
+    print("\n  Accumulate-level Signal Entries:")
+    accum_entries = []
+    below_25_streak = 0
+    in_cycle = False
+    cycle_entry = None
+    for r in results:
+        if r["score"] < 25:
+            below_25_streak += 1
+            if below_25_streak > 30:
+                in_cycle = False
+                cycle_entry = None
+        else:
+            below_25_streak = 0
+
+        if not in_cycle and r["score"] >= 50:
+            in_cycle = True
+            cycle_entry = r
+            accum_entries.append(r)
+            print(f"    First 50+ in cycle: {r['date']} score={r['score']:.1f} price=${r['price']:,.0f}")
+
+    signals = []
+    for cluster in merged_clusters:
+        first = cluster[0]
+        last = cluster[-1]
+        peak_score_day = max(cluster, key=lambda r: r["score"])
+        entry_date = first["date"]
+        entry_price = first["price"]
+        entry_dt = datetime.strptime(entry_date, "%Y-%m-%d")
+
+        # Compute returns at many intervals from entry date
+        trajectory = {}
+        for days_fwd in [7, 14, 30, 60, 90, 120, 150, 180, 270, 365, 500, 730, 1000]:
+            fwd_date = (entry_dt + timedelta(days=days_fwd)).strftime("%Y-%m-%d")
+            fwd_price = price_lookup.get(fwd_date)
+            if fwd_price:
+                trajectory[f"{days_fwd}d"] = round(((fwd_price - entry_price) / entry_price) * 100, 1)
+
+        # Find peak price within 1 year and within all remaining data
+        peak_1y_price = 0
+        peak_1y_date = entry_date
+        peak_all_price = 0
+        peak_all_date = entry_date
+        for r in results:
+            if r["date"] <= entry_date:
+                continue
+            if r["price"] > peak_all_price:
+                peak_all_price = r["price"]
+                peak_all_date = r["date"]
+            one_year = (entry_dt + timedelta(days=365)).strftime("%Y-%m-%d")
+            if r["date"] <= one_year and r["price"] > peak_1y_price:
+                peak_1y_price = r["price"]
+                peak_1y_date = r["date"]
+
+        signal = {
+            "entry_date": entry_date,
+            "entry_price": entry_price,
+            "entry_score": first["score"],
+            "peak_score": peak_score_day["score"],
+            "peak_score_date": peak_score_day["date"],
+            "peak_score_price": peak_score_day["price"],
+            "last_date": last["date"],
+            "signal_days": len(cluster),
+            "duration_days": (datetime.strptime(last["date"], "%Y-%m-%d") - entry_dt).days,
+            "trajectory": trajectory,
+            "peak_1y": {
+                "price": peak_1y_price,
+                "date": peak_1y_date,
+                "return_pct": round(((peak_1y_price - entry_price) / entry_price) * 100, 1) if peak_1y_price > 0 else 0,
+                "days": (datetime.strptime(peak_1y_date, "%Y-%m-%d") - entry_dt).days if peak_1y_price > 0 else 0,
+            },
+            "peak_all": {
+                "price": peak_all_price,
+                "date": peak_all_date,
+                "return_pct": round(((peak_all_price - entry_price) / entry_price) * 100, 1) if peak_all_price > 0 else 0,
+                "days": (datetime.strptime(peak_all_date, "%Y-%m-%d") - entry_dt).days if peak_all_price > 0 else 0,
+            },
+        }
+        signals.append(signal)
+        print(f"    Signal {len(signals)}: {entry_date} at ${entry_price:,.0f} (score {first['score']:.1f})")
+        print(f"      Duration: {signal['duration_days']} days, {signal['signal_days']} days at 75+")
+        print(f"      Peak score: {peak_score_day['score']:.1f} on {peak_score_day['date']}")
+        if peak_1y_price > 0:
+            print(f"      1-year peak: ${peak_1y_price:,.0f} ({signal['peak_1y']['return_pct']:+.1f}%) on {peak_1y_date}")
+        print(f"      All-time peak after: ${peak_all_price:,.0f} ({signal['peak_all']['return_pct']:+.1f}%) on {peak_all_date}")
+        print(f"      Trajectory: {json.dumps(trajectory)}")
+
+    # Build accumulate signal trajectories
+    accum_signals = []
+    for ae in accum_entries:
+        entry_dt = datetime.strptime(ae["date"], "%Y-%m-%d")
+        entry_price = ae["price"]
+        trajectory = {}
+        for days_fwd in [7, 14, 30, 60, 90, 120, 150, 180, 270, 365, 500, 730, 1000]:
+            fwd_date = (entry_dt + timedelta(days=days_fwd)).strftime("%Y-%m-%d")
+            fwd_price = price_lookup.get(fwd_date)
+            if fwd_price:
+                trajectory[f"{days_fwd}d"] = round(((fwd_price - entry_price) / entry_price) * 100, 1)
+
+        peak_1y_price = 0
+        peak_1y_date = ae["date"]
+        peak_all_price = 0
+        peak_all_date = ae["date"]
+        for r in results:
+            if r["date"] <= ae["date"]:
+                continue
+            if r["price"] > peak_all_price:
+                peak_all_price = r["price"]
+                peak_all_date = r["date"]
+            one_year = (entry_dt + timedelta(days=365)).strftime("%Y-%m-%d")
+            if r["date"] <= one_year and r["price"] > peak_1y_price:
+                peak_1y_price = r["price"]
+                peak_1y_date = r["date"]
+
+        accum_signals.append({
+            "entry_date": ae["date"],
+            "entry_price": entry_price,
+            "entry_score": ae["score"],
+            "trajectory": trajectory,
+            "peak_1y": {
+                "price": peak_1y_price,
+                "date": peak_1y_date,
+                "return_pct": round(((peak_1y_price - entry_price) / entry_price) * 100, 1) if peak_1y_price > 0 else 0,
+            },
+            "peak_all": {
+                "price": peak_all_price,
+                "date": peak_all_date,
+                "return_pct": round(((peak_all_price - entry_price) / entry_price) * 100, 1) if peak_all_price > 0 else 0,
+            },
+        })
+
+    # Cycle tops — when score was lowest during major price peaks
+    cycle_tops = []
+    for peak_date, label in [("2017-12-17", "2017 Bull Top"), ("2021-11-10", "2021 Bull Top"), ("2025-10-07", "2025 Bull Top")]:
+        r = None
+        for d in results:
+            if d["date"] == peak_date:
+                r = d
+                break
+        if r:
+            cycle_tops.append({
+                "date": r["date"],
+                "price": r["price"],
+                "score": r["score"],
+                "zone": r["zone"],
+                "label": label,
+            })
+
     # Save results
     save_data = {
         "meta": {
@@ -566,6 +743,9 @@ def run_backtest():
             "computed_at": datetime.now(tz=timezone.utc).isoformat(),
         },
         "daily": results,
+        "signals": signals,
+        "accum_signals": accum_signals,
+        "cycle_tops": cycle_tops,
         "zone_stats": {},
     }
 

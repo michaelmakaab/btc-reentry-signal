@@ -24,8 +24,8 @@
   },
   "realizedPrice": {
     "value": 54160.0,
-    "ratio": 1.3583,
-    "percentAbove": 35.8,
+    "ratio": 1.3706,
+    "percentAbove": 37.1,
     "live": true,
     "desc": "Price below realized price = market at aggregate loss = bottom zone"
   },
@@ -94,7 +94,7 @@
     "desc": "Below 0.5 = miner capitulation = accumulation zone"
   },
   "mayerMultiple": {
-    "value": 0.7847,
+    "value": 0.7919,
     "sma200d": 93745.0,
     "live": true,
     "thresholds": {
@@ -107,8 +107,8 @@
   },
   "wma200": {
     "value": 58810.0,
-    "ratio": 1.2509,
-    "percentAbove": 25.1,
+    "ratio": 1.2623,
+    "percentAbove": 26.2,
     "live": true,
     "desc": "Historic cycle floor. Price at or below = major buy zone"
   },
@@ -124,7 +124,7 @@
     "avgDaysToBottom": 383,
     "cycleProgress": 0.42,
     "estimatedBottom": "2026-10-25",
-    "drawdownPct": -41.0,
+    "drawdownPct": -40.5,
     "athPrice": 124776.68,
     "live": true,
     "desc": "Day 161 of ~383. Est. bottom: Oct 2026"
@@ -132,15 +132,15 @@
   "rainbowChart": {
     "currentBand": "Accumulate",
     "bands": {
-      "Fire Sale": 19856,
-      "BUY!": 32266,
-      "Accumulate": 50882,
-      "Still Cheap": 77564,
-      "HODL!": 114794,
-      "Is this a bubble?": 170640,
-      "FOMO intensifies": 248203,
-      "Sell. Seriously.": 359895,
-      "Max Bubble": 527432
+      "Fire Sale": 19857,
+      "BUY!": 32268,
+      "Accumulate": 50884,
+      "Still Cheap": 77567,
+      "HODL!": 114799,
+      "Is this a bubble?": 170647,
+      "FOMO intensifies": 248213,
+      "Sell. Seriously.": 359909,
+      "Max Bubble": 527453
     },
     "live": true,
     "desc": "Logarithmic regression bands. Lower = deeper value"
@@ -187,16 +187,16 @@
     "desc": "Negative = outflows = coins leaving exchanges = accumulation"
   },
   "openInterest": {
-    "value": 89023.0,
-    "changePct30d": 12.6,
+    "value": 89345.0,
+    "changePct30d": 13.0,
     "live": true,
     "source": "Binance",
     "desc": "Total derivatives positions. Large decline = leverage reset = healthier market"
   },
   "_halving": {
-    "blockHeight": 941010,
+    "blockHeight": 941017,
     "nextBlock": 1050000,
-    "blocksLeft": 108990,
+    "blocksLeft": 108983,
     "estDays": 757,
     "estDate": "2028-04-12",
     "progress": 0.481,
@@ -704,12 +704,13 @@
     }
   },
   "_meta": {
-    "computedAt": "2026-03-17T13:53:34.463318+00:00",
-    "currentPrice": 73563.0,
+    "computedAt": "2026-03-17T14:54:08.469347+00:00",
+    "currentPrice": 74233.36,
     "currentDate": "2026-03-17",
-    "priceSource": "CoinGecko",
+    "priceSource": "Binance",
     "priceSources": {
-      "CoinGecko": 73563.0
+      "Binance": 74233.36,
+      "CoinGecko": 74179.0
     }
   },
   "_priceHistory": [

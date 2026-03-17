@@ -1134,6 +1134,173 @@ def main():
     print(f"\n  📡 {live_count}/{total} indicators live | {cached_count}/{len(BG_ENDPOINTS)} BGeometrics cached")
     print(f"  💡 Run again in 1 hour to fetch remaining BGeometrics data")
 
+    # Extend historical datasets with today's data
+    if "--extend-history" in sys.argv:
+        extend_history(bg_cache, price_hist, fear_greed, funding, hash_rate, miner_rev)
+
+
+# ─── Extend Historical Datasets ───────────────────────
+
+HIST_DIR = DATA_DIR / "history"
+
+def _append_to_history(filename, new_points):
+    """Append new data points to a historical JSON file.
+    Deduplicates by date — only appends points with dates newer than the last entry.
+    Returns count of new points added.
+    """
+    path = HIST_DIR / f"{filename}.json"
+    if not path.exists():
+        return 0
+
+    with open(path) as f:
+        existing = json.load(f)
+
+    if not isinstance(existing, list) or len(existing) == 0:
+        return 0
+
+    # Find the latest date in existing data
+    last_date = existing[-1].get("date", "")
+
+    # Filter new points to only those after last_date
+    added = 0
+    for pt in new_points:
+        if pt.get("date", "") > last_date:
+            existing.append(pt)
+            added += 1
+
+    if added > 0:
+        # Sort by date to be safe
+        existing.sort(key=lambda x: x.get("date", ""))
+        with open(path, "w") as f:
+            json.dump(existing, f)
+
+    return added
+
+
+def extend_history(bg_cache, price_hist, fear_greed, funding, hash_rate, miner_rev):
+    """Extend historical datasets with the freshly fetched data.
+    Called after main fetch to keep history files growing daily.
+    """
+    if not HIST_DIR.exists():
+        print("\n⚠ No history directory — skipping history extension")
+        return
+
+    print("\n📚 Extending historical datasets...")
+    total_added = 0
+
+    # ── BGeometrics indicators ──
+    # Map from cache key to (history filename, value_key)
+    bg_map = {
+        "mvrv_zscore":      "bg_mvrv_zscore",
+        "nupl":             "bg_nupl",
+        "sopr":             "bg_sopr",
+        "realized_price":   "bg_realized_price",
+        "reserve_risk":     "bg_reserve_risk",
+        "supply_profit":    "bg_supply_profit",
+        "lth_sopr":         "bg_lth_sopr",
+        "sth_sopr":         "bg_sth_sopr",
+        "ssr":              "bg_ssr",
+        "rhodl_ratio":      "bg_rhodl_ratio",
+        "nvts":             "bg_nvts",
+        "thermocap_mult":   "bg_thermocap",
+        "exchange_reserve": "bg_exchange_reserve",
+        "exchange_netflow": "bg_exchange_netflow",
+    }
+
+    for cache_key, hist_file in bg_map.items():
+        entry = bg_cache.get(cache_key)
+        if entry and entry.get("value") is not None and entry.get("date"):
+            pt = {"date": entry["date"], "value": entry["value"]}
+            n = _append_to_history(hist_file, [pt])
+            if n > 0:
+                print(f"  +{n} {hist_file}")
+                total_added += n
+
+    # ── Blockchain.info price ──
+    if price_hist and "prices" in price_hist:
+        new_pts = [{"date": p["date"], "value": p["price"]} for p in price_hist["prices"]]
+        n = _append_to_history("bc_price", new_pts)
+        if n > 0:
+            print(f"  +{n} bc_price")
+            total_added += n
+
+    # ── Blockchain.info market cap ──
+    if price_hist and "marketCaps" in price_hist:
+        new_pts = []
+        for mc in price_hist["marketCaps"]:
+            ts = mc.get("ts", 0)
+            if ts:
+                d = datetime.fromtimestamp(ts / 1000, tz=timezone.utc).strftime("%Y-%m-%d")
+                new_pts.append({"date": d, "value": mc["cap"]})
+        n = _append_to_history("bc_market_cap", new_pts)
+        if n > 0:
+            print(f"  +{n} bc_market_cap")
+            total_added += n
+
+    # ── Hash rate ──
+    if hash_rate:
+        new_pts = []
+        for h in hash_rate:
+            ts = h.get("ts", 0)
+            if ts:
+                d = datetime.fromtimestamp(ts / 1000, tz=timezone.utc).strftime("%Y-%m-%d")
+                new_pts.append({"date": d, "value": h["hashRate"]})
+        n = _append_to_history("bc_hash_rate", new_pts)
+        if n > 0:
+            print(f"  +{n} bc_hash_rate")
+            total_added += n
+
+    # ── Miner revenue ──
+    if miner_rev:
+        new_pts = []
+        for m in miner_rev:
+            ts = m.get("ts", 0)
+            if ts:
+                d = datetime.fromtimestamp(ts / 1000, tz=timezone.utc).strftime("%Y-%m-%d")
+                new_pts.append({"date": d, "value": m["revenue"]})
+        n = _append_to_history("bc_miner_revenue", new_pts)
+        if n > 0:
+            print(f"  +{n} bc_miner_revenue")
+            total_added += n
+
+    # ── Fear & Greed ──
+    if fear_greed:
+        new_pts = [{"date": f["date"], "value": f["value"]} for f in fear_greed]
+        n = _append_to_history("fg_fear_greed", new_pts)
+        if n > 0:
+            print(f"  +{n} fg_fear_greed")
+            total_added += n
+
+    # ── Funding rates ──
+    if funding:
+        # Funding rates are 8-hourly, aggregate to daily average
+        from collections import defaultdict
+        daily = defaultdict(list)
+        for fr in funding:
+            ts = fr.get("ts", 0)
+            if ts:
+                d = datetime.fromtimestamp(ts / 1000, tz=timezone.utc).strftime("%Y-%m-%d")
+                daily[d].append(fr["rate"])
+
+        new_pts = []
+        for d, rates in sorted(daily.items()):
+            avg_rate = sum(rates) / len(rates)
+            new_pts.append({
+                "date": d,
+                "datetime": f"{d} 00:00",
+                "rate": round(avg_rate, 8),
+                "ts": int(datetime.strptime(d, "%Y-%m-%d").replace(tzinfo=timezone.utc).timestamp() * 1000)
+            })
+        n = _append_to_history("bn_funding_rates", new_pts)
+        if n > 0:
+            print(f"  +{n} bn_funding_rates")
+            total_added += n
+
+    if total_added > 0:
+        print(f"  ✓ Added {total_added} new data points across history files")
+    else:
+        print(f"  ● History already up to date")
+
 
 if __name__ == "__main__":
     main()

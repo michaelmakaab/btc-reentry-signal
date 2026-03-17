@@ -264,17 +264,38 @@ def main():
     bt_file = DATA_DIR / "backtest_results.json"
     bt_html = ""
     bt_chart_json = "null"
+    bt_signals_json = "null"
     if bt_file.exists():
         bt = json.load(open(bt_file))
         zs = bt.get("zone_stats", {})
+        signals = bt.get("signals", [])
+        accum_signals = bt.get("accum_signals", [])
+        cycle_tops = bt.get("cycle_tops", [])
 
-        # Build chart data: sample every 7 days for performance
+        # Build chart data: sample every 7 days + force-include signal dates
         daily = bt.get("daily", [])
+        # Collect dates that must be included exactly
+        must_include = set()
+        for s in signals:
+            must_include.add(s["entry_date"])
+            must_include.add(s["peak_score_date"])
+        for s in accum_signals:
+            must_include.add(s["entry_date"])
+        for t in cycle_tops:
+            must_include.add(t["date"])
+
         chart_points = []
         for i, d in enumerate(daily):
-            if i % 7 == 0 or i == len(daily) - 1:
-                chart_points.append({"d": d["date"], "s": d["score"], "p": d["price"], "z": d["zone"]})
+            if i % 7 == 0 or i == len(daily) - 1 or d["date"] in must_include:
+                chart_points.append({"d": d["date"], "s": round(d["score"], 1), "p": round(d["price"], 0), "z": d["zone"]})
         bt_chart_json = json.dumps(chart_points)
+
+        # Build signals + tops JSON for chart markers
+        bt_signals_json = json.dumps({
+            "signals": [{"d": s["entry_date"], "p": s["entry_price"], "s": s["entry_score"]} for s in signals],
+            "accum": [{"d": s["entry_date"], "p": s["entry_price"], "s": s["entry_score"]} for s in accum_signals],
+            "tops": [{"d": t["date"], "p": t["price"], "s": t["score"], "l": t["label"]} for t in cycle_tops],
+        })
 
         # Zone stats table rows
         zone_rows = ""
@@ -303,45 +324,113 @@ def main():
               <td class="mono">{win365:.0f}%</td>
             </tr>''' if avg180 is not None and avg365 is not None else ""
 
+        # ── Signal Performance Cards ──
+        signal_cards = ""
+        # Strong Buy signals
+        for sig in signals:
+            traj = sig["trajectory"]
+            # Build trajectory row
+            traj_rows = ""
+            for period, label in [("30d","1 mo"), ("90d","3 mo"), ("180d","6 mo"), ("365d","1 yr"), ("730d","2 yr"), ("1000d","~3 yr")]:
+                v = traj.get(period)
+                if v is not None:
+                    color = "#22C55E" if v > 0 else "#EF4444"
+                    traj_rows += f'<div class="traj-row"><span class="traj-label">{label}</span><span class="traj-val mono" style="color:{color}">{v:+.0f}%</span></div>'
+            pk1 = sig["peak_1y"]
+            pk_all = sig["peak_all"]
+            signal_cards += f'''
+          <div class="sig-card sig-strong">
+            <div class="sig-badge" style="background:#22C55E;color:#0F172A">STRONG BUY</div>
+            <div class="sig-entry">Entered <span class="mono">{sig["entry_date"]}</span> at <span class="mono" style="color:#F8FAFC">${sig["entry_price"]:,.0f}</span></div>
+            <div class="sig-detail">Score hit <span class="mono" style="color:#22C55E">{sig["peak_score"]:.0f}</span> &bull; Signal lasted {sig["signal_days"]} days</div>
+            <div class="sig-traj-title">Returns from signal day:</div>
+            <div class="sig-traj">{traj_rows}</div>
+            <div class="sig-peaks">
+              <div class="sig-peak">1-yr peak: <span class="mono" style="color:#22C55E">${pk1["price"]:,.0f}</span> <span style="color:#22C55E">(+{pk1["return_pct"]:.0f}%)</span></div>
+              <div class="sig-peak">Cycle peak: <span class="mono" style="color:#22C55E">${pk_all["price"]:,.0f}</span> <span style="color:#22C55E">(+{pk_all["return_pct"]:.0f}%)</span></div>
+            </div>
+          </div>'''
+
+        # Accumulate signals
+        for sig in accum_signals:
+            traj = sig["trajectory"]
+            traj_rows = ""
+            for period, label in [("30d","1 mo"), ("90d","3 mo"), ("180d","6 mo"), ("365d","1 yr"), ("730d","2 yr")]:
+                v = traj.get(period)
+                if v is not None:
+                    color = "#22C55E" if v > 0 else "#EF4444"
+                    traj_rows += f'<div class="traj-row"><span class="traj-label">{label}</span><span class="traj-val mono" style="color:{color}">{v:+.0f}%</span></div>'
+            pk1 = sig["peak_1y"]
+            pk_all = sig["peak_all"]
+            # Format entry date nicely
+            from datetime import datetime as dt_cls
+            entry_dt = dt_cls.strptime(sig["entry_date"], "%Y-%m-%d")
+            entry_nice = entry_dt.strftime("%b %d, %Y")
+            signal_cards += f'''
+          <div class="sig-card sig-accum">
+            <div class="sig-badge" style="background:#EAB308;color:#0F172A">ACCUMULATE</div>
+            <div class="sig-entry">First signal <span class="mono">{sig["entry_date"]}</span> at <span class="mono" style="color:#F8FAFC">${sig["entry_price"]:,.0f}</span></div>
+            <div class="sig-detail">Score: <span class="mono" style="color:#EAB308">{sig["entry_score"]:.0f}</span></div>
+            <div class="sig-traj-title">Returns from signal day:</div>
+            <div class="sig-traj">{traj_rows}</div>
+            <div class="sig-peaks">
+              <div class="sig-peak">1-yr peak: <span class="mono" style="color:#22C55E">${pk1["price"]:,.0f}</span> <span style="color:#22C55E">(+{pk1["return_pct"]:.0f}%)</span></div>
+              <div class="sig-peak">Cycle peak: <span class="mono" style="color:#22C55E">${pk_all["price"]:,.0f}</span> <span style="color:#22C55E">(+{pk_all["return_pct"]:.0f}%)</span></div>
+            </div>
+          </div>'''
+
+        # ── Cycle Top Cards ──
+        top_cards = ""
+        for top in cycle_tops:
+            top_cards += f'''
+          <div class="top-card">
+            <div class="top-label">{top["label"]}</div>
+            <div class="top-price mono">${top["price"]:,.0f}</div>
+            <div class="top-score">Score: <span class="mono" style="color:#EF4444">{top["score"]:.1f}</span> &mdash; {top["zone"].replace("_"," ").title()}</div>
+          </div>'''
+
         # Headline stats
         sb = zs.get("STRONG_BUY", {})
-        sb_avg = sb.get("avg_180d", 0)
-        sb_win = sb.get("win_rate_180d", 0)
-        sb_days = sb.get("days", 0)
+        sb_avg = sb.get("avg_180d", 0) or 0
+        sb_win = sb.get("win_rate_180d", 0) or 0
+        # Use signal trajectory data for headline
+        headline_return = ""
+        if signals:
+            pk = signals[0]["peak_1y"]
+            headline_return = f'+{pk["return_pct"]:.0f}%'
+        elif accum_signals:
+            pk = accum_signals[0]["peak_1y"]
+            headline_return = f'+{pk["return_pct"]:.0f}%'
+
+        num_signals = len(signals) + len(accum_signals)
 
         bt_html = f'''
     <section class="bt-sec">
       <div class="sec-hdr">Signal Track Record</div>
       <div class="bt-subtitle">Backtest: 2017 &ndash; present &bull; {len(daily):,} days scored &bull; ~1M historical data points back to 2009 &bull; Same model running today</div>
 
-      <div class="bt-headline-grid">
-        <div class="bt-stat">
-          <div class="bt-stat-num mono" style="color:#22C55E">+{sb_avg:.0f}%</div>
-          <div class="bt-stat-label">Avg 6-month return when score &ge; 75</div>
-        </div>
-        <div class="bt-stat">
-          <div class="bt-stat-num mono" style="color:#22C55E">{sb_win:.0f}%</div>
-          <div class="bt-stat-label">Win rate (positive return in 180 days)</div>
-        </div>
-        <div class="bt-stat">
-          <div class="bt-stat-num mono" style="color:#F59E0B">3/3</div>
-          <div class="bt-stat-label">Major cycle bottoms detected</div>
-        </div>
-      </div>
-
-      <div class="bt-chart-card">
-        <div class="bt-chart-title">Historical Score vs BTC Price</div>
-        <div class="bt-chart-box"><canvas id="btChart"></canvas></div>
+      <div class="bt-chart-card" style="margin-bottom:16px">
+        <div class="bt-chart-title">Score vs BTC Price &mdash; Full History (hover to explore)</div>
+        <div class="bt-chart-box" style="height:320px"><canvas id="btChart"></canvas></div>
         <div class="bt-chart-legend">
-          <span class="cl-item"><span class="cl-dot" style="background:#F59E0B;height:2px"></span>BTC Price</span>
-          <span class="cl-item"><span class="cl-dot" style="background:#22C55E"></span>Strong Buy (75+)</span>
-          <span class="cl-item"><span class="cl-dot" style="background:#EAB308"></span>Accumulate</span>
-          <span class="cl-item"><span class="cl-dot" style="background:#FB923C"></span>Watching</span>
-          <span class="cl-item"><span class="cl-dot" style="background:#EF4444"></span>No Entry</span>
+          <span class="cl-item"><span class="cl-dot" style="background:#F59E0B;height:2px"></span>BTC Price (log)</span>
+          <span class="cl-item"><span class="cl-dot" style="background:rgba(148,163,184,0.5);height:2px"></span>Signal Score</span>
+          <span class="cl-item"><span class="cl-dot" style="background:#22C55E"></span>Signal Entry</span>
+          <span class="cl-item"><span class="cl-dot" style="background:#EF4444"></span>Cycle Top</span>
         </div>
       </div>
 
-      <div class="bt-table-card">
+      <div class="bt-chart-title" style="margin-bottom:10px">What Happened From Each Signal</div>
+      <div class="bt-subtitle" style="margin-bottom:14px">Every time the score entered Accumulate or Strong Buy territory, these were the returns from that day forward.</div>
+      <div class="sig-grid">{signal_cards}</div>
+
+      <div class="bt-chart-card" style="margin-top:16px">
+        <div class="bt-chart-title">What the Score Said at Cycle Tops</div>
+        <div class="bt-subtitle" style="margin-bottom:10px">At every major peak, the score was deep in No Entry &mdash; correctly saying &ldquo;this is NOT the time to buy.&rdquo;</div>
+        <div class="top-grid">{top_cards}</div>
+      </div>
+
+      <div class="bt-table-card" style="margin-top:16px">
         <div class="bt-chart-title">Zone Performance</div>
         <div class="bt-table-wrap">
         <table class="bt-table">
@@ -354,27 +443,6 @@ def main():
         </table>
         </div>
         <div class="bt-note">Forward returns calculated from each day the zone was active. Win rate = % of days with positive return at horizon.</div>
-      </div>
-
-      <div class="bt-bottoms-card">
-        <div class="bt-chart-title">Cycle Bottom Detection</div>
-        <div class="bt-bottoms">
-          <div class="bt-bottom-item">
-            <div class="bt-bottom-date">Dec 2018</div>
-            <div class="bt-bottom-detail">Score: <span class="mono" style="color:#22C55E">84.9</span> at $3,232</div>
-            <div class="bt-bottom-result">&#8594; <span style="color:#22C55E">+155%</span> in 6 months</div>
-          </div>
-          <div class="bt-bottom-item">
-            <div class="bt-bottom-date">Mar 2020</div>
-            <div class="bt-bottom-detail">Score: <span class="mono" style="color:#EAB308">71.9</span> at $4,830</div>
-            <div class="bt-bottom-result">&#8594; <span style="color:#22C55E">+110%</span> in 6 months</div>
-          </div>
-          <div class="bt-bottom-item">
-            <div class="bt-bottom-date">Nov 2022</div>
-            <div class="bt-bottom-detail">Score: <span class="mono" style="color:#22C55E">75.8</span> at $16,260</div>
-            <div class="bt-bottom-result">&#8594; <span style="color:#22C55E">+65%</span> in 6 months</div>
-          </div>
-        </div>
       </div>
     </section>'''
 
@@ -518,13 +586,9 @@ body{{min-height:100vh;background:#060911;color:#E2E8F0;font-family:'DM Sans',sa
 /* Backtest Track Record */
 .bt-sec{{padding:20px 0}}
 .bt-subtitle{{font-size:12px;color:#64748B;margin-top:4px;margin-bottom:16px}}
-.bt-headline-grid{{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-bottom:16px}}
-.bt-stat{{background:#0F172A;border:1px solid #1E293B;border-radius:10px;padding:18px;text-align:center}}
-.bt-stat-num{{font-size:32px;font-weight:700;line-height:1}}
-.bt-stat-label{{font-size:11px;color:#94A3B8;margin-top:6px;line-height:1.3}}
-.bt-chart-card,.bt-table-card,.bt-bottoms-card{{background:#0F172A;border:1px solid #1E293B;border-radius:10px;padding:18px;margin-bottom:14px}}
+.bt-chart-card,.bt-table-card{{background:#0F172A;border:1px solid #1E293B;border-radius:10px;padding:18px;margin-bottom:14px}}
 .bt-chart-title{{font-size:11px;color:#F59E0B;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;margin-bottom:10px}}
-.bt-chart-box{{background:#080D17;border:1px solid #1E293B;border-radius:8px;height:260px;position:relative;overflow:hidden}}
+.bt-chart-box{{background:#080D17;border:1px solid #1E293B;border-radius:8px;height:320px;position:relative;overflow:hidden}}
 .bt-chart-box canvas{{display:block}}
 .bt-chart-legend{{display:flex;gap:16px;justify-content:center;margin-top:10px;flex-wrap:wrap}}
 .bt-table-wrap{{overflow-x:auto}}
@@ -532,15 +596,32 @@ body{{min-height:100vh;background:#060911;color:#E2E8F0;font-family:'DM Sans',sa
 .bt-table th{{text-align:left;padding:6px 10px;color:#64748B;font-size:10px;text-transform:uppercase;letter-spacing:0.5px;border-bottom:1px solid #1E293B}}
 .bt-table td{{padding:6px 10px;border-bottom:1px solid #111827}}
 .bt-note{{font-size:10px;color:#475569;margin-top:8px;font-style:italic}}
-.bt-bottoms{{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}}
-.bt-bottom-item{{background:#080D17;border:1px solid #1E293B;border-radius:8px;padding:14px;text-align:center}}
-.bt-bottom-date{{font-size:16px;font-weight:700;color:#F8FAFC}}
-.bt-bottom-detail{{font-size:12px;color:#94A3B8;margin-top:4px}}
-.bt-bottom-result{{font-size:14px;font-weight:700;margin-top:6px}}
+/* Signal performance cards */
+.sig-grid{{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:14px}}
+.sig-card{{background:#0F172A;border:1px solid #1E293B;border-radius:10px;padding:18px}}
+.sig-card.sig-strong{{border-color:#22C55E33}}
+.sig-card.sig-accum{{border-color:#EAB30833}}
+.sig-badge{{display:inline-block;font-size:10px;font-weight:700;letter-spacing:1px;padding:2px 8px;border-radius:4px;margin-bottom:8px}}
+.sig-entry{{font-size:14px;color:#94A3B8;margin-bottom:4px}}
+.sig-detail{{font-size:12px;color:#64748B;margin-bottom:10px}}
+.sig-traj-title{{font-size:10px;color:#64748B;text-transform:uppercase;letter-spacing:0.5px;margin-bottom:6px}}
+.sig-traj{{display:grid;grid-template-columns:repeat(3,1fr);gap:4px;margin-bottom:12px}}
+.traj-row{{display:flex;justify-content:space-between;padding:3px 6px;background:#080D17;border-radius:4px}}
+.traj-label{{font-size:11px;color:#64748B}}
+.traj-val{{font-size:12px;font-weight:700}}
+.sig-peaks{{border-top:1px solid #1E293B;padding-top:8px}}
+.sig-peak{{font-size:12px;color:#94A3B8;margin-bottom:2px}}
+/* Cycle top cards */
+.top-grid{{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}}
+.top-card{{background:#080D17;border:1px solid #EF444433;border-radius:8px;padding:14px;text-align:center}}
+.top-label{{font-size:12px;color:#64748B;margin-bottom:4px}}
+.top-price{{font-size:20px;font-weight:700;color:#F8FAFC}}
+.top-score{{font-size:12px;color:#94A3B8;margin-top:4px}}
 
 @media(max-width:768px){{
-  .bt-headline-grid{{grid-template-columns:1fr}}
-  .bt-bottoms{{grid-template-columns:1fr}}
+  .sig-grid{{grid-template-columns:1fr}}
+  .sig-traj{{grid-template-columns:repeat(2,1fr)}}
+  .top-grid{{grid-template-columns:1fr}}
 }}
 
 /* Footer */
@@ -637,15 +718,14 @@ body{{min-height:100vh;background:#060911;color:#E2E8F0;font-family:'DM Sans',sa
       </ul>
 
       <h4>Does It Actually Work? (Backtest Results)</h4>
-      <p>We backtested this exact scoring model against every day from Jan 2017 to present &mdash; over 3,300 trading days using nearly 1 million historical data points spanning back to Bitcoin&rsquo;s genesis block in 2009. Price data, hash rates, miner revenue, and realized price all go back to 2009&ndash;2010. On-chain metrics like SOPR, LTH-SOPR, and Reserve Risk cover 2010+. Fear &amp; Greed data from 2018, funding rates from 2019. The model was applied retroactively using the same indicator thresholds, weights, and scoring logic running today. Key findings:</p>
+      <p>We backtested this exact scoring model against every day from Jan 2017 to present &mdash; over 3,300 trading days using nearly 1 million historical data points spanning back to Bitcoin&rsquo;s genesis block in 2009. The model was applied retroactively using the same thresholds, weights, and scoring logic running today. Key findings:</p>
       <ul>
-        <li><strong>Strong Buy zone (75+)</strong> has appeared on only 24 days &mdash; all in Dec 2018 and Nov 2022, right at confirmed cycle bottoms.</li>
-        <li><strong>100% win rate</strong> &mdash; Every single day the score was 75+, BTC was higher 6 months later. Average return: +116%.</li>
-        <li><strong>3 for 3 on cycle bottoms</strong> &mdash; Dec 2018 ($3,232, score 84.9), Mar 2020 ($4,830, score 71.9), Nov 2022 ($16,260, score 75.8).</li>
-        <li><strong>Low scores flagged danger</strong> &mdash; In Dec 2017 at $19,280 (the top), the score was 4.5. BTC fell 66% over the next 6 months.</li>
-        <li><strong>Monotonic relationship</strong> &mdash; Higher score = better forward returns at every time horizon. The zones work as designed.</li>
+        <li><strong>Strong Buy (75+) is extremely selective</strong> &mdash; it has only triggered once, in Dec 2018 at the bear market bottom. Buying on that first signal day: +120% in 6 months, +271% peak within a year.</li>
+        <li><strong>Accumulate (50+) caught every major bottom</strong> &mdash; Nov 2018, Mar 2020, Jun 2022, and Feb 2026 (current cycle). Returns from each signal day are tracked in the Signal Track Record below.</li>
+        <li><strong>At every cycle top, the score said &ldquo;No Entry&rdquo;</strong> &mdash; Dec 2017 top ($19K): score 4. Nov 2021 top ($69K): score 9. Oct 2025 top ($125K): score 8. The model never once said buy during a peak.</li>
+        <li><strong>Higher score = better returns</strong> at every time horizon. The zones work as designed.</li>
       </ul>
-      <p style="color:#64748B;font-size:12px;margin-top:8px">See the Signal Track Record section below for the full chart, zone performance table, and bottom detection details.</p>
+      <p style="color:#64748B;font-size:12px;margin-top:8px">See the Signal Track Record section below for the interactive chart, signal trajectories, and zone performance table.</p>
 
       <h4>Important Caveats</h4>
       <p>This is a framework, not financial advice. Past cycles don&rsquo;t guarantee future patterns. The backtest applies today&rsquo;s model to historical data &mdash; it was not used to make real-time decisions during those periods. The model is designed for macro cycle bottoms &mdash; it won&rsquo;t help with short-term trading. Some BGeometrics indicators rotate through a cache due to API rate limits, so not all 26 indicators may be live at any given time. The score will become more accurate as all data populates.</p>
@@ -893,6 +973,7 @@ ccv.addEventListener('mouseleave',()=>{{ctip.style.display='none';cvl.style.disp
 
 /* Backtest History Chart */
 const btData={bt_chart_json};
+const btMarkers={bt_signals_json};
 const btcv=document.getElementById('btChart');
 if(btcv&&btData&&btData.length>0){{
 const bBox=btcv.parentElement;
@@ -910,7 +991,6 @@ const bPlotW=bW-bLpad-bRpad;
 
 /* Price on log scale */
 const prices=btData.map(d=>d.p);
-const scores=btData.map(d=>d.s);
 const logMin=Math.log10(Math.min(...prices)*0.8);
 const logMax=Math.log10(Math.max(...prices)*1.2);
 const logRange=logMax-logMin;
@@ -963,7 +1043,7 @@ for(let i=0;i<btData.length-1;i++){{
 }}
 
 /* Score line */
-bCtx.beginPath();bCtx.strokeStyle='rgba(148,163,184,0.4)';bCtx.lineWidth=1;bCtx.lineJoin='round';
+bCtx.beginPath();bCtx.strokeStyle='rgba(148,163,184,0.5)';bCtx.lineWidth=1.5;bCtx.lineJoin='round';
 btData.forEach((d,i)=>{{
   const x=bx(i),y=byScore(d.s);
   i===0?bCtx.moveTo(x,y):bCtx.lineTo(x,y);
@@ -978,37 +1058,68 @@ btData.forEach((d,i)=>{{
 }});
 bCtx.stroke();
 
-/* 75-line threshold */
+/* 75-line and 50-line thresholds */
 bCtx.setLineDash([4,4]);bCtx.strokeStyle='#22C55E';bCtx.lineWidth=1;
 bCtx.beginPath();bCtx.moveTo(bLpad,byScore(75));bCtx.lineTo(bW-bRpad,byScore(75));bCtx.stroke();
+bCtx.strokeStyle='#EAB308';
+bCtx.beginPath();bCtx.moveTo(bLpad,byScore(50));bCtx.lineTo(bW-bRpad,byScore(50));bCtx.stroke();
 bCtx.setLineDash([]);
 bCtx.font='9px Space Mono';bCtx.fillStyle='#22C55E';bCtx.textAlign='left';
-bCtx.fillText('Strong Buy',bW-bRpad+4,byScore(75)-4);
+bCtx.fillText('Strong Buy (75)',bW-bRpad+4,byScore(75)-4);
+bCtx.fillStyle='#EAB308';
+bCtx.fillText('Accumulate (50)',bW-bRpad+4,byScore(50)-4);
 
-/* Bottom markers */
-const markers=[
-  {{label:'Dec 2018',find:'2018-12'}},
-  {{label:'Mar 2020',find:'2020-03'}},
-  {{label:'Nov 2022',find:'2022-11'}},
-];
-markers.forEach(m=>{{
-  const idx=btData.findIndex(d=>d.d.startsWith(m.find));
-  if(idx>=0){{
-    const x=bx(idx),y=byPrice(btData[idx].p);
-    bCtx.beginPath();bCtx.arc(x,y,4,0,Math.PI*2);bCtx.fillStyle='#22C55E';bCtx.fill();
-    bCtx.beginPath();bCtx.arc(x,y,4,0,Math.PI*2);bCtx.strokeStyle='#0F172A';bCtx.lineWidth=2;bCtx.stroke();
-    bCtx.font='bold 9px Space Mono';bCtx.fillStyle='#22C55E';bCtx.textAlign='center';
-    bCtx.fillText(m.label,x,y-8);
-  }}
-}});
+/* Signal entry markers (green triangles) */
+if(btMarkers){{
+  const allSignals=[...(btMarkers.signals||[]),...(btMarkers.accum||[])];
+  allSignals.forEach(sig=>{{
+    const idx=btData.findIndex(d=>d.d>=sig.d);
+    if(idx>=0){{
+      const x=bx(idx),y=byPrice(sig.p);
+      const isStrong=sig.s>=75;
+      const color=isStrong?'#22C55E':'#EAB308';
+      /* Draw triangle pointing up */
+      bCtx.beginPath();bCtx.moveTo(x,y-8);bCtx.lineTo(x-5,y+2);bCtx.lineTo(x+5,y+2);bCtx.closePath();
+      bCtx.fillStyle=color;bCtx.fill();
+      bCtx.strokeStyle='#0F172A';bCtx.lineWidth=1.5;bCtx.stroke();
+      /* Label */
+      const dt=new Date(sig.d+'T00:00:00');
+      const mo=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+      const lbl=mo[dt.getMonth()]+' '+dt.getFullYear();
+      bCtx.font='bold 9px Space Mono';bCtx.fillStyle=color;bCtx.textAlign='center';
+      bCtx.fillText(lbl,x,y-12);
+    }}
+  }});
 
-/* Hover */
+  /* Cycle top markers (red diamonds) */
+  (btMarkers.tops||[]).forEach(top=>{{
+    const idx=btData.findIndex(d=>d.d>=top.d);
+    if(idx>=0){{
+      const x=bx(idx),y=byPrice(top.p);
+      /* Draw diamond */
+      bCtx.beginPath();bCtx.moveTo(x,y-6);bCtx.lineTo(x+5,y);bCtx.lineTo(x,y+6);bCtx.lineTo(x-5,y);bCtx.closePath();
+      bCtx.fillStyle='#EF4444';bCtx.fill();
+      bCtx.strokeStyle='#0F172A';bCtx.lineWidth=1.5;bCtx.stroke();
+      /* Label */
+      bCtx.font='bold 9px Space Mono';bCtx.fillStyle='#EF4444';bCtx.textAlign='center';
+      bCtx.fillText(top.l.replace(' Bull Top',''),x,y-10);
+    }}
+  }});
+}}
+
+/* Hover tooltip showing date, price, score, zone */
 const bTip=document.createElement('div');
-bTip.style.cssText='position:absolute;display:none;background:#1E293B;border:1px solid #334155;border-radius:6px;padding:6px 10px;font:11px Space Mono;color:#E2E8F0;pointer-events:none;z-index:10;white-space:nowrap';
+bTip.style.cssText='position:absolute;display:none;background:#1E293B;border:1px solid #334155;border-radius:6px;padding:8px 12px;font:11px Space Mono;color:#E2E8F0;pointer-events:none;z-index:10;white-space:nowrap;line-height:1.5';
 bBox.appendChild(bTip);
 const bVl=document.createElement('div');
 bVl.style.cssText='position:absolute;display:none;width:1px;background:#334155;pointer-events:none;z-index:5';
 bBox.appendChild(bVl);
+const bDotP=document.createElement('div');
+bDotP.style.cssText='position:absolute;display:none;width:8px;height:8px;border-radius:50%;background:#F59E0B;border:2px solid #0F172A;pointer-events:none;z-index:6;transform:translate(-50%,-50%)';
+bBox.appendChild(bDotP);
+const bDotS=document.createElement('div');
+bDotS.style.cssText='position:absolute;display:none;width:6px;height:6px;border-radius:50%;background:#94A3B8;border:1px solid #0F172A;pointer-events:none;z-index:6;transform:translate(-50%,-50%)';
+bBox.appendChild(bDotS);
 btcv.addEventListener('mousemove',e=>{{
   const r=btcv.getBoundingClientRect();
   const mx=e.clientX-r.left;
@@ -1016,16 +1127,20 @@ btcv.addEventListener('mousemove',e=>{{
   if(idx>=0&&idx<btData.length){{
     const d=btData[idx];
     const zl={{STRONG_BUY:'Strong Buy',ACCUMULATE:'Accumulate',WATCHING:'Watching',NO_ENTRY:'No Entry'}};
-    bTip.textContent=d.d+'  $'+d.p.toLocaleString()+'  Score: '+d.s.toFixed(1)+' ('+( zl[d.z]||d.z)+')';
+    const zc={{STRONG_BUY:'#22C55E',ACCUMULATE:'#EAB308',WATCHING:'#FB923C',NO_ENTRY:'#EF4444'}};
+    bTip.innerHTML=d.d+'<br>Price: <span style=\"color:#F59E0B\">$'+d.p.toLocaleString()+'</span><br>Score: <span style=\"color:'+(zc[d.z]||'#94A3B8')+'\">'+d.s.toFixed(1)+'</span> ('+(zl[d.z]||d.z)+')';
     bTip.style.display='block';
     const px=bx(idx);
+    const pyP=byPrice(d.p), pyS=byScore(d.s);
     bVl.style.left=(px+bPad)+'px';bVl.style.top=bPad+'px';bVl.style.height=bPlotH+'px';bVl.style.display='block';
+    bDotP.style.left=(px+bPad)+'px';bDotP.style.top=(pyP+bPad)+'px';bDotP.style.display='block';
+    bDotS.style.left=(px+bPad)+'px';bDotS.style.top=(pyS+bPad)+'px';bDotS.style.display='block';
     const tw=bTip.offsetWidth;
     bTip.style.left=Math.min(Math.max(px+bPad-tw/2,bPad),bW+bPad-tw)+'px';
-    bTip.style.top=(bPad-20)+'px';
+    bTip.style.top=Math.max(pyP+bPad-60,bPad)+'px';
   }}
 }});
-btcv.addEventListener('mouseleave',()=>{{bTip.style.display='none';bVl.style.display='none'}});
+btcv.addEventListener('mouseleave',()=>{{bTip.style.display='none';bVl.style.display='none';bDotP.style.display='none';bDotS.style.display='none'}});
 }}
 </script>
 </body>
