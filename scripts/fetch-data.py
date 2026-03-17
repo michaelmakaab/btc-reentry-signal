@@ -1021,7 +1021,7 @@ def compute_composite(ind):
     composite = round(sum(d["contribution"] for d in domains.values()), 1)
 
     if composite >= 75:   zone, label, color = "STRONG_BUY", "STRONG BUY", "#22C55E"
-    elif composite >= 50: zone, label, color = "ACCUMULATE", "ACCUMULATE", "#EAB308"
+    elif composite >= 50: zone, label, color = "ACCUMULATE", "HIGH STRESS", "#EAB308"
     elif composite >= 25: zone, label, color = "WATCHING", "WATCHING", "#FB923C"
     else:                 zone, label, color = "NO_ENTRY", "NO ENTRY", "#EF4444"
 

@@ -21,10 +21,10 @@ def main():
 
     # Zone descriptions
     zone_descs = {
-        "NO_ENTRY": "Market hasn't shown enough bottom signals yet. Most indicators say patience &mdash; there's likely more downside ahead.",
-        "WATCHING": "Signals are building. Some indicators are entering historically attractive zones, but not enough confluence yet. Prepare capital and watch.",
-        "ACCUMULATE": "Multiple domains signal value territory. History supports beginning measured accumulation (DCA). Not all signals have fired &mdash; the absolute bottom may not be in.",
-        "STRONG_BUY": "Rare confluence across all domains. Historically, this level of signal convergence has marked cycle bottoms with near-perfect reliability."
+        "NO_ENTRY": "Not a bottoming environment. Most indicators are far from historically stressed levels. Patience recommended.",
+        "WATCHING": "Stress is building across some domains, but not enough confluence yet. Worth monitoring &mdash; prepare capital.",
+        "ACCUMULATE": "Bear market stress is elevated across multiple domains. This does NOT mean the bottom is in &mdash; the Jun 2022 signal preceded another 6 months of decline. Think of this as a regime indicator, not a timing signal.",
+        "STRONG_BUY": "Rare cross-domain confluence. The only time this triggered (Dec 2018), it marked the cycle bottom within 8% of the absolute low."
     }
 
     # ── Domain Cards ──
@@ -301,7 +301,7 @@ def main():
         zone_rows = ""
         zone_config = [
             ("STRONG_BUY", "Strong Buy", "75&ndash;100", "#22C55E"),
-            ("ACCUMULATE", "Accumulate", "50&ndash;75", "#EAB308"),
+            ("ACCUMULATE", "High Stress", "50&ndash;75", "#EAB308"),
             ("WATCHING", "Watching", "25&ndash;50", "#FB923C"),
             ("NO_ENTRY", "No Entry", "0&ndash;25", "#EF4444"),
         ]
@@ -351,7 +351,7 @@ def main():
             </div>
           </div>'''
 
-        # Accumulate signals
+        # Accumulate / High Stress signals
         for sig in accum_signals:
             traj = sig["trajectory"]
             traj_rows = ""
@@ -362,21 +362,22 @@ def main():
                     traj_rows += f'<div class="traj-row"><span class="traj-label">{label}</span><span class="traj-val mono" style="color:{color}">{v:+.0f}%</span></div>'
             pk1 = sig["peak_1y"]
             pk_all = sig["peak_all"]
-            # Format entry date nicely
-            from datetime import datetime as dt_cls
-            entry_dt = dt_cls.strptime(sig["entry_date"], "%Y-%m-%d")
-            entry_nice = entry_dt.strftime("%b %d, %Y")
+            # Add caveat for signals that had significant drawdowns
+            caveat = ""
+            t180 = traj.get("180d")
+            if t180 is not None and t180 < -20:
+                caveat = f'<div style="font-size:11px;color:#EF4444;margin-top:8px;padding:6px 8px;background:#EF444410;border-radius:4px;border:1px solid #EF444420">&#9888; Signal was {abs(t180):.0f}% underwater at 6 months. A -75% drawdown rule outperformed this entry.</div>'
             signal_cards += f'''
           <div class="sig-card sig-accum">
-            <div class="sig-badge" style="background:#EAB308;color:#0F172A">ACCUMULATE</div>
+            <div class="sig-badge" style="background:#EAB308;color:#0F172A">HIGH STRESS</div>
             <div class="sig-entry">First signal <span class="mono">{sig["entry_date"]}</span> at <span class="mono" style="color:#F8FAFC">${sig["entry_price"]:,.0f}</span></div>
-            <div class="sig-detail">Score: <span class="mono" style="color:#EAB308">{sig["entry_score"]:.0f}</span></div>
+            <div class="sig-detail">Score: <span class="mono" style="color:#EAB308">{sig["entry_score"]:.0f}</span> &bull; Regime indicator, not a buy signal</div>
             <div class="sig-traj-title">Returns from signal day:</div>
             <div class="sig-traj">{traj_rows}</div>
             <div class="sig-peaks">
               <div class="sig-peak">1-yr peak: <span class="mono" style="color:#22C55E">${pk1["price"]:,.0f}</span> <span style="color:#22C55E">(+{pk1["return_pct"]:.0f}%)</span></div>
               <div class="sig-peak">Cycle peak: <span class="mono" style="color:#22C55E">${pk_all["price"]:,.0f}</span> <span style="color:#22C55E">(+{pk_all["return_pct"]:.0f}%)</span></div>
-            </div>
+            </div>{caveat}
           </div>'''
 
         # ── Cycle Top Cards ──
@@ -407,7 +408,7 @@ def main():
         bt_html = f'''
     <section class="bt-sec">
       <div class="sec-hdr">Signal Track Record</div>
-      <div class="bt-subtitle">Backtest: 2017 &ndash; present &bull; {len(daily):,} days scored &bull; ~1M historical data points back to 2009 &bull; Same model running today</div>
+      <div class="bt-subtitle">Backtest: 2017 &ndash; present &bull; {len(daily):,} days scored &bull; Same model running today &bull; Read &ldquo;Behind the Score&rdquo; above for honest limitations</div>
 
       <div class="bt-chart-card" style="margin-bottom:16px">
         <div class="bt-chart-title">Score vs BTC Price &mdash; Full History (hover to explore)</div>
@@ -420,13 +421,13 @@ def main():
         </div>
       </div>
 
-      <div class="bt-chart-title" style="margin-bottom:10px">What Happened From Each Signal</div>
-      <div class="bt-subtitle" style="margin-bottom:14px">Every time the score entered Accumulate or Strong Buy territory, these were the returns from that day forward.</div>
+      <div class="bt-chart-title" style="margin-bottom:10px">What Happened From Each Stress Signal</div>
+      <div class="bt-subtitle" style="margin-bottom:14px">Every time the score crossed 50 (High Stress) or 75 (Strong Buy). Green returns don&rsquo;t validate the signal &mdash; Bitcoin always recovers eventually. What matters is whether the entry beat random bear market buying. See methodology for that comparison.</div>
       <div class="sig-grid">{signal_cards}</div>
 
       <div class="bt-chart-card" style="margin-top:16px">
         <div class="bt-chart-title">What the Score Said at Cycle Tops</div>
-        <div class="bt-subtitle" style="margin-bottom:10px">At every major peak, the score was deep in No Entry &mdash; correctly saying &ldquo;this is NOT the time to buy.&rdquo;</div>
+        <div class="bt-subtitle" style="margin-bottom:10px">At every major peak, the score was deep in No Entry &mdash; this is the model&rsquo;s strongest track record: 3 for 3 on avoiding tops.</div>
         <div class="top-grid">{top_cards}</div>
       </div>
 
@@ -641,8 +642,8 @@ body{{min-height:100vh;background:#060911;color:#E2E8F0;font-family:'DM Sans',sa
   <div class="hdr-inner">
     <div>
       <div class="tag">Bitcoin Re-Entry Signal</div>
-      <div class="title">Cycle Bottom Detector</div>
-      <div class="subtitle">26 indicators &bull; 6 domains &bull; 1 score</div>
+      <div class="title">Bear Market Stress Meter</div>
+      <div class="subtitle">23 indicators &bull; 6 domains &bull; 1 score &mdash; measures how much pain the market is in</div>
     </div>
     <div class="price-box">
       <div class="price mono">${meta["currentPrice"]:,.0f}</div>
@@ -682,7 +683,7 @@ body{{min-height:100vh;background:#060911;color:#E2E8F0;font-family:'DM Sans',sa
       </div>
       <div class="zone-ptr"><div class="zone-needle" style="left:{c["score"]}%"></div></div>
       <div class="zone-labels mono">
-        <span>0 No Entry</span><span>25 Watching</span><span>50 Accumulate</span><span>75 Strong Buy</span><span>100</span>
+        <span>0 No Entry</span><span>25 Watching</span><span>50 High Stress</span><span>75 Strong Buy</span><span>100</span>
       </div>
 
     </div>
@@ -690,56 +691,62 @@ body{{min-height:100vh;background:#060911;color:#E2E8F0;font-family:'DM Sans',sa
 
   <!-- Behind the Score -->
   <details class="methodology">
-    <summary>Behind the Score &mdash; Why These Metrics?</summary>
+    <summary>Behind the Score &mdash; What This Model Does (and Doesn&rsquo;t Do)</summary>
     <div class="method-body">
-      <h4>The Problem</h4>
-      <p>No single indicator reliably identifies a Bitcoin cycle bottom. MVRV-Z Score can remain depressed for months while price continues falling. Fear &amp; Greed flashes extreme fear during mid-cycle corrections that aren&rsquo;t bottoms. The Puell Multiple can mislead during hash rate transitions unrelated to capitulation. Every metric, in isolation, produces false positives.</p>
-      <p>A simple drawdown rule (e.g., &ldquo;buy when price is down 70% from ATH&rdquo;) captures some bottoms but misses timing badly &mdash; the 2021-22 bear was at -70% for months, and buying at -70% still meant sitting through another -25% decline. The score aims to do better by waiting for <em>multiple independent confirmation</em> before signalling.</p>
+      <h4>What This Score Actually Is</h4>
+      <p>This is a <strong>bear market stress meter</strong>, not a buy signal. It measures how much simultaneous pain exists across 23 indicators spanning 6 fundamentally different measurement domains. Higher score = more stress = historically closer to a cycle bottom.</p>
+      <p>Think of it like a thermometer for market suffering. A high reading tells you the market is very sick. It does <em>not</em> tell you the fever has peaked.</p>
 
-      <h4>The Approach: Multi-Domain Confluence</h4>
-      <p>The model aggregates 23 live indicators across 6 domains. The core thesis is that cycle bottoms are unique events where stress appears simultaneously across fundamentally different measurement frameworks &mdash; on-chain, technical, sentiment, miner economics, exchange flows, and cycle timing. When enough unrelated metrics converge on &ldquo;bottom,&rdquo; the signal is far stronger than any single reading.</p>
-      <p>This is analogous to factor-based scoring in traditional finance: no single factor (value, momentum, quality) times the market perfectly, but a composite of uncorrelated signals reduces noise and improves hit rate.</p>
-
-      <h4>Domain Design &amp; Weight Rationale</h4>
+      <h4>What It&rsquo;s Good At (Backed by Data)</h4>
       <ul>
-        <li><strong>On-Chain Valuation (30%)</strong> &mdash; MVRV-Z Score, NUPL, Realized Price ratio, Supply in Profit, Reserve Risk, Stablecoin Supply Ratio, and Thermocap Multiple. These compare market price against aggregate cost basis derived from Bitcoin&rsquo;s UTXO set. <em>Highest weight because on-chain cost-basis metrics have historically been the most reliable bottoming signals</em>, marking every major cycle low (Dec 2018, Mar 2020, Nov 2022). Note: several of these (MVRV-Z, NUPL, Realized Price, Supply in Profit) are partially correlated since they all derive from the realized cap. The model accounts for this by weighting them individually rather than treating them as fully independent &mdash; they collectively represent one domain, not seven separate signals.</li>
-        <li><strong>Technical / Price (20%)</strong> &mdash; Mayer Multiple (price/200d MA), 200-Week Moving Average, Pi Cycle Bottom indicator, Rainbow Chart band, and drawdown depth from ATH. These are mean-reversion measures &mdash; how far price has deviated from long-term statistical norms. <em>Second-highest weight because these are straightforward and well-studied</em>, though they can lag at macro turning points.</li>
-        <li><strong>Miner Health (15%)</strong> &mdash; Hash Ribbons (30d vs 60d hash rate MA crossover) and Puell Multiple (daily miner revenue vs 365d average). Miner capitulation &mdash; when marginal miners shut off rigs and sell reserves &mdash; historically precedes price bottoms by removing a persistent source of sell pressure. <em>Moderate weight because the signal is leading but noisy</em> (halving events and geographic disruptions can trigger hash rate drops unrelated to capitulation).</li>
-        <li><strong>Sentiment &amp; Positioning (15%)</strong> &mdash; SOPR and LTH-SOPR (on-chain profit/loss of spent coins), Fear &amp; Greed Index (survey/volatility composite), and perpetual funding rates. These measure whether sellers are realizing losses (capitulation) and whether the market is positioned bearishly. <em>Contrarian indicators that work best at extremes</em>, but can generate false signals during prolonged fear without price recovery.</li>
-        <li><strong>Exchange &amp; Liquidity (10%)</strong> &mdash; NVT Signal (network value to transaction volume), Open Interest (derivatives positioning), and exchange netflow/reserve data (where available). Coins leaving exchanges and declining leverage suggest accumulation rather than distribution. <em>Lower weight because exchange data has become less reliable</em> as institutional custody and ETF flows have changed the landscape.</li>
-        <li><strong>Cycle Timing (10%)</strong> &mdash; Days since ATH relative to historical bottoming windows (~363-407 days in past cycles), and RHODL Ratio (long-term vs short-term holder balance). <em>Lowest weight deliberately</em> &mdash; while Bitcoin has shown ~4-year cycles historically, there is no fundamental reason future cycles must follow the same timing. This domain provides context, not conviction.</li>
+        <li><strong>Cycle top avoidance &mdash; 3 for 3.</strong> At every major peak (Dec 2017 at $19K, Nov 2021 at $67K, Oct 2025 at $125K), the score was deep in No Entry (4&ndash;8 out of 100). It has never signalled stress during a top. If the score is low, it is not time to buy the dip.</li>
+        <li><strong>Strong Buy bottom timing &mdash; nailed it (n=1).</strong> The only time the score crossed 75 was Dec 2018, within 8% of the absolute cycle bottom at $3,128. Returns: +120% at 6 months, +271% peak within one year. However, this has only happened once in the entire dataset.</li>
+        <li><strong>Higher score = lower price within bear markets.</strong> During 2022, days with score 50&ndash;55 averaged $21.8K while days at score 65&ndash;70 averaged $18.7K. The score does rank-order relative value within a bear market, even if it can&rsquo;t pinpoint the exact bottom.</li>
       </ul>
 
-      <h4>How the Score Is Computed</h4>
-      <p>Each indicator is scored 0&ndash;10 based on where its current value sits relative to historically confirmed bottom levels. A score of 10 means the indicator is at or beyond levels only seen during previous cycle bottoms; 0 means it&rsquo;s showing the opposite (euphoria/top territory). Indicators within each domain are combined using reliability-based sub-weights, producing a domain average (0&ndash;10). Domains are then weighted and summed to a 0&ndash;100 composite.</p>
-      <p>If a domain has no data (e.g., an API is down), its weight is redistributed proportionally across active domains rather than defaulting to zero &mdash; this prevents data availability from artificially depressing the score.</p>
-      <p>The composite maps to four zones:</p>
+      <h4>What It&rsquo;s NOT Good At (Also Backed by Data)</h4>
       <ul>
-        <li><strong>0&ndash;25 No Entry</strong> &mdash; Fewer than ~2 of 6 domains showing stress. Not a bottoming environment.</li>
-        <li><strong>25&ndash;50 Watching</strong> &mdash; Some signals building but insufficient confluence. Prepare capital.</li>
-        <li><strong>50&ndash;75 Accumulate</strong> &mdash; Multiple domains in value territory. Historically viable DCA territory, but expect volatility &mdash; the Jun 2022 Accumulate signal saw -36% drawdown over 6 months before recovering.</li>
-        <li><strong>75&ndash;100 Strong Buy</strong> &mdash; Rare cross-domain confluence. Has only triggered once in the entire dataset (Dec 2018).</li>
+        <li><strong>The &ldquo;High Stress&rdquo; zone (50&ndash;75) is not a buy signal.</strong> In Jun 2022, the score crossed 50 at $26,593. The actual bottom came 5 months later at $15,742 &mdash; another 41% down. A simple rule of &ldquo;buy at -75% from ATH&rdquo; would have entered at ~$16K and outperformed. The score read ~67 at both $20K in June and $16K at the actual bottom &mdash; it couldn&rsquo;t tell the difference.</li>
+        <li><strong>It doesn&rsquo;t consistently beat random bear market buying.</strong> We compared the Jun 2022 High Stress entry ($26.6K) against the average price on random days during that bear market ($21.1K). Random buying was 26% cheaper. The model detected the bear market regime correctly, but didn&rsquo;t improve on simply buying randomly during it.</li>
+        <li><strong>The score can&rsquo;t distinguish intermediate crashes from real bottoms.</strong> The composite gave essentially the same reading (~67) during the Jun 2022 crash and the Nov 2022 actual bottom. Multiple indicators &ldquo;look bottomy&rdquo; at any deep drawdown, not just the final one.</li>
       </ul>
 
-      <h4>Backtest Results &amp; Limitations</h4>
-      <p>The model was backtested over 3,363 trading days (Jan 2017 &ndash; present) using 18 historical datasets spanning back to 2009. The same thresholds, weights, and scoring logic running live today were applied retroactively. Key findings:</p>
+      <h4>How to Read the Zones</h4>
       <ul>
-        <li><strong>Strong Buy (75+) triggered once</strong> &mdash; Dec 2018 at the bear market bottom ($3,485). Returns from signal day: +120% at 6 months, +271% peak within one year, +1,302% at ~3 years.</li>
-        <li><strong>Accumulate (50+) fired near every major bottom</strong> &mdash; Nov 2018 ($5,757), Mar 2020 ($7,937), Jun 2022 ($26,593), Feb 2026 ($62,812). However, Accumulate is not a precision timer &mdash; the Jun 2022 entry saw -28% at 1 month and -36% at 6 months before turning positive at ~1.4 years. The model identifies the <em>zone</em>, not the exact bottom.</li>
-        <li><strong>At every cycle top, the score read 4&ndash;8 (deep No Entry)</strong> &mdash; Dec 2017 ($19K): score 4. Nov 2021 ($67K): score 7. Oct 2025 ($125K): score 8. The model never signalled buy during a peak.</li>
-        <li><strong>Monotonic relationship between score and forward returns</strong> &mdash; Higher scores produced better outcomes at every time horizon tested (30d, 90d, 180d, 365d), with Strong Buy days averaging +135% at 6 months vs +79% for Accumulate and +58% for Watching.</li>
+        <li><strong>0&ndash;25 No Entry</strong> &mdash; Market is not under stress. Not a bottoming environment. This is where the model has its strongest track record &mdash; every cycle top registered here.</li>
+        <li><strong>25&ndash;50 Watching</strong> &mdash; Some stress building. Prepare capital and monitor, but no rush.</li>
+        <li><strong>50&ndash;75 High Stress</strong> &mdash; Bear market pain is widespread. You are likely in a bear market. But this does NOT mean the bottom is in. The Jun 2022 signal saw -36% more downside over 6 months. Treat this as a regime indicator, not a timing signal. If you act here, use small positions with DCA.</li>
+        <li><strong>75&ndash;100 Strong Buy</strong> &mdash; Extreme cross-domain confluence. Fired once (Dec 2018), within 8% of the bottom. If it fires again, it warrants attention &mdash; but remember n=1.</li>
       </ul>
+
+      <h4>Benchmark: Score vs Simple Drawdown Rules</h4>
+      <p>For honesty, here&rsquo;s how the model&rsquo;s High Stress (50+) signals compare against buying at a fixed percentage below the all-time high:</p>
+      <ul>
+        <li><strong>2018 cycle:</strong> High Stress first triggered at $5,757 (-71% from ATH). A -75% drawdown rule would have entered at ~$4,500. Bottom was $3,128.</li>
+        <li><strong>2022 cycle:</strong> High Stress first triggered at $26,593 (-61% from ATH). A -75% drawdown rule would have entered at ~$16K. Bottom was $15,742. The simple rule won by a wide margin: 1-year return of +131% vs -3% for the model&rsquo;s signal.</li>
+      </ul>
+      <p>The model adds genuine value at the Strong Buy level (75+) and for cycle top avoidance. The High Stress zone tells you the market is in pain, but a simple -75% drawdown rule has historically been a better entry timer.</p>
+
+      <h4>The Model: 6 Domains, 23 Indicators</h4>
+      <ul>
+        <li><strong>On-Chain Valuation (30%)</strong> &mdash; MVRV-Z, NUPL, Realized Price, Supply in Profit, Reserve Risk, Stablecoin Supply Ratio, Thermocap Multiple. Compares price to aggregate cost basis. Note: these are partially correlated (all derive from the realized cap) and are grouped as one domain, not treated as independent.</li>
+        <li><strong>Technical / Price (20%)</strong> &mdash; Mayer Multiple, 200-Week MA, Pi Cycle Bottom, Rainbow Chart, drawdown depth. Mean-reversion measures of how far price has deviated from long-term norms.</li>
+        <li><strong>Miner Health (15%)</strong> &mdash; Hash Ribbons (30d vs 60d hash rate cross) and Puell Multiple (daily revenue vs 365d avg). Miner capitulation removes a persistent sell pressure source.</li>
+        <li><strong>Sentiment (15%)</strong> &mdash; SOPR, LTH-SOPR, Fear &amp; Greed, Fear Duration, Funding Rates. Measures whether the market is in panic and sellers are realizing losses.</li>
+        <li><strong>Exchange &amp; Liquidity (10%)</strong> &mdash; NVT Signal, Open Interest, Exchange Netflow. Lower weight because exchange data is less reliable in the ETF era.</li>
+        <li><strong>Cycle Timing (10%)</strong> &mdash; Days since ATH relative to historical bottoming windows, RHODL Ratio. Lowest weight &mdash; no fundamental reason future cycles must follow the same timing.</li>
+      </ul>
+      <p>Each indicator is scored 0&ndash;10 (10 = historically confirmed bottom levels). Domain averages are weighted and summed to a 0&ndash;100 composite. If a domain has no data, its weight is redistributed to active domains.</p>
 
       <h4>Honest Limitations</h4>
       <ul>
-        <li><strong>Tiny sample size.</strong> Bitcoin has had ~3 complete bear-to-bull cycles since 2013. Any model that &ldquo;works on all 3&rdquo; could easily be overfit to a small sample. Statistical significance is weak at n=3.</li>
-        <li><strong>Retroactive backtest.</strong> The thresholds and weights were informed by studying past cycles. This is not a true out-of-sample test &mdash; it&rsquo;s a model designed to explain history, now being applied forward. Whether it generalizes to future cycles is an open question.</li>
-        <li><strong>Correlated indicators.</strong> While the 6 domains are conceptually distinct, some indicators within domains (and even across them) share underlying data. On-chain valuation metrics are especially correlated since they all derive from the realized cap. The model partially mitigates this through domain grouping and weight caps, but it&rsquo;s not the same as 23 truly independent signals.</li>
-        <li><strong>Regime change risk.</strong> Bitcoin&rsquo;s market structure has fundamentally changed with spot ETFs, institutional adoption, and global regulatory frameworks. Historical cycle dynamics driven by retail speculation may not persist. The 4-year halving cycle could compress or elongate.</li>
-        <li><strong>Accumulate ≠ bottom.</strong> As the Jun 2022 signal demonstrates, Accumulate-zone entries can involve significant drawdowns before recovery. The model identifies value zones, not precise bottoms. Position sizing and DCA are essential.</li>
-        <li><strong>Not financial advice.</strong> This is a research framework built on publicly available data. It should inform, not replace, your own analysis and risk management.</li>
+        <li><strong>Tiny sample size (n=3).</strong> Three complete cycles is not enough to validate any model statistically. This could easily be overfit.</li>
+        <li><strong>Retroactive backtest.</strong> Thresholds and weights were tuned on historical data. This is not out-of-sample.</li>
+        <li><strong>Correlated indicators.</strong> On-chain metrics share underlying data. It&rsquo;s not 23 independent signals.</li>
+        <li><strong>Regime change.</strong> ETFs, institutional flows, and regulatory changes mean past cycle dynamics may not repeat.</li>
+        <li><strong>High Stress &ne; bottom.</strong> The Jun 2022 and Feb 2026 signals both demonstrate that elevated stress can precede months of further decline.</li>
+        <li><strong>Not financial advice.</strong> This is a research framework, not a trading system.</li>
       </ul>
-      <p style="color:#64748B;font-size:12px;margin-top:8px">See the Signal Track Record section below for the interactive chart, entry trajectories, and zone performance data.</p>
     </div>
   </details>
 
@@ -779,7 +786,7 @@ body{{min-height:100vh;background:#060911;color:#E2E8F0;font-family:'DM Sans',sa
 </div>
 
 <footer class="footer"><div class="wrap">
-  <div>Bitcoin Re-Entry Signal v2 &mdash; Not financial advice. Do your own research.</div>
+  <div>Bitcoin Re-Entry Signal &mdash; Bear Market Stress Meter &mdash; Not financial advice. Do your own research.</div>
   <div>Data: BGeometrics &bull; Blockchain.info &bull; Alternative.me &bull; Binance</div>
   <div style="margin-top:6px"><a href="https://charts.bgeometrics.com/">BGeometrics</a> &bull; <a href="https://www.bitcoinmagazinepro.com/charts/">Bitcoin Magazine Pro</a> &bull; <a href="https://charts.bitbo.io/">Bitbo</a></div>
 </div></footer>
@@ -1078,7 +1085,7 @@ bCtx.setLineDash([]);
 bCtx.font='9px Space Mono';bCtx.fillStyle='#22C55E';bCtx.textAlign='left';
 bCtx.fillText('Strong Buy (75)',bW-bRpad+4,byScore(75)-4);
 bCtx.fillStyle='#EAB308';
-bCtx.fillText('Accumulate (50)',bW-bRpad+4,byScore(50)-4);
+bCtx.fillText('High Stress (50)',bW-bRpad+4,byScore(50)-4);
 
 /* Signal entry markers (green triangles) */
 if(btMarkers){{
@@ -1137,7 +1144,7 @@ btcv.addEventListener('mousemove',e=>{{
   const idx=Math.round(((mx-bLpad)/bPlotW)*(btData.length-1));
   if(idx>=0&&idx<btData.length){{
     const d=btData[idx];
-    const zl={{STRONG_BUY:'Strong Buy',ACCUMULATE:'Accumulate',WATCHING:'Watching',NO_ENTRY:'No Entry'}};
+    const zl={{STRONG_BUY:'Strong Buy',ACCUMULATE:'High Stress',WATCHING:'Watching',NO_ENTRY:'No Entry'}};
     const zc={{STRONG_BUY:'#22C55E',ACCUMULATE:'#EAB308',WATCHING:'#FB923C',NO_ENTRY:'#EF4444'}};
     bTip.innerHTML=d.d+'<br>Price: <span style=\"color:#F59E0B\">$'+d.p.toLocaleString()+'</span><br>Score: <span style=\"color:'+(zc[d.z]||'#94A3B8')+'\">'+d.s.toFixed(1)+'</span> ('+(zl[d.z]||d.z)+')';
     bTip.style.display='block';
