@@ -335,31 +335,87 @@ def main():
             <div class="top-score">Score: <span class="mono" style="color:#22C55E">{b["score"]:.1f}</span></div>
           </div>'''
 
-        # ── Bear market journey table ──
+        # ── Bear market journey table (built from backtest data) ──
         journey_rows = ""
-        journeys = [
-            ("2018", [
-                ("Top", "Dec 2017", 19280, 4.1, "0%"),
-                ("Score 25", "Mar 2018", 8214, 26.7, "-57%"),
-                ("Score 50", "Nov 2018", 5757, 52.7, "-70%"),
-                ("Score 65", "Dec 2018", 4013, 63.1, "-79%"),
-                ("Bottom", "Dec 2018", 3128, 79.0, "-84%"),
-            ]),
-            ("2022", [
-                ("Top", "Nov 2021", 66954, 7.4, "0%"),
-                ("Score 25", "May 2022", 30074, 39.1, "-55%"),
-                ("Score 50", "Jun 2022", 26593, 56.6, "-60%"),
-                ("Score 65", "Jul 2022", 19865, 68.2, "-70%"),
-                ("Bottom", "Nov 2022", 15742, 67.4, "-76%"),
-            ]),
+
+        # Define cycle periods: (label, top_date, bottom_date_or_None)
+        cycle_defs = [
+            ("2018", "2017-12-17", "2018-12-15"),
+            ("2022", "2021-11-10", "2022-11-21"),
+            ("Now", "2025-10-07", None),  # Current cycle, no bottom yet
         ]
+
+        journeys = []
+        for cyc_label, top_date, bottom_date in cycle_defs:
+            # Find top day
+            top_day = next((d for d in daily if d["date"] == top_date), None)
+            if not top_day:
+                continue
+            ath_price = top_day["price"]
+
+            # Build phases for this cycle
+            phases = []
+            from datetime import datetime as _dt
+            top_dt = _dt.strptime(top_date, "%Y-%m-%d")
+            top_nice = top_dt.strftime("%b %Y")
+            phases.append(("Top", top_nice, int(ath_price), top_day["score"], "0%"))
+
+            # Find first time score crosses key thresholds after the top
+            end_date = bottom_date or daily[-1]["date"]
+            crossed_25 = crossed_50 = crossed_65 = False
+            peak_score = 0
+            peak_score_day = None
+            for d in daily:
+                if d["date"] <= top_date:
+                    continue
+                if d["date"] > end_date:
+                    break
+                dd_pct = round((d["price"] - ath_price) / ath_price * 100)
+                if d["score"] > peak_score:
+                    peak_score = d["score"]
+                    peak_score_day = d
+                if not crossed_25 and d["score"] >= 25:
+                    crossed_25 = True
+                    dt = _dt.strptime(d["date"], "%Y-%m-%d")
+                    phases.append(("Score 25", dt.strftime("%b %Y"), int(d["price"]), round(d["score"], 1), f"{dd_pct}%"))
+                if not crossed_50 and d["score"] >= 50:
+                    crossed_50 = True
+                    dt = _dt.strptime(d["date"], "%Y-%m-%d")
+                    phases.append(("Score 50", dt.strftime("%b %Y"), int(d["price"]), round(d["score"], 1), f"{dd_pct}%"))
+                if not crossed_65 and d["score"] >= 65:
+                    crossed_65 = True
+                    dt = _dt.strptime(d["date"], "%Y-%m-%d")
+                    phases.append(("Score 65", dt.strftime("%b %Y"), int(d["price"]), round(d["score"], 1), f"{dd_pct}%"))
+
+            if bottom_date:
+                btm_day = next((d for d in daily if d["date"] == bottom_date), None)
+                if btm_day:
+                    dd_pct = round((btm_day["price"] - ath_price) / ath_price * 100)
+                    phases.append(("Bottom", _dt.strptime(bottom_date, "%Y-%m-%d").strftime("%b %Y"), int(btm_day["price"]), round(btm_day["score"], 1), f"{dd_pct}%"))
+            else:
+                # Current cycle — show where we are now
+                now_day = daily[-1]
+                dd_pct = round((now_day["price"] - ath_price) / ath_price * 100)
+                dt = _dt.strptime(now_day["date"], "%Y-%m-%d")
+                phases.append(("You are here", dt.strftime("%b %Y"), int(now_day["price"]), round(now_day["score"], 1), f"{dd_pct}%"))
+
+            journeys.append((cyc_label, phases))
         for cycle_name, phases in journeys:
             for phase, date, price, score, dd in phases:
                 sc_color = "#EF4444" if score < 10 else "#FB923C" if score < 25 else "#EAB308" if score < 50 else "#22C55E" if score >= 65 else "#EAB308"
                 is_bottom = phase == "Bottom"
                 is_top = phase == "Top"
-                row_style = ' style="border-bottom:2px solid #1E293B"' if is_bottom else ""
-                phase_style = f' style="color:#EF4444;font-weight:700"' if is_top else (f' style="color:#22C55E;font-weight:700"' if is_bottom else "")
+                is_here = phase == "You are here"
+                is_last = is_bottom or is_here
+                row_style = ' style="border-bottom:2px solid #1E293B"' if is_last else ""
+                if is_top:
+                    phase_style = ' style="color:#EF4444;font-weight:700"'
+                elif is_bottom:
+                    phase_style = ' style="color:#22C55E;font-weight:700"'
+                elif is_here:
+                    phase_style = ' style="color:#F59E0B;font-weight:700"'
+                else:
+                    phase_style = ""
                 journey_rows += f'''<tr{row_style}>
                   <td class="mono">{cycle_name}</td>
                   <td{phase_style}>{phase}</td>
