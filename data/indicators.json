@@ -23,15 +23,15 @@
     "desc": "Below 0 = network at unrealized loss = capitulation"
   },
   "realizedPrice": {
-    "value": 54236.0,
-    "ratio": 1.3725,
-    "percentAbove": 37.3,
+    "value": 54160.0,
+    "ratio": 1.37,
+    "percentAbove": 37.0,
     "live": true,
     "desc": "Price below realized price = market at aggregate loss = bottom zone"
   },
   "supplyInProfit": {
-    "value": 51.1,
-    "absolute": 10127182.0,
+    "value": 51.6,
+    "absolute": 10207390.0,
     "live": true,
     "thresholds": {
       "deepBottom": 45,
@@ -51,7 +51,7 @@
     "desc": "Below 0.002 = high conviction, low risk = ideal accumulation"
   },
   "ssr": {
-    "value": 5.56,
+    "value": 5.7,
     "live": true,
     "thresholds": {
       "highBuyingPower": 5,
@@ -94,7 +94,7 @@
     "desc": "Below 0.5 = miner capitulation = accumulation zone"
   },
   "mayerMultiple": {
-    "value": 0.7941,
+    "value": 0.7915,
     "sma200d": 93745.0,
     "live": true,
     "thresholds": {
@@ -107,8 +107,8 @@
   },
   "wma200": {
     "value": 58810.0,
-    "ratio": 1.2658,
-    "percentAbove": 26.6,
+    "ratio": 1.2617,
+    "percentAbove": 26.2,
     "live": true,
     "desc": "Historic cycle floor. Price at or below = major buy zone"
   },
@@ -124,7 +124,7 @@
     "avgDaysToBottom": 383,
     "cycleProgress": 0.42,
     "estimatedBottom": "2026-10-25",
-    "drawdownPct": -40.3,
+    "drawdownPct": -40.5,
     "athPrice": 124776.68,
     "live": true,
     "desc": "Day 161 of ~383. Est. bottom: Oct 2026"
@@ -132,26 +132,26 @@
   "rainbowChart": {
     "currentBand": "Accumulate",
     "bands": {
-      "Fire Sale": 19849,
-      "BUY!": 32254,
-      "Accumulate": 50862,
-      "Still Cheap": 77534,
-      "HODL!": 114751,
-      "Is this a bubble?": 170575,
-      "FOMO intensifies": 248109,
-      "Sell. Seriously.": 359758,
-      "Max Bubble": 527232
+      "Fire Sale": 19851,
+      "BUY!": 32258,
+      "Accumulate": 50868,
+      "Still Cheap": 77543,
+      "HODL!": 114764,
+      "Is this a bubble?": 170595,
+      "FOMO intensifies": 248139,
+      "Sell. Seriously.": 359801,
+      "Max Bubble": 527294
     },
     "live": true,
     "desc": "Logarithmic regression bands. Lower = deeper value"
   },
   "sopr": {
-    "value": 1.0027,
+    "value": 1.0056,
     "live": true,
     "desc": "Below 1.0 = sellers at a loss = capitulation"
   },
   "lthSopr": {
-    "value": 0.9792,
+    "value": 0.9751,
     "live": true,
     "desc": "Long-term holders selling at loss = extreme capitulation"
   },
@@ -187,20 +187,20 @@
     "desc": "Negative = outflows = coins leaving exchanges = accumulation"
   },
   "openInterest": {
-    "value": 88894.0,
-    "changePct30d": 12.4,
+    "value": 88430.0,
+    "changePct30d": 11.8,
     "live": true,
     "source": "Binance",
     "desc": "Total derivatives positions. Large decline = leverage reset = healthier market"
   },
   "_meta": {
-    "computedAt": "2026-03-17T04:04:17.171863+00:00",
-    "currentPrice": 74440.68,
+    "computedAt": "2026-03-17T07:07:24.408765+00:00",
+    "currentPrice": 74198.88,
     "currentDate": "2026-03-17",
     "priceSource": "Binance",
     "priceSources": {
-      "Binance": 74440.68,
-      "CoinGecko": 74557.0
+      "Binance": 74198.88,
+      "CoinGecko": 74182.0
     }
   },
   "_priceHistory": [
