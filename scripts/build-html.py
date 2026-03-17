@@ -512,11 +512,15 @@ body{{min-height:100vh;background:#060911;color:#E2E8F0;font-family:'DM Sans',sa
 .pos-scale{{margin-top:8px}}
 .pos-track{{position:relative;height:16px;background:#1E293B;border-radius:8px;overflow:visible}}
 .pos-fill{{position:absolute;inset:0;border-radius:8px}}
-.pos-marker{{position:absolute;top:-4px;z-index:2}}
-.pos-marker-line{{width:2px;height:24px;border-radius:1px}}
+.pos-marker{{position:absolute;top:-4px;z-index:2;cursor:pointer;width:12px;margin-left:-6px}}
+.pos-marker-line{{width:2px;height:24px;border-radius:1px;margin:0 auto}}
 .pos-top-marker .pos-marker-line{{background:#EF4444}}
 .pos-btm-marker .pos-marker-line{{background:#22C55E}}
 .pos-needle{{position:absolute;top:-6px;width:4px;height:28px;background:#F8FAFC;border-radius:2px;z-index:3;transform:translateX(-50%)}}
+.pos-tip{{display:none;position:absolute;bottom:32px;left:50%;transform:translateX(-50%);background:#1E293B;border:1px solid #334155;border-radius:6px;padding:6px 10px;font-size:11px;color:#E2E8F0;white-space:nowrap;z-index:10;text-align:center;line-height:1.4;pointer-events:none}}
+.pos-marker:hover .pos-tip{{display:block}}
+.pos-top-marker:hover .pos-tip{{border-color:#EF4444}}
+.pos-btm-marker:hover .pos-tip{{border-color:#22C55E}}
 .pos-labels{{display:flex;justify-content:space-between;font-size:10px;color:#475569;margin-top:6px}}
 
 /* Behind the Score — collapsible */
@@ -695,12 +699,12 @@ body{{min-height:100vh;background:#060911;color:#E2E8F0;font-family:'DM Sans',sa
           <!-- Gradient background: red (tops) to green (bottoms) -->
           <div class="pos-fill" style="background:linear-gradient(90deg, #EF4444 0%, #EF4444 10%, #1E293B 20%, #1E293B 55%, #EAB308 70%, #22C55E 80%, #22C55E 100%);opacity:0.25"></div>
           <!-- Historical top markers -->
-          <div class="pos-marker pos-top-marker" style="left:4.1%" title="2017 Top: Score 4.1"><div class="pos-marker-line"></div></div>
-          <div class="pos-marker pos-top-marker" style="left:7.4%" title="2021 Top: Score 7.4"><div class="pos-marker-line"></div></div>
-          <div class="pos-marker pos-top-marker" style="left:8.1%" title="2025 Top: Score 8.1"><div class="pos-marker-line"></div></div>
+          <div class="pos-marker pos-top-marker" style="left:4.1%"><div class="pos-marker-line"></div><div class="pos-tip">2017 Top<br><span class="mono">$19,280</span><br>Score 4.1</div></div>
+          <div class="pos-marker pos-top-marker" style="left:7.4%"><div class="pos-marker-line"></div><div class="pos-tip">2021 Top<br><span class="mono">$66,954</span><br>Score 7.4</div></div>
+          <div class="pos-marker pos-top-marker" style="left:8.1%"><div class="pos-marker-line"></div><div class="pos-tip">2025 Top<br><span class="mono">$124,777</span><br>Score 8.1</div></div>
           <!-- Historical bottom markers -->
-          <div class="pos-marker pos-btm-marker" style="left:67.4%" title="2022 Bottom: Score 67.4"><div class="pos-marker-line"></div></div>
-          <div class="pos-marker pos-btm-marker" style="left:79%" title="2018 Bottom: Score 79.0"><div class="pos-marker-line"></div></div>
+          <div class="pos-marker pos-btm-marker" style="left:67.4%"><div class="pos-marker-line"></div><div class="pos-tip">2022 Bottom<br><span class="mono">$15,742</span><br>Score 67.4</div></div>
+          <div class="pos-marker pos-btm-marker" style="left:79%"><div class="pos-marker-line"></div><div class="pos-tip">2018 Bottom<br><span class="mono">$3,128</span><br>Score 79.0</div></div>
           <!-- You are here -->
           <div class="pos-needle" style="left:{c["score"]}%"></div>
         </div>
