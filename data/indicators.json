@@ -24,8 +24,8 @@
   },
   "realizedPrice": {
     "value": 54117.0,
-    "ratio": 1.3723,
-    "percentAbove": 37.2,
+    "ratio": 1.3713,
+    "percentAbove": 37.1,
     "live": true,
     "desc": "Price below realized price = market at aggregate loss = bottom zone"
   },
@@ -94,7 +94,7 @@
     "desc": "Below 0.5 = miner capitulation = accumulation zone"
   },
   "mayerMultiple": {
-    "value": 0.7922,
+    "value": 0.7916,
     "sma200d": 93745.0,
     "live": true,
     "thresholds": {
@@ -107,8 +107,8 @@
   },
   "wma200": {
     "value": 58820.0,
-    "ratio": 1.2626,
-    "percentAbove": 26.3,
+    "ratio": 1.2616,
+    "percentAbove": 26.2,
     "live": true,
     "desc": "Historic cycle floor. Price at or below = major buy zone"
   },
@@ -132,15 +132,15 @@
   "rainbowChart": {
     "currentBand": "Accumulate",
     "bands": {
-      "Fire Sale": 19871,
+      "Fire Sale": 19872,
       "BUY!": 32291,
       "Accumulate": 50921,
       "Still Cheap": 77623,
-      "HODL!": 114882,
+      "HODL!": 114883,
       "Is this a bubble?": 170771,
-      "FOMO intensifies": 248394,
-      "Sell. Seriously.": 360171,
-      "Max Bubble": 527837
+      "FOMO intensifies": 248395,
+      "Sell. Seriously.": 360172,
+      "Max Bubble": 527839
     },
     "live": true,
     "desc": "Logarithmic regression bands. Lower = deeper value"
@@ -164,9 +164,9 @@
     "desc": "Sustained extreme fear (< 25) = contrarian buy"
   },
   "fundingRates": {
-    "current": null,
-    "avg10d": null,
-    "negativePeriods": 0,
+    "current": -4.8e-05,
+    "avg10d": -2.5e-05,
+    "negativePeriods": 22,
     "live": true,
     "desc": "Negative = shorts paying longs = bearish positioning"
   },
@@ -188,16 +188,16 @@
     "desc": "Negative = outflows = coins leaving exchanges = accumulation"
   },
   "openInterest": {
-    "value": null,
-    "changePct30d": null,
-    "live": false,
+    "value": 93560.0,
+    "changePct30d": 16.7,
+    "live": true,
     "source": "Binance",
     "desc": "Total derivatives positions. Large decline = leverage reset = healthier market"
   },
   "_halving": {
-    "blockHeight": 941136,
+    "blockHeight": 941138,
     "nextBlock": 1050000,
-    "blocksLeft": 108864,
+    "blocksLeft": 108862,
     "estDays": 756,
     "estDate": "2028-04-12",
     "progress": 0.4816,
@@ -705,12 +705,13 @@
     }
   },
   "_meta": {
-    "computedAt": "2026-03-18T09:43:51.284727+00:00",
-    "currentPrice": 74265.0,
+    "computedAt": "2026-03-18T09:50:33.080697+00:00",
+    "currentPrice": 74209.97,
     "currentDate": "2026-03-17",
-    "priceSource": "CoinGecko",
+    "priceSource": "Binance",
     "priceSources": {
-      "CoinGecko": 74265.0
+      "Binance": 74209.97,
+      "CoinGecko": 74236.0
     }
   },
   "_priceHistory": [
@@ -1436,7 +1437,7 @@
     }
   ],
   "_composite": {
-    "score": 44.7,
+    "score": 43.5,
     "zone": "WATCHING",
     "zoneLabel": "WATCHING",
     "zoneColor": "#FB923C",
@@ -1539,7 +1540,7 @@
         "contribution": 7.8
       },
       "sentiment": {
-        "score": 4.5,
+        "score": 4.4,
         "weight": 0.15,
         "items": [
           {
@@ -1561,14 +1562,19 @@
             "name": "Fear Duration",
             "score": 0,
             "weight": 1
+          },
+          {
+            "name": "Funding Rates",
+            "score": 4,
+            "weight": 1
           }
         ],
         "label": "Sentiment & Positioning",
         "effectiveWeight": 0.15,
-        "contribution": 6.7
+        "contribution": 6.6
       },
       "exchange": {
-        "score": 5.0,
+        "score": 3.9,
         "weight": 0.1,
         "items": [
           {
@@ -1580,11 +1586,16 @@
             "name": "NVT Signal",
             "score": 1,
             "weight": 1.5
+          },
+          {
+            "name": "Open Interest",
+            "score": 0,
+            "weight": 1
           }
         ],
         "label": "Exchange & Liquidity",
         "effectiveWeight": 0.1,
-        "contribution": 5.0
+        "contribution": 3.9
       },
       "cycle": {
         "score": 3.6,

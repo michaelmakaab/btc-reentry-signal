@@ -283,11 +283,19 @@ def fetch_funding_rates():
     data = fetch_json("https://fapi.binance.com/fapi/v1/fundingRate?symbol=BTCUSDT&limit=100", "Binance funding rates")
     if data:
         return [{"ts": d["fundingTime"], "rate": float(d["fundingRate"])} for d in data]
-    # Fallback: Bybit
+    # Fallback 1: OKX
     time.sleep(0.3)
-    data = fetch_json("https://api.bybit.com/v5/market/funding/history?category=linear&symbol=BTCUSDT&limit=100", "Bybit funding rates")
-    if data and "result" in data and "list" in data["result"]:
-        return [{"ts": int(d["fundingRateTimestamp"]), "rate": float(d["fundingRate"])} for d in data["result"]["list"]]
+    data = fetch_json("https://www.okx.com/api/v5/public/funding-rate?instId=BTC-USDT-SWAP", "OKX funding rate")
+    if data and "data" in data and data["data"]:
+        d = data["data"][0]
+        return [{"ts": int(d["fundingTime"]), "rate": float(d["fundingRate"])}]
+    # Fallback 2: Kraken Futures
+    time.sleep(0.3)
+    data = fetch_json("https://futures.kraken.com/derivatives/api/v3/tickers", "Kraken Futures tickers")
+    if data and "tickers" in data:
+        for t in data["tickers"]:
+            if t.get("symbol") == "pi_xbtusd" and "fundingRate" in t:
+                return [{"ts": int(time.time() * 1000), "rate": float(t["fundingRate"])}]
     return None
 
 def fetch_spot_price():
@@ -307,12 +315,12 @@ def fetch_spot_price():
     if data and "bitcoin" in data:
         sources.append(("CoinGecko", float(data["bitcoin"]["usd"])))
 
-    # Source 3: Bybit (fallback if Binance is geo-blocked)
+    # Source 3: OKX (fallback if Binance is geo-blocked)
     if not any(s[0] == "Binance" for s in sources):
         time.sleep(0.3)
-        data = fetch_json("https://api.bybit.com/v5/market/tickers?category=spot&symbol=BTCUSDT", "Bybit spot")
-        if data and "result" in data and "list" in data["result"] and data["result"]["list"]:
-            sources.append(("Bybit", float(data["result"]["list"][0]["lastPrice"])))
+        data = fetch_json("https://www.okx.com/api/v5/market/ticker?instId=BTC-USDT", "OKX spot")
+        if data and "data" in data and data["data"]:
+            sources.append(("OKX", float(data["data"][0]["last"])))
 
     if not sources:
         print("  ⚠ No spot price available, will use Blockchain.info daily average")
@@ -332,7 +340,7 @@ def fetch_spot_price():
     return {"price": primary[1], "source": primary[0], "all": {n: p for n, p in sources}}
 
 def fetch_open_interest():
-    """Fetch BTC open interest from Binance Futures, with Bybit fallback."""
+    """Fetch BTC open interest: Binance -> OKX -> Kraken fallback chain."""
     print("\n📊 Fetching open interest...")
     # Try Binance first
     data = fetch_json("https://fapi.binance.com/fapi/v1/openInterest?symbol=BTCUSDT", "Binance OI (current)")
@@ -345,14 +353,20 @@ def fetch_open_interest():
             oi_history = [{"ts": d["timestamp"], "oi": float(d["sumOpenInterest"]), "oiUsd": float(d["sumOpenInterestValue"])} for d in hist]
         return {"current": oi_btc, "history": oi_history}
 
-    # Fallback: Bybit
+    # Fallback 1: OKX
     time.sleep(0.3)
-    data = fetch_json("https://api.bybit.com/v5/market/open-interest?category=linear&symbol=BTCUSDT&intervalTime=1d&limit=30", "Bybit OI (30d)")
-    if data and "result" in data and "list" in data["result"] and data["result"]["list"]:
-        entries = data["result"]["list"]
-        oi_btc = float(entries[0]["openInterest"])
-        oi_history = [{"ts": int(d["timestamp"]), "oi": float(d["openInterest"]), "oiUsd": 0} for d in entries]
-        return {"current": oi_btc, "history": oi_history}
+    data = fetch_json("https://www.okx.com/api/v5/public/open-interest?instType=SWAP&instId=BTC-USDT-SWAP", "OKX OI")
+    if data and "data" in data and data["data"]:
+        oi_btc = float(data["data"][0].get("oiCcy", 0) or data["data"][0].get("oi", 0))
+        return {"current": oi_btc, "history": []}
+
+    # Fallback 2: Kraken Futures
+    time.sleep(0.3)
+    data = fetch_json("https://futures.kraken.com/derivatives/api/v3/tickers", "Kraken Futures OI")
+    if data and "tickers" in data:
+        for t in data["tickers"]:
+            if t.get("symbol") == "pi_xbtusd" and "openInterest" in t:
+                return {"current": float(t["openInterest"]), "history": []}
 
     return None
 
