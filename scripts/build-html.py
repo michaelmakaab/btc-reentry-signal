@@ -584,7 +584,10 @@ body{{min-height:100vh;background:#060911;color:#E2E8F0;font-family:'DM Sans',sa
 .pos-marker-line{{width:2px;height:24px;border-radius:1px;margin:0 auto}}
 .pos-top-marker .pos-marker-line{{background:#EF4444}}
 .pos-btm-marker .pos-marker-line{{background:#22C55E}}
-.pos-needle{{position:absolute;top:-6px;width:4px;height:28px;background:#F8FAFC;border-radius:2px;z-index:3;transform:translateX(-50%)}}
+.pos-needle{{position:absolute;top:-6px;width:16px;height:28px;z-index:3;margin-left:-8px;cursor:pointer}}
+.pos-needle-line{{width:4px;height:28px;background:#F8FAFC;border-radius:2px;margin:0 auto}}
+.pos-needle:hover .pos-tip{{display:block}}
+.pos-needle .pos-tip{{border-color:#F8FAFC}}
 .pos-tip{{display:none;position:absolute;bottom:32px;left:50%;transform:translateX(-50%);background:#1E293B;border:1px solid #334155;border-radius:6px;padding:6px 10px;font-size:11px;color:#E2E8F0;white-space:nowrap;z-index:10;text-align:center;line-height:1.4;pointer-events:none}}
 .pos-marker:hover .pos-tip{{display:block}}
 .pos-top-marker:hover .pos-tip{{border-color:#EF4444}}
@@ -771,7 +774,7 @@ body{{min-height:100vh;background:#060911;color:#E2E8F0;font-family:'DM Sans',sa
           <!-- Historical bottom markers (dynamic from backtest) -->
           {pos_btm_markers}
           <!-- You are here -->
-          <div class="pos-needle" style="left:{c["score"]}%"></div>
+          <div class="pos-needle" style="left:{c["score"]}%"><div class="pos-needle-line"></div><div class="pos-tip">You Are Here<br><span class="mono">${meta.get("currentPrice", 0):,.0f}</span><br>Score {c["score"]}</div></div>
         </div>
         <div class="pos-labels mono">
           <span style="color:#EF4444">&#9662; Tops ({top_range_str})</span>
