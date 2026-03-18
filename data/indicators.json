@@ -24,8 +24,8 @@
   },
   "realizedPrice": {
     "value": 54160.0,
-    "ratio": 1.375,
-    "percentAbove": 37.5,
+    "ratio": 1.3739,
+    "percentAbove": 37.4,
     "live": true,
     "desc": "Price below realized price = market at aggregate loss = bottom zone"
   },
@@ -94,7 +94,7 @@
     "desc": "Below 0.5 = miner capitulation = accumulation zone"
   },
   "mayerMultiple": {
-    "value": 0.7944,
+    "value": 0.7938,
     "sma200d": 93745.0,
     "live": true,
     "thresholds": {
@@ -107,8 +107,8 @@
   },
   "wma200": {
     "value": 58820.0,
-    "ratio": 1.2661,
-    "percentAbove": 26.6,
+    "ratio": 1.265,
+    "percentAbove": 26.5,
     "live": true,
     "desc": "Historic cycle floor. Price at or below = major buy zone"
   },
@@ -124,7 +124,7 @@
     "avgDaysToBottom": 383,
     "cycleProgress": 0.423,
     "estimatedBottom": "2026-10-25",
-    "drawdownPct": -40.3,
+    "drawdownPct": -40.4,
     "athPrice": 124776.68,
     "live": true,
     "desc": "Day 162 of ~383. Est. bottom: Oct 2026"
@@ -134,13 +134,13 @@
     "bands": {
       "Fire Sale": 19867,
       "BUY!": 32284,
-      "Accumulate": 50909,
+      "Accumulate": 50910,
       "Still Cheap": 77606,
       "HODL!": 114857,
-      "Is this a bubble?": 170733,
-      "FOMO intensifies": 248339,
-      "Sell. Seriously.": 360091,
-      "Max Bubble": 527720
+      "Is this a bubble?": 170734,
+      "FOMO intensifies": 248340,
+      "Sell. Seriously.": 360093,
+      "Max Bubble": 527722
     },
     "live": true,
     "desc": "Logarithmic regression bands. Lower = deeper value"
@@ -176,27 +176,28 @@
     "desc": "Network Value to Transactions. Low = undervalued network"
   },
   "exchangeReserves": {
-    "value": 3225203.0,
+    "value": 2603154.0,
     "live": true,
+    "source": "Coin Metrics",
     "desc": "Coins on exchanges. Declining = accumulation (bullish)"
   },
   "exchangeNetflow": {
-    "value": -968.53,
+    "value": -1168.53,
     "live": true,
-    "source": "BGeometrics",
+    "source": "Coin Metrics",
     "desc": "Negative = outflows = coins leaving exchanges = accumulation"
   },
   "openInterest": {
-    "value": 93429.0,
-    "changePct30d": 16.5,
+    "value": 93451.0,
+    "changePct30d": 16.6,
     "live": true,
     "source": "Binance",
     "desc": "Total derivatives positions. Large decline = leverage reset = healthier market"
   },
   "_halving": {
-    "blockHeight": 941097,
+    "blockHeight": 941099,
     "nextBlock": 1050000,
-    "blocksLeft": 108903,
+    "blocksLeft": 108901,
     "estDays": 756,
     "estDate": "2028-04-12",
     "progress": 0.4814,
@@ -704,13 +705,13 @@
     }
   },
   "_meta": {
-    "computedAt": "2026-03-18T04:00:43.715844+00:00",
-    "currentPrice": 74470.01,
+    "computedAt": "2026-03-18T04:07:14.364509+00:00",
+    "currentPrice": 74410.16,
     "currentDate": "2026-03-17",
     "priceSource": "Binance",
     "priceSources": {
-      "Binance": 74470.01,
-      "CoinGecko": 74515.0
+      "Binance": 74410.16,
+      "CoinGecko": 74463.0
     }
   },
   "_priceHistory": [

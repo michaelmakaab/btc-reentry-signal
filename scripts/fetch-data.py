@@ -89,13 +89,11 @@ BG_ENDPOINTS = [
     ("lth_sopr",         "/v1/lth-sopr",           "lthSopr"),
     ("ssr",              "/v1/ssr",                 "ssrStablecoin"),
     # Priority 2: Additional indicators
-    ("exchange_reserve", "/v1/exchange-reserve-btc","exchangeReserveBtc"),
     ("rhodl_ratio",      "/v1/rhodl-ratio",        "rhodl1m"),
     ("nvts",             "/v1/nvts",               "nvts"),
     ("thermocap_mult",   "/v1/thermocap-multiple", "thermocapMultiple"),
     ("sth_sopr",         "/v1/sth-sopr",           "sthSopr"),
-    ("exchange_netflow", "/v1/exchange-netflow-btc","exchangeNetflowBtc"),
-    # Removed: open_interest (now from Binance), nupl_zone (redundant, we compute from nupl)
+    # Exchange reserve & netflow moved to Coin Metrics (BGeometrics 403'd)
 ]
 
 CACHE_MAX_AGE = 20 * 3600  # 20 hours (data is daily resolution)
@@ -348,6 +346,57 @@ def fetch_miner_revenue():
     if not data or "values" not in data: return None
     return [{"ts": d["x"]*1000, "revenue": d["y"]} for d in data["values"]]
 
+def fetch_exchange_flows():
+    """Fetch exchange reserve and netflow from Coin Metrics community API (free, no auth)."""
+    print("\n📊 Fetching exchange flows from Coin Metrics...")
+    try:
+        # Get last 7 days to ensure we have today's data
+        from datetime import timedelta
+        end = datetime.now(timezone.utc)
+        start = end - timedelta(days=7)
+        url = (f"https://community-api.coinmetrics.io/v4/timeseries/asset-metrics"
+               f"?assets=btc&metrics=FlowInExNtv,FlowOutExNtv,SplyExNtv"
+               f"&start_time={start.strftime('%Y-%m-%d')}"
+               f"&end_time={end.strftime('%Y-%m-%d')}"
+               f"&page_size=100")
+        data = fetch_json(url, "Coin Metrics exchange flows")
+        if not data or "data" not in data:
+            print("  ✗ No data from Coin Metrics")
+            return None
+
+        rows = data["data"]
+        if not rows:
+            return None
+
+        # Use the most recent day
+        latest = rows[-1]
+        date = latest.get("time", "")[:10]
+        reserve = float(latest.get("SplyExNtv", 0))
+        flow_in = float(latest.get("FlowInExNtv", 0))
+        flow_out = float(latest.get("FlowOutExNtv", 0))
+        netflow = round(flow_in - flow_out, 4)
+
+        # Also build history points for extend_history
+        history = []
+        for row in rows:
+            d = row.get("time", "")[:10]
+            r = row.get("SplyExNtv")
+            fi = row.get("FlowInExNtv")
+            fo = row.get("FlowOutExNtv")
+            if d and r and fi and fo:
+                history.append({
+                    "date": d,
+                    "reserve": float(r),
+                    "netflow": round(float(fi) - float(fo), 4),
+                })
+
+        print(f"  ✓ Reserve: {reserve:,.0f} BTC, Netflow: {netflow:+,.1f} BTC ({date})")
+        return {"date": date, "reserve": reserve, "netflow": netflow, "history": history}
+    except Exception as e:
+        print(f"  ✗ Coin Metrics: {e}")
+        return None
+
+
 def fetch_block_height():
     """Fetch current Bitcoin block height from blockchain.info."""
     print("\n📦 Fetching block height...")
@@ -372,7 +421,7 @@ def bg(cache, key, default=None):
         return entry["value"]
     return default
 
-def compute_indicators(price_hist, fear_greed, funding, hash_rate, miner_rev, bg_cache, spot=None, oi_data=None, block_height=None):
+def compute_indicators(price_hist, fear_greed, funding, hash_rate, miner_rev, bg_cache, spot=None, oi_data=None, block_height=None, exch_flows=None):
     prices = price_hist["prices"]
     daily_prices = [p["price"] for p in prices]
     bc_price = daily_prices[-1]
@@ -678,26 +727,21 @@ def compute_indicators(price_hist, fear_greed, funding, hash_rate, miner_rev, bg
     # DOMAIN 5: EXCHANGE & LIQUIDITY (10%)
     # ═══════════════════════════════════════════
 
-    # Exchange Reserves — from BGeometrics (NEW)
-    exch_reserve = bg(bg_cache, "exchange_reserve")
+    # Exchange Reserves — from Coin Metrics (free, reliable)
+    exch_reserve = exch_flows.get("reserve") if exch_flows else None
     ind["exchangeReserves"] = {
         "value": r(exch_reserve, 0) if exch_reserve else None,
         "live": exch_reserve is not None,
+        "source": "Coin Metrics",
         "desc": "Coins on exchanges. Declining = accumulation (bullish)"
     }
 
-    # Exchange Netflow — computed from reserve changes, or from BGeometrics
-    exch_netflow_bg = bg(bg_cache, "exchange_netflow")
-    # Also compute netflow from reserve history if available
-    reserve_prev = bg_cache.get("exchange_reserve_prev", {}).get("value")
-    computed_netflow = None
-    if exch_reserve is not None and reserve_prev is not None:
-        computed_netflow = exch_reserve - reserve_prev  # positive = inflow, negative = outflow
-    netflow_val = exch_netflow_bg if exch_netflow_bg is not None else computed_netflow
+    # Exchange Netflow — from Coin Metrics
+    netflow_val = exch_flows.get("netflow") if exch_flows else None
     ind["exchangeNetflow"] = {
         "value": r(netflow_val, 2) if netflow_val is not None else None,
         "live": netflow_val is not None,
-        "source": "BGeometrics" if exch_netflow_bg is not None else "computed" if computed_netflow is not None else None,
+        "source": "Coin Metrics",
         "desc": "Negative = outflows = coins leaving exchanges = accumulation"
     }
 
@@ -1072,18 +1116,6 @@ def main():
     # Fetch BGeometrics (cached, rate-limited)
     bg_cache = fetch_bgeometrics()
 
-    # Store exchange reserve history for netflow computation
-    exch_reserve_entry = bg_cache.get("exchange_reserve")
-    if exch_reserve_entry and exch_reserve_entry.get("value") is not None:
-        prev = bg_cache.get("exchange_reserve_prev")
-        # Only update prev if the current value is from a different date
-        if not prev or prev.get("date") != exch_reserve_entry.get("date"):
-            bg_cache["exchange_reserve_prev"] = {
-                "value": exch_reserve_entry["value"],
-                "date": exch_reserve_entry.get("date", ""),
-            }
-            save_cache(bg_cache)
-
     # Fetch real-time spot price first
     spot = fetch_spot_price()
 
@@ -1101,6 +1133,8 @@ def main():
     time.sleep(1)
     oi_data = fetch_open_interest()
     time.sleep(1)
+    exch_flows = fetch_exchange_flows()
+    time.sleep(1)
     hash_rate = fetch_hash_rate()
     time.sleep(1)
     miner_rev = fetch_miner_revenue()
@@ -1108,7 +1142,7 @@ def main():
     block_height = fetch_block_height()
 
     # Compute
-    indicators = compute_indicators(price_hist, fear_greed, funding, hash_rate, miner_rev, bg_cache, spot, oi_data, block_height)
+    indicators = compute_indicators(price_hist, fear_greed, funding, hash_rate, miner_rev, bg_cache, spot, oi_data, block_height, exch_flows)
 
     # Save
     out = DATA_DIR / "indicators.json"
@@ -1136,7 +1170,7 @@ def main():
 
     # Extend historical datasets with today's data
     if "--extend-history" in sys.argv:
-        extend_history(bg_cache, price_hist, fear_greed, funding, hash_rate, miner_rev)
+        extend_history(bg_cache, price_hist, fear_greed, funding, hash_rate, miner_rev, exch_flows)
 
 
 # ─── Extend Historical Datasets ───────────────────────
@@ -1177,7 +1211,7 @@ def _append_to_history(filename, new_points):
     return added
 
 
-def extend_history(bg_cache, price_hist, fear_greed, funding, hash_rate, miner_rev):
+def extend_history(bg_cache, price_hist, fear_greed, funding, hash_rate, miner_rev, exch_flows=None):
     """Extend historical datasets with the freshly fetched data.
     Called after main fetch to keep history files growing daily.
     """
@@ -1203,8 +1237,7 @@ def extend_history(bg_cache, price_hist, fear_greed, funding, hash_rate, miner_r
         "rhodl_ratio":      "bg_rhodl_ratio",
         "nvts":             "bg_nvts",
         "thermocap_mult":   "bg_thermocap",
-        "exchange_reserve": "bg_exchange_reserve",
-        "exchange_netflow": "bg_exchange_netflow",
+        # exchange_reserve and exchange_netflow now from Coin Metrics (below)
     }
 
     for cache_key, hist_file in bg_map.items():
@@ -1294,6 +1327,19 @@ def extend_history(bg_cache, price_hist, fear_greed, funding, hash_rate, miner_r
         n = _append_to_history("bn_funding_rates", new_pts)
         if n > 0:
             print(f"  +{n} bn_funding_rates")
+            total_added += n
+
+    # ── Coin Metrics exchange flows ──
+    if exch_flows and exch_flows.get("history"):
+        reserve_pts = [{"date": h["date"], "value": h["reserve"]} for h in exch_flows["history"]]
+        netflow_pts = [{"date": h["date"], "value": h["netflow"]} for h in exch_flows["history"]]
+        n = _append_to_history("bg_exchange_reserve", reserve_pts)
+        if n > 0:
+            print(f"  +{n} bg_exchange_reserve (Coin Metrics)")
+            total_added += n
+        n = _append_to_history("bg_exchange_netflow", netflow_pts)
+        if n > 0:
+            print(f"  +{n} bg_exchange_netflow (Coin Metrics)")
             total_added += n
 
     if total_added > 0:
