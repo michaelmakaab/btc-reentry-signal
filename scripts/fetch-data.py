@@ -279,9 +279,16 @@ def fetch_fear_greed():
 
 def fetch_funding_rates():
     print("\n💰 Fetching funding rates...")
+    # Try Binance first (most liquid)
     data = fetch_json("https://fapi.binance.com/fapi/v1/fundingRate?symbol=BTCUSDT&limit=100", "Binance funding rates")
-    if not data: return None
-    return [{"ts": d["fundingTime"], "rate": float(d["fundingRate"])} for d in data]
+    if data:
+        return [{"ts": d["fundingTime"], "rate": float(d["fundingRate"])} for d in data]
+    # Fallback: Bybit
+    time.sleep(0.3)
+    data = fetch_json("https://api.bybit.com/v5/market/funding/history?category=linear&symbol=BTCUSDT&limit=100", "Bybit funding rates")
+    if data and "result" in data and "list" in data["result"]:
+        return [{"ts": int(d["fundingRateTimestamp"]), "rate": float(d["fundingRate"])} for d in data["result"]["list"]]
+    return None
 
 def fetch_spot_price():
     """Fetch real-time BTC spot price from multiple sources for accuracy."""
@@ -299,6 +306,13 @@ def fetch_spot_price():
     data = fetch_json("https://api.coingecko.com/api/v3/simple/price?ids=bitcoin&vs_currencies=usd", "CoinGecko spot")
     if data and "bitcoin" in data:
         sources.append(("CoinGecko", float(data["bitcoin"]["usd"])))
+
+    # Source 3: Bybit (fallback if Binance is geo-blocked)
+    if not any(s[0] == "Binance" for s in sources):
+        time.sleep(0.3)
+        data = fetch_json("https://api.bybit.com/v5/market/tickers?category=spot&symbol=BTCUSDT", "Bybit spot")
+        if data and "result" in data and "list" in data["result"] and data["result"]["list"]:
+            sources.append(("Bybit", float(data["result"]["list"][0]["lastPrice"])))
 
     if not sources:
         print("  ⚠ No spot price available, will use Blockchain.info daily average")
@@ -318,21 +332,29 @@ def fetch_spot_price():
     return {"price": primary[1], "source": primary[0], "all": {n: p for n, p in sources}}
 
 def fetch_open_interest():
-    """Fetch BTC open interest from Binance Futures (free, no rate limit issues)."""
-    print("\n📊 Fetching open interest from Binance...")
+    """Fetch BTC open interest from Binance Futures, with Bybit fallback."""
+    print("\n📊 Fetching open interest...")
+    # Try Binance first
     data = fetch_json("https://fapi.binance.com/fapi/v1/openInterest?symbol=BTCUSDT", "Binance OI (current)")
-    if not data or "openInterest" not in data:
-        return None
-    oi_btc = float(data["openInterest"])
+    if data and "openInterest" in data:
+        oi_btc = float(data["openInterest"])
+        time.sleep(0.3)
+        hist = fetch_json("https://fapi.binance.com/futures/data/openInterestHist?symbol=BTCUSDT&period=1d&limit=30", "Binance OI (30d history)")
+        oi_history = []
+        if hist:
+            oi_history = [{"ts": d["timestamp"], "oi": float(d["sumOpenInterest"]), "oiUsd": float(d["sumOpenInterestValue"])} for d in hist]
+        return {"current": oi_btc, "history": oi_history}
 
-    # Get 30-day history for trend analysis
+    # Fallback: Bybit
     time.sleep(0.3)
-    hist = fetch_json("https://fapi.binance.com/futures/data/openInterestHist?symbol=BTCUSDT&period=1d&limit=30", "Binance OI (30d history)")
-    oi_history = []
-    if hist:
-        oi_history = [{"ts": d["timestamp"], "oi": float(d["sumOpenInterest"]), "oiUsd": float(d["sumOpenInterestValue"])} for d in hist]
+    data = fetch_json("https://api.bybit.com/v5/market/open-interest?category=linear&symbol=BTCUSDT&intervalTime=1d&limit=30", "Bybit OI (30d)")
+    if data and "result" in data and "list" in data["result"] and data["result"]["list"]:
+        entries = data["result"]["list"]
+        oi_btc = float(entries[0]["openInterest"])
+        oi_history = [{"ts": int(d["timestamp"]), "oi": float(d["openInterest"]), "oiUsd": 0} for d in entries]
+        return {"current": oi_btc, "history": oi_history}
 
-    return {"current": oi_btc, "history": oi_history}
+    return None
 
 def fetch_hash_rate():
     print("\n⛏️  Fetching hash rate...")

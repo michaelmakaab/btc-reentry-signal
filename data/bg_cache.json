@@ -1,0 +1,90 @@
+{
+  "mvrv_zscore": {
+    "value": 0.6395,
+    "date": "2026-03-16",
+    "fetched_at": 1773806404.332319,
+    "consecutive_failures": 0
+  },
+  "nupl": {
+    "value": 0.25602870254105775,
+    "date": "2026-03-16",
+    "fetched_at": 1773806404.332319,
+    "consecutive_failures": 0
+  },
+  "sopr": {
+    "value": 1.0001163126283619,
+    "date": "2026-03-17",
+    "fetched_at": 1773818984.436641,
+    "consecutive_failures": 0
+  },
+  "supply_profit": {
+    "value": 10153577.319116807,
+    "date": "2026-03-17",
+    "fetched_at": 1773818984.436641,
+    "consecutive_failures": 0
+  },
+  "reserve_risk": {
+    "value": 0.0006325315,
+    "date": "2026-03-17",
+    "fetched_at": 1773806404.332319,
+    "consecutive_failures": 0
+  },
+  "ssr": {
+    "value": 5.654158,
+    "date": "2026-03-17",
+    "fetched_at": 1773818984.436641,
+    "consecutive_failures": 0
+  },
+  "realized_price": {
+    "value": 54117.11187471282,
+    "date": "2026-03-17",
+    "fetched_at": 1773818984.436641,
+    "consecutive_failures": 0
+  },
+  "lth_sopr": {
+    "value": 0.8794885727954885,
+    "date": "2026-03-17",
+    "fetched_at": 1773818984.436641,
+    "consecutive_failures": 0
+  },
+  "exchange_reserve": {
+    "value": 3225203.2443308,
+    "date": "2026-03-14",
+    "fetched_at": 1773580105.533928,
+    "consecutive_failures": 17
+  },
+  "rhodl_ratio": {
+    "value": 1079.5920433333,
+    "date": "2026-03-17",
+    "fetched_at": 1773818984.436641,
+    "consecutive_failures": 0
+  },
+  "nvts": {
+    "value": 145.12,
+    "date": "2026-03-16",
+    "fetched_at": 1773818984.436641,
+    "consecutive_failures": 0
+  },
+  "thermocap_mult": {
+    "value": 1.3923,
+    "date": "2026-03-17",
+    "fetched_at": 1773818984.436641,
+    "consecutive_failures": 0
+  },
+  "sth_sopr": {
+    "value": 1.00217834456218,
+    "date": "2026-03-17",
+    "fetched_at": 1773824228.209192,
+    "consecutive_failures": 0
+  },
+  "exchange_netflow": {
+    "value": -968.52685005,
+    "date": "2026-03-14",
+    "fetched_at": 1773580105.533928,
+    "consecutive_failures": 15
+  },
+  "exchange_reserve_prev": {
+    "value": 3225203.2443308,
+    "date": "2026-03-14"
+  }
+}
