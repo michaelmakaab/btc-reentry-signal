@@ -12,7 +12,7 @@ HIST_DIR = Path(__file__).parent.parent / "data" / "history"
 
 ENDPOINTS = [
     ("bg_mvrv_zscore",      "/v1/mvrv-zscore",         "mvrvZscore",        "MVRV Z-Score"),
-    ("bg_rhodl_ratio",      "/v1/rhodl-ratio",          "rhodlRatio1m",      "RHODL Ratio"),
+    ("bg_rhodl_ratio",      "/v1/rhodl-ratio",          "rhodl1m",           "RHODL Ratio"),
     ("bg_nvts",             "/v1/nvts",                 "nvts",              "NVT Signal"),
     ("bg_thermocap",        "/v1/thermocap-multiple",   "thermocapMultiple", "Thermocap Multiple"),
     ("bg_exchange_reserve", "/v1/exchange-reserve-btc",  "exchangeReserveBtc","Exchange Reserve"),

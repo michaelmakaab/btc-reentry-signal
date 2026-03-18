@@ -90,7 +90,7 @@ BG_ENDPOINTS = [
     ("ssr",              "/v1/ssr",                 "ssrStablecoin"),
     # Priority 2: Additional indicators
     ("exchange_reserve", "/v1/exchange-reserve-btc","exchangeReserveBtc"),
-    ("rhodl_ratio",      "/v1/rhodl-ratio",        "rhodlRatio1m"),
+    ("rhodl_ratio",      "/v1/rhodl-ratio",        "rhodl1m"),
     ("nvts",             "/v1/nvts",               "nvts"),
     ("thermocap_mult",   "/v1/thermocap-multiple", "thermocapMultiple"),
     ("sth_sopr",         "/v1/sth-sopr",           "sthSopr"),

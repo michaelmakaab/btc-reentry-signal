@@ -120,11 +120,10 @@ def download_bgeometrics():
         ("bg_lth_sopr",       "/v1/lth-sopr",           "lthSopr",          "LTH-SOPR"),
         ("bg_sth_sopr",       "/v1/sth-sopr",           "sthSopr",          "STH-SOPR"),
         ("bg_ssr",            "/v1/ssr",                "ssrStablecoin",     "Stablecoin Supply Ratio"),
-        ("bg_rhodl_ratio",    "/v1/rhodl-ratio",        "rhodlRatio1m",      "RHODL Ratio"),
+        ("bg_rhodl_ratio",    "/v1/rhodl-ratio",        "rhodl1m",           "RHODL Ratio"),
         ("bg_nvts",           "/v1/nvts",               "nvts",              "NVT Signal"),
         ("bg_thermocap",      "/v1/thermocap-multiple", "thermocapMultiple", "Thermocap Multiple"),
-        ("bg_exchange_reserve", "/v1/exchange-reserve-btc", "exchangeReserveBtc", "Exchange Reserve"),
-        ("bg_exchange_netflow", "/v1/exchange-netflow-btc", "exchangeNetflowBtc", "Exchange Netflow"),
+        # Exchange Reserve & Netflow moved to Coin Metrics (BGeometrics 403'd)
     ]
 
     downloaded = 0
@@ -248,6 +247,53 @@ def download_funding_rates():
         print("  ✗ Funding rates: no data")
 
 
+def download_coinmetrics():
+    """Download exchange reserve & netflow from Coin Metrics community API (free, no auth)."""
+    print("\n═══ Coin Metrics (community API) ═══")
+
+    reserve_path = HIST_DIR / "bg_exchange_reserve.json"
+    netflow_path = HIST_DIR / "bg_exchange_netflow.json"
+
+    # Skip if both already have data
+    if reserve_path.exists() and netflow_path.exists():
+        r_data = json.load(open(reserve_path))
+        n_data = json.load(open(netflow_path))
+        if isinstance(r_data, list) and len(r_data) > 1000 and isinstance(n_data, list) and len(n_data) > 1000:
+            print(f"  ⏭ Exchange Reserve: already downloaded ({len(r_data)} points)")
+            print(f"  ⏭ Exchange Netflow: already downloaded ({len(n_data)} points)")
+            return
+
+    print("  📥 Exchange Reserve & Netflow (FlowInExNtv, FlowOutExNtv, SplyExNtv)...")
+    url = ("https://community-api.coinmetrics.io/v4/timeseries/asset-metrics"
+           "?assets=btc&metrics=FlowInExNtv,FlowOutExNtv,SplyExNtv"
+           "&start_time=2014-01-01&end_time=2030-01-01&page_size=10000")
+    data = fetch_json(url, "Coin Metrics exchange flows", timeout=120)
+    if not data or "data" not in data:
+        print("  ✗ No data from Coin Metrics")
+        return
+
+    rows = data["data"]
+    reserve_points = []
+    netflow_points = []
+    for row in rows:
+        date = row.get("time", "")[:10]
+        reserve = row.get("SplyExNtv")
+        flow_in = row.get("FlowInExNtv")
+        flow_out = row.get("FlowOutExNtv")
+        if date and reserve:
+            reserve_points.append({"date": date, "value": float(reserve)})
+        if date and flow_in and flow_out:
+            netflow_points.append({"date": date, "value": round(float(flow_in) - float(flow_out), 4)})
+
+    reserve_points.sort(key=lambda x: x["date"])
+    netflow_points.sort(key=lambda x: x["date"])
+
+    if reserve_points:
+        save("bg_exchange_reserve", reserve_points)
+    if netflow_points:
+        save("bg_exchange_netflow", netflow_points)
+
+
 def status_report():
     """Print summary of what's been downloaded."""
     print("\n═══ Download Status ═══")
@@ -298,6 +344,9 @@ def main():
 
     # Phase 4: BGeometrics (rate limited — may need multiple runs)
     download_bgeometrics()
+
+    # Phase 5: Coin Metrics — exchange reserve & netflow (free, no rate limit)
+    download_coinmetrics()
 
     # Summary
     status_report()

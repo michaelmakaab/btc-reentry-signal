@@ -19,25 +19,65 @@ def main():
     meta = data["_meta"]
     spark = data.get("_priceHistory", [])
 
+    # Load backtest early to get dynamic score ranges
+    bt_file = DATA_DIR / "backtest_results.json"
+    top_range_str = "5&ndash;13"  # defaults
+    btm_range_str = "70&ndash;75"
+    method_tops_detail = ""
+    method_btms_detail = ""
+    pos_top_markers = ""
+    pos_btm_markers = ""
+    top_lo = 5; top_hi = 14; btm_lo = 70; btm_hi = 75  # defaults
+    if bt_file.exists():
+        _bt = json.load(open(bt_file))
+        _tops = _bt.get("cycle_tops", [])
+        _daily = _bt.get("daily", [])
+        if _tops:
+            _top_lo = int(min(t["score"] for t in _tops))
+            _top_hi = int(max(t["score"] for t in _tops)) + 1
+            top_range_str = f"{_top_lo}&ndash;{_top_hi}"
+            top_lo = _top_lo; top_hi = _top_hi
+            # Build detail strings for methodology: "Dec 2017 (5.2), Nov 2021 (12.0), Oct 2025 (13.1)"
+            from datetime import datetime as _dt
+            _parts = []
+            for t in _tops:
+                _d = _dt.strptime(t["date"], "%Y-%m-%d")
+                _parts.append(f'{_d.strftime("%b %Y")} ({t["score"]:.1f})')
+            method_tops_detail = ", ".join(_parts)
+        _btm_dates = [("2018-12-15", "Dec 2018"), ("2022-11-21", "Nov 2022")]
+        _btm_scores = []
+        _btm_parts = []
+        for bd, blabel in _btm_dates:
+            bday = next((d for d in _daily if d["date"] == bd), None)
+            if bday:
+                _btm_scores.append(round(bday["score"], 1))
+                _btm_parts.append(f'{blabel} ({round(bday["score"], 1)})')
+        if _btm_scores:
+            _btm_lo = int(min(_btm_scores))
+            _btm_hi = int(max(_btm_scores)) + 1
+            btm_range_str = f"{_btm_lo}&ndash;{_btm_hi}"
+            btm_lo = _btm_lo; btm_hi = _btm_hi
+        method_btms_detail = ", ".join(_btm_parts)
+
     # Position context based on score (GPS-style)
     score_val = c["score"]
-    if score_val <= 10:
-        position_ctx = "Cycle tops have historically registered in this range (4&ndash;8). Every major peak scored here. This is NOT the time to buy."
+    if score_val <= 15:
+        position_ctx = f"Cycle tops have historically registered in this range ({top_range_str}). Every major peak scored here."
         ctx_color = "#EF4444"
     elif score_val <= 25:
-        position_ctx = "Low stress. Market is either in a bull run or very early in a correction. Previous bottoms were at 67&ndash;79."
+        position_ctx = f"Low stress. Market is either in a bull run or very early in a correction. Previous bottoms were at {btm_range_str}."
         ctx_color = "#FB923C"
     elif score_val <= 45:
-        position_ctx = "Bear market building. Stress is rising but still well below historical bottoming levels (67&ndash;79). Previous bears spent months in this range."
+        position_ctx = f"Bear market building. Stress is rising but still well below historical bottoming levels ({btm_range_str}). Previous bears spent months in this range."
         ctx_color = "#FB923C"
     elif score_val <= 65:
-        position_ctx = "Deep bear territory. Stress is widespread. Previous bottoms scored 67&ndash;79, so we&rsquo;re approaching but not yet at historical bottom levels."
+        position_ctx = f"Deep bear territory. Stress is widespread. Previous bottoms scored {btm_range_str}, so we&rsquo;re approaching but not yet at historical bottom levels."
         ctx_color = "#EAB308"
-    elif score_val <= 75:
-        position_ctx = "Historically, cycle bottoms have occurred in this range. The 2022 bottom scored 67.4, the 2018 bottom peaked at 79. Pay close attention."
+    elif score_val <= 80:
+        position_ctx = f"Historically, cycle bottoms have occurred in this range ({btm_range_str}). Pay close attention."
         ctx_color = "#22C55E"
     else:
-        position_ctx = "Extreme cross-domain stress. The only time the score exceeded 75 (Dec 2018), it marked the cycle bottom within 8% of the absolute low."
+        position_ctx = f"Extreme cross-domain stress. Previous cycle bottoms scored {btm_range_str}."
         ctx_color = "#22C55E"
 
     # ── Domain Cards ──
@@ -285,8 +325,21 @@ def main():
         accum_signals = bt.get("accum_signals", [])
         cycle_tops = bt.get("cycle_tops", [])
 
-        # Build chart data: sample every 7 days + force-include signal dates
+        # Compute score ranges from backtest data for dynamic references
         daily = bt.get("daily", [])
+        top_scores = [t["score"] for t in cycle_tops]
+        btm_dates = ["2018-12-15", "2022-11-21"]
+        btm_scores = []
+        for bd in btm_dates:
+            bday = next((d for d in daily if d["date"] == bd), None)
+            if bday:
+                btm_scores.append(round(bday["score"], 1))
+        top_range_lo = int(min(top_scores)) if top_scores else 4
+        top_range_hi = int(max(top_scores)) + 1 if top_scores else 10
+        btm_range_lo = int(min(btm_scores)) if btm_scores else 67
+        btm_range_hi = int(max(btm_scores)) + 1 if btm_scores else 78
+
+        # Build chart data: sample every 7 days + force-include signal dates
         # Collect dates that must be included exactly
         must_include = set()
         for s in signals:
@@ -310,6 +363,26 @@ def main():
             "tops": [{"d": t["date"], "p": t["price"], "s": t["score"], "l": t["label"]} for t in cycle_tops],
         })
 
+        # ── Cycle Bottom Reference Data (needed before markers and cards) ──
+        bottom_dates = [("2018 Bottom", "2018-12-15"), ("2022 Bottom", "2022-11-21")]
+        bottom_refs = []
+        for label, bdate in bottom_dates:
+            bday = next((d for d in daily if d["date"] == bdate), None)
+            if bday:
+                bottom_refs.append({"label": label, "date": bdate, "price": int(bday["price"]), "score": round(bday["score"], 1)})
+            else:
+                bottom_refs.append({"label": label, "date": bdate, "price": 0, "score": 0})
+
+        # ── Position scale markers (dynamic from backtest) ──
+        pos_top_markers = ""
+        for t in cycle_tops:
+            year = t["date"][:4]
+            pos_top_markers += f'<div class="pos-marker pos-top-marker" style="left:{t["score"]}%"><div class="pos-marker-line"></div><div class="pos-tip">{year} Top<br><span class="mono">${t["price"]:,.0f}</span><br>Score {t["score"]:.1f}</div></div>\n          '
+        pos_btm_markers = ""
+        for b in bottom_refs:
+            year = b["label"][:4]
+            pos_btm_markers += f'<div class="pos-marker pos-btm-marker" style="left:{b["score"]}%"><div class="pos-marker-line"></div><div class="pos-tip">{year} Bottom<br><span class="mono">${b["price"]:,.0f}</span><br>Score {b["score"]:.1f}</div></div>\n          '
+
         # ── Cycle Top Cards ──
         top_cards = ""
         for top in cycle_tops:
@@ -320,13 +393,8 @@ def main():
             <div class="top-score">Score: <span class="mono" style="color:#EF4444">{top["score"]:.1f}</span></div>
           </div>'''
 
-        # ── Cycle Bottom Reference Cards ──
+        # ── Cycle Bottom Cards ──
         bottom_cards = ""
-        # Known bottoms with their scores
-        bottom_refs = [
-            {"label": "2018 Bottom", "date": "Dec 15, 2018", "price": 3128, "score": 79.0},
-            {"label": "2022 Bottom", "date": "Nov 21, 2022", "price": 15742, "score": 67.4},
-        ]
         for b in bottom_refs:
             bottom_cards += f'''
           <div class="top-card" style="border-color:#22C55E33">
@@ -444,13 +512,13 @@ def main():
       </div>
 
       <div class="bt-chart-card" style="margin-top:16px">
-        <div class="bt-chart-title">Cycle Tops &mdash; Score Was in Single Digits Every Time</div>
-        <div class="bt-subtitle" style="margin-bottom:10px">The model&rsquo;s strongest result: 3 for 3 on identifying when the market was at its most dangerous.</div>
+        <div class="bt-chart-title">Cycle Tops &mdash; Score Was {top_range_str}</div>
+        <div class="bt-subtitle" style="margin-bottom:10px">3 for 3 on identifying when the market was at its most dangerous. Low score = low stress = cycle peak.</div>
         <div class="top-grid">{top_cards}</div>
       </div>
 
       <div class="bt-chart-card" style="margin-top:16px">
-        <div class="bt-chart-title">Cycle Bottoms &mdash; Score Was 67&ndash;79</div>
+        <div class="bt-chart-title">Cycle Bottoms &mdash; Score Was {btm_range_str}</div>
         <div class="bt-subtitle" style="margin-bottom:10px">Both confirmed cycle bottoms occurred when the score was in this range. Use as a reference point, not a guarantee.</div>
         <div class="top-grid">{bottom_cards}</div>
       </div>
@@ -663,7 +731,7 @@ body{{min-height:100vh;background:#060911;color:#E2E8F0;font-family:'DM Sans',sa
     <div>
       <div class="tag">Bitcoin Cycle Positioning</div>
       <div class="title">Where Are We?</div>
-      <div class="subtitle">23 indicators &bull; 6 domains &bull; 1 score &mdash; cycle tops scored 4&ndash;8 &bull; bottoms scored 67&ndash;79</div>
+      <div class="subtitle">23 indicators &bull; 6 domains &bull; 1 score &mdash; cycle tops scored {top_range_str} &bull; bottoms scored {btm_range_str}</div>
     </div>
     <div class="price-box">
       <div class="price mono">${meta["currentPrice"]:,.0f}</div>
@@ -698,23 +766,20 @@ body{{min-height:100vh;background:#060911;color:#E2E8F0;font-family:'DM Sans',sa
         <div class="pos-track">
           <!-- Gradient background: red (tops) to green (bottoms) -->
           <div class="pos-fill" style="background:linear-gradient(90deg, #EF4444 0%, #EF4444 10%, #1E293B 20%, #1E293B 55%, #EAB308 70%, #22C55E 80%, #22C55E 100%);opacity:0.25"></div>
-          <!-- Historical top markers -->
-          <div class="pos-marker pos-top-marker" style="left:4.1%"><div class="pos-marker-line"></div><div class="pos-tip">2017 Top<br><span class="mono">$19,280</span><br>Score 4.1</div></div>
-          <div class="pos-marker pos-top-marker" style="left:7.4%"><div class="pos-marker-line"></div><div class="pos-tip">2021 Top<br><span class="mono">$66,954</span><br>Score 7.4</div></div>
-          <div class="pos-marker pos-top-marker" style="left:8.1%"><div class="pos-marker-line"></div><div class="pos-tip">2025 Top<br><span class="mono">$124,777</span><br>Score 8.1</div></div>
-          <!-- Historical bottom markers -->
-          <div class="pos-marker pos-btm-marker" style="left:67.4%"><div class="pos-marker-line"></div><div class="pos-tip">2022 Bottom<br><span class="mono">$15,742</span><br>Score 67.4</div></div>
-          <div class="pos-marker pos-btm-marker" style="left:79%"><div class="pos-marker-line"></div><div class="pos-tip">2018 Bottom<br><span class="mono">$3,128</span><br>Score 79.0</div></div>
+          <!-- Historical top markers (dynamic from backtest) -->
+          {pos_top_markers}
+          <!-- Historical bottom markers (dynamic from backtest) -->
+          {pos_btm_markers}
           <!-- You are here -->
           <div class="pos-needle" style="left:{c["score"]}%"></div>
         </div>
         <div class="pos-labels mono">
-          <span style="color:#EF4444">&#9662; Tops (4&ndash;8)</span>
+          <span style="color:#EF4444">&#9662; Tops ({top_range_str})</span>
           <span>0</span>
           <span>25</span>
           <span>50</span>
           <span>75</span>
-          <span style="color:#22C55E">&#9662; Bottoms (67&ndash;79)</span>
+          <span style="color:#22C55E">&#9662; Bottoms ({btm_range_str})</span>
         </div>
       </div>
 
@@ -730,10 +795,10 @@ body{{min-height:100vh;background:#060911;color:#E2E8F0;font-family:'DM Sans',sa
       <p>This score measures that shift across 23 indicators in 6 domains. Each indicator scores 0&ndash;10 based on where its current reading sits relative to its full historical range. A 0 means conditions last seen at cycle peaks. A 10 means conditions last seen at cycle lows. The weighted average gives a single composite from 0 to 100.</p>
 
       <h4>Historical Reference Points</h4>
-      <p>Three cycle tops. Three cycle bottoms. The score landed in consistent ranges each time:</p>
+      <p>Three cycle tops. Two confirmed cycle bottoms. The score landed in consistent ranges each time:</p>
       <ul>
-        <li><strong>Cycle tops scored 4&ndash;8</strong> &mdash; Dec 2017 (4.1), Nov 2021 (7.4), Oct 2025 (8.1). When almost nothing in the market is stressed, the score is near zero.</li>
-        <li><strong>Cycle bottoms scored 67&ndash;79</strong> &mdash; Dec 2018 (79.0), Nov 2022 (67.4). When stress is extreme across most domains, the score is high.</li>
+        <li><strong>Cycle tops scored {top_range_str}</strong> &mdash; {method_tops_detail}. When almost nothing in the market is stressed, the score is near zero.</li>
+        <li><strong>Cycle bottoms scored {btm_range_str}</strong> &mdash; {method_btms_detail}. When stress is extreme across most domains, the score is high.</li>
       </ul>
       <p>The current score tells you where you sit relative to those reference points.</p>
 
@@ -794,7 +859,7 @@ body{{min-height:100vh;background:#060911;color:#E2E8F0;font-family:'DM Sans',sa
 
 <footer class="footer"><div class="wrap">
   <div>Bitcoin Cycle Positioning &mdash; Not financial advice. Do your own research.</div>
-  <div>Data: BGeometrics &bull; Blockchain.info &bull; Alternative.me &bull; Binance</div>
+  <div>Data: BGeometrics &bull; Blockchain.info &bull; Coin Metrics &bull; Alternative.me &bull; Binance</div>
   <div style="margin-top:6px"><a href="https://charts.bgeometrics.com/">BGeometrics</a> &bull; <a href="https://www.bitcoinmagazinepro.com/charts/">Bitcoin Magazine Pro</a> &bull; <a href="https://charts.bitbo.io/">Bitbo</a></div>
 </div></footer>
 
@@ -1084,20 +1149,20 @@ btData.forEach((d,i)=>{{
 }});
 bCtx.stroke();
 
-/* Historical bottoming range (67-79) and top range (4-8) */
+/* Historical bottoming range and top range (dynamic) */
 bCtx.fillStyle='rgba(34,197,94,0.08)';
-bCtx.fillRect(bLpad,byScore(79),bPlotW,byScore(67)-byScore(79));
+bCtx.fillRect(bLpad,byScore({btm_hi}),bPlotW,byScore({btm_lo})-byScore({btm_hi}));
 bCtx.fillStyle='rgba(239,68,68,0.08)';
-bCtx.fillRect(bLpad,byScore(8),bPlotW,byScore(4)-byScore(8));
+bCtx.fillRect(bLpad,byScore({top_hi}),bPlotW,byScore({top_lo})-byScore({top_hi}));
 bCtx.setLineDash([4,4]);bCtx.strokeStyle='#22C55E';bCtx.lineWidth=1;
-bCtx.beginPath();bCtx.moveTo(bLpad,byScore(67));bCtx.lineTo(bW-bRpad,byScore(67));bCtx.stroke();
+bCtx.beginPath();bCtx.moveTo(bLpad,byScore({btm_lo}));bCtx.lineTo(bW-bRpad,byScore({btm_lo}));bCtx.stroke();
 bCtx.strokeStyle='#EF4444';
-bCtx.beginPath();bCtx.moveTo(bLpad,byScore(8));bCtx.lineTo(bW-bRpad,byScore(8));bCtx.stroke();
+bCtx.beginPath();bCtx.moveTo(bLpad,byScore({top_hi}));bCtx.lineTo(bW-bRpad,byScore({top_hi}));bCtx.stroke();
 bCtx.setLineDash([]);
 bCtx.font='9px Space Mono';bCtx.fillStyle='#22C55E';bCtx.textAlign='left';
-bCtx.fillText('Bottoms (67-79)',bW-bRpad+4,byScore(73));
+bCtx.fillText('Bottoms ({btm_lo}-{btm_hi})',bW-bRpad+4,byScore(({btm_lo}+{btm_hi})/2));
 bCtx.fillStyle='#EF4444';
-bCtx.fillText('Tops (4-8)',bW-bRpad+4,byScore(6)-4);
+bCtx.fillText('Tops ({top_lo}-{top_hi})',bW-bRpad+4,byScore(({top_lo}+{top_hi})/2)-4);
 
 /* Cycle top markers (red diamonds) */
 if(btMarkers){{
