@@ -1,9 +1,9 @@
 {
   "meta": {
     "start_date": "2017-01-01",
-    "end_date": "2026-03-29",
-    "total_days": 3375,
-    "computed_at": "2026-03-29T08:26:34.494372+00:00"
+    "end_date": "2026-03-30",
+    "total_days": 3376,
+    "computed_at": "2026-03-30T09:01:22.589132+00:00"
   },
   "daily": [
     {
@@ -111411,7 +111411,7 @@
       "return_30d": 15.0,
       "return_90d": 29.7,
       "return_180d": 32.0,
-      "return_365d": null
+      "return_365d": -20.2
     },
     {
       "score": 14.7,
@@ -118255,7 +118255,7 @@
       "price": 114034.76,
       "return_30d": -5.0,
       "return_90d": -23.6,
-      "return_180d": null,
+      "return_180d": -42.2,
       "return_365d": null
     },
     {
@@ -121584,7 +121584,7 @@
       "date": "2025-12-30",
       "price": 87123.05,
       "return_30d": 2.3,
-      "return_90d": null,
+      "return_90d": -24.3,
       "return_180d": null,
       "return_365d": null
     },
@@ -123803,7 +123803,7 @@
       "indicators_available": 23,
       "date": "2026-02-28",
       "price": 65866.66,
-      "return_30d": null,
+      "return_30d": 0.1,
       "return_90d": null,
       "return_180d": null,
       "return_365d": null
@@ -124845,8 +124845,45 @@
       "return_365d": null
     },
     {
-      "score": 51.8,
+      "score": 63.5,
       "zone": "ACCUMULATE",
+      "domains": {
+        "onChain": {
+          "score": 7.7,
+          "count": 2
+        },
+        "miner": {
+          "score": 6.1,
+          "count": 2
+        },
+        "technical": {
+          "score": 4.7,
+          "count": 5
+        },
+        "sentiment": {
+          "score": 6.6,
+          "count": 3
+        },
+        "exchange": {
+          "score": 8.0,
+          "count": 1
+        },
+        "cycle": {
+          "score": 4.0,
+          "count": 1
+        }
+      },
+      "indicators_available": 14,
+      "date": "2026-03-29",
+      "price": 66320.1,
+      "return_30d": null,
+      "return_90d": null,
+      "return_180d": null,
+      "return_365d": null
+    },
+    {
+      "score": 48.8,
+      "zone": "WATCHING",
       "domains": {
         "onChain": {
           "score": 0,
@@ -124861,7 +124898,7 @@
           "count": 5
         },
         "sentiment": {
-          "score": 6.6,
+          "score": 5.7,
           "count": 3
         },
         "exchange": {
@@ -124874,8 +124911,8 @@
         }
       },
       "indicators_available": 9,
-      "date": "2026-03-29",
-      "price": 66320.1,
+      "date": "2026-03-30",
+      "price": 65956.94,
       "return_30d": null,
       "return_90d": null,
       "return_180d": null,
@@ -125085,7 +125122,7 @@
       "days": 403,
       "avg_30d": 6.2,
       "median_30d": 4.2,
-      "win_rate_30d": 61.8,
+      "win_rate_30d": 61.9,
       "min_30d": -42.9,
       "max_30d": 43.1,
       "avg_90d": 29.6,
@@ -125105,14 +125142,14 @@
       "max_365d": 1085.3
     },
     "WATCHING": {
-      "days": 1156,
+      "days": 1157,
       "avg_30d": 3.7,
       "median_30d": 1.9,
       "win_rate_30d": 55.3,
       "min_30d": -48.4,
       "max_30d": 66.1,
       "avg_90d": 13.5,
-      "median_90d": 6.1,
+      "median_90d": 6.0,
       "win_rate_90d": 56.5,
       "min_90d": -54.0,
       "max_90d": 245.7,
@@ -125139,13 +125176,13 @@
       "win_rate_90d": 57.7,
       "min_90d": -61.3,
       "max_90d": 424.1,
-      "avg_180d": 52.6,
+      "avg_180d": 52.5,
       "median_180d": 13.4,
       "win_rate_180d": 57.8,
       "min_180d": -66.2,
       "max_180d": 641.5,
-      "avg_365d": 85.9,
-      "median_365d": 14.1,
+      "avg_365d": 85.8,
+      "median_365d": 14.0,
       "win_rate_365d": 55.2,
       "min_365d": -83.2,
       "max_365d": 1687.0
