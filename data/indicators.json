@@ -1,6 +1,6 @@
 {
   "mvrvZScore": {
-    "value": 0.8072,
+    "value": 0.8327,
     "live": true,
     "thresholds": {
       "deepBottom": -1.0,
@@ -23,9 +23,9 @@
     "desc": "Below 0 = network at unrealized loss = capitulation"
   },
   "realizedPrice": {
-    "value": 53604.0,
-    "ratio": 1.4532,
-    "percentAbove": 45.3,
+    "value": 53635.0,
+    "ratio": 1.4285,
+    "percentAbove": 42.8,
     "live": true,
     "desc": "Price below realized price = market at aggregate loss = bottom zone"
   },
@@ -41,7 +41,7 @@
     "desc": "Below 50% = more supply at loss than profit = cycle bottom signal"
   },
   "reserveRisk": {
-    "value": 0.0006551828,
+    "value": 0.0006455068,
     "live": true,
     "thresholds": {
       "greenZone": 0.002,
@@ -51,7 +51,7 @@
     "desc": "Below 0.002 = high conviction, low risk = ideal accumulation"
   },
   "ssr": {
-    "value": 5.91,
+    "value": 5.83,
     "live": true,
     "thresholds": {
       "highBuyingPower": 5,
@@ -77,13 +77,13 @@
   },
   "hashRibbon": {
     "signal": "CAPITULATION",
-    "ma30d": 966702444.0,
-    "ma60d": 975474548.0,
+    "ma30d": 959133368.0,
+    "ma60d": 974228740.0,
     "live": true,
     "desc": "Buy signal = 30d hash MA crosses above 60d after capitulation"
   },
   "puellMultiple": {
-    "value": 0.8356,
+    "value": 0.8191,
     "live": true,
     "thresholds": {
       "deepGreen": 0.3,
@@ -94,8 +94,8 @@
     "desc": "Below 0.5 = miner capitulation = accumulation zone"
   },
   "mayerMultiple": {
-    "value": 0.9167,
-    "sma200d": 84976.0,
+    "value": 0.904,
+    "sma200d": 84755.0,
     "live": true,
     "thresholds": {
       "deepBottom": 0.6,
@@ -106,66 +106,66 @@
     "desc": "Price / 200-day MA. Below 0.8 = oversold"
   },
   "wma200": {
-    "value": 60384.0,
-    "ratio": 1.29,
-    "percentAbove": 29.0,
+    "value": 60156.0,
+    "ratio": 1.2736,
+    "percentAbove": 27.4,
     "live": true,
     "desc": "Historic cycle floor. Price at or below = major buy zone"
   },
   "piCycleBottom": {
     "signal": "ABOVE",
-    "ema150": 79323.0,
-    "threshold": 45305.0,
+    "ema150": 79297.0,
+    "threshold": 45287.0,
     "live": true,
     "desc": "150d EMA below 471d SMA x 0.475 = cycle bottom"
   },
   "cycleTiming": {
-    "daysSinceATH": 202,
+    "daysSinceATH": 203,
     "avgDaysToBottom": 383,
-    "cycleProgress": 0.527,
+    "cycleProgress": 0.53,
     "estimatedBottom": "2026-10-25",
-    "drawdownPct": -37.6,
+    "drawdownPct": -38.6,
     "athPrice": 124776.68,
     "live": true,
-    "desc": "Day 202 of ~383. Est. bottom: Oct 2026"
+    "desc": "Day 203 of ~383. Est. bottom: Oct 2026"
   },
   "rainbowChart": {
     "currentBand": "Accumulate",
     "bands": {
-      "Fire Sale": 20620,
-      "BUY!": 33508,
-      "Accumulate": 52839,
-      "Still Cheap": 80547,
-      "HODL!": 119210,
-      "Is this a bubble?": 177204,
-      "FOMO intensifies": 257751,
-      "Sell. Seriously.": 373739,
-      "Max Bubble": 547721
+      "Fire Sale": 20639,
+      "BUY!": 33539,
+      "Accumulate": 52888,
+      "Still Cheap": 80622,
+      "HODL!": 119320,
+      "Is this a bubble?": 177367,
+      "FOMO intensifies": 257989,
+      "Sell. Seriously.": 374084,
+      "Max Bubble": 548226
     },
     "live": true,
     "desc": "Logarithmic regression bands. Lower = deeper value"
   },
   "sopr": {
-    "value": 1.0034,
+    "value": 1.0009,
     "live": true,
     "desc": "Below 1.0 = sellers at a loss = capitulation"
   },
   "lthSopr": {
-    "value": 1.4242,
+    "value": 0.8471,
     "live": true,
     "desc": "Long-term holders selling at loss = extreme capitulation"
   },
   "fearGreed": {
-    "current": 47,
-    "label": "Neutral",
-    "avg30d": 20.8,
+    "current": 33,
+    "label": "Fear",
+    "avg30d": 21.6,
     "extremeFearDays": 0,
     "live": true,
     "desc": "Sustained extreme fear (< 25) = contrarian buy"
   },
   "fundingRates": {
-    "current": -7.6e-05,
-    "avg10d": -7.6e-05,
+    "current": -0.0001,
+    "avg10d": -0.0001,
     "negativePeriods": 1,
     "live": true,
     "desc": "Negative = shorts paying longs = bearish positioning"
@@ -176,31 +176,31 @@
     "desc": "Network Value to Transactions. Low = undervalued network"
   },
   "exchangeReserves": {
-    "value": 2561317.0,
+    "value": 2572448.0,
     "live": true,
     "source": "Coin Metrics",
     "desc": "Coins on exchanges. Declining = accumulation (bullish)"
   },
   "exchangeNetflow": {
-    "value": -34.22,
+    "value": 10790.51,
     "live": true,
     "source": "Coin Metrics",
     "desc": "Negative = outflows = coins leaving exchanges = accumulation"
   },
   "openInterest": {
-    "value": 32992.0,
+    "value": 32789.0,
     "changePct30d": null,
     "live": true,
     "source": "Binance",
     "desc": "Total derivatives positions. Large decline = leverage reset = healthier market"
   },
   "_halving": {
-    "blockHeight": 946855,
+    "blockHeight": 947009,
     "nextBlock": 1050000,
-    "blocksLeft": 103145,
-    "estDays": 716,
+    "blocksLeft": 102991,
+    "estDays": 715,
     "estDate": "2028-04-12",
-    "progress": 0.5088,
+    "progress": 0.5096,
     "reward": 3.125,
     "nextReward": 1.5625
   },
@@ -479,12 +479,12 @@
         -37.8
       ],
       [
-        202,
-        -37.0
+        203,
+        -38.0
       ]
     ],
     "athDate": "2025-10-07",
-    "daysSinceATH": 202,
+    "daysSinceATH": 203,
     "cycles": {
       "2013": {
         "label": "2013-15",
@@ -761,20 +761,16 @@
     }
   },
   "_meta": {
-    "computedAt": "2026-04-27T10:01:53.529079+00:00",
-    "currentPrice": 77898.0,
-    "currentDate": "2026-04-27",
+    "computedAt": "2026-04-28T10:03:25.168093+00:00",
+    "currentPrice": 76615.0,
+    "currentDate": "2026-04-28",
     "priceSource": "CoinGecko",
     "priceSources": {
-      "CoinGecko": 77898.0,
-      "OKX": 77923.0
+      "CoinGecko": 76615.0,
+      "OKX": 76652.5
     }
   },
   "_priceHistory": [
-    {
-      "d": "2025-10-30",
-      "p": 110069
-    },
     {
       "d": "2025-10-31",
       "p": 108303
@@ -1490,10 +1486,14 @@
     {
       "d": "2026-04-27",
       "p": 78649
+    },
+    {
+      "d": "2026-04-28",
+      "p": 77373
     }
   ],
   "_composite": {
-    "score": 36.2,
+    "score": 38.2,
     "zone": "WATCHING",
     "zoneLabel": "WATCHING",
     "zoneColor": "#FB923C",
@@ -1596,7 +1596,7 @@
         "contribution": 5.8
       },
       "sentiment": {
-        "score": 1.9,
+        "score": 4.4,
         "weight": 0.15,
         "items": [
           {
@@ -1606,12 +1606,12 @@
           },
           {
             "name": "LTH-SOPR",
-            "score": 0,
+            "score": 10,
             "weight": 1.5
           },
           {
             "name": "Fear & Greed",
-            "score": 2,
+            "score": 4,
             "weight": 1.5
           },
           {
@@ -1627,15 +1627,15 @@
         ],
         "label": "Sentiment & Positioning",
         "effectiveWeight": 0.15,
-        "contribution": 2.8
+        "contribution": 6.6
       },
       "exchange": {
-        "score": 3.2,
+        "score": 1.4,
         "weight": 0.1,
         "items": [
           {
             "name": "Exchange Netflow",
-            "score": 4,
+            "score": 0,
             "weight": 2
           },
           {
@@ -1651,7 +1651,7 @@
         ],
         "label": "Exchange & Liquidity",
         "effectiveWeight": 0.1,
-        "contribution": 3.2
+        "contribution": 1.4
       },
       "cycle": {
         "score": 3.6,
