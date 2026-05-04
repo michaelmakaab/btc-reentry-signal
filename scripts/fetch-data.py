@@ -131,7 +131,7 @@ def fetch_bgeometrics():
     # Split endpoints into: never cached (urgent), stale (need refresh), fresh (skip)
     never_cached = []
     never_cached_failing = []  # Never cached AND has consecutive failures
-    stale = []
+    stale = []  # tuples of (fetched_at, key, path, field) for sorting
     fresh = []
 
     for key, path, field in BG_ENDPOINTS:
@@ -143,15 +143,21 @@ def fetch_bgeometrics():
             else:
                 never_cached.append((key, path, field))
         elif (now - cached.get("fetched_at", 0)) >= CACHE_MAX_AGE:
-            stale.append((key, path, field))
+            stale.append((cached.get("fetched_at", 0), key, path, field))
         else:
             fresh.append((key, path, field))
+
+    # Sort stale by fetched_at ASC — oldest data gets priority (fairness rotation)
+    # Without this, the static BG_ENDPOINTS order means the same first 8 endpoints
+    # always win the daily 8-call budget, leaving the last 4 chronically stale.
+    stale.sort(key=lambda x: x[0])
+    stale = [(key, path, field) for _, key, path, field in stale]
 
     # Log fresh (skipped) endpoints
     for key, path, field in fresh:
         print(f"  ● {key}: cached ({cache[key].get('value')})")
 
-    # Fetch order: never-cached first, then stale, then chronically failing (low priority)
+    # Fetch order: never-cached first, then stale (oldest first), then chronically failing (low priority)
     fetch_queue = never_cached + stale + never_cached_failing
     if never_cached:
         print(f"  → {len(never_cached)} endpoints never cached — fetching first")
