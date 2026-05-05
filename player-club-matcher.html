@@ -56,7 +56,8 @@
     <button id="btn-import-json" class="btn btn-ghost" title="Restore from a JSON backup">⇪ Import JSON</button>
     <button id="btn-export-json" class="btn btn-ghost" title="Download a JSON backup">⇩ Export JSON</button>
     <button id="btn-export-csv"  class="btn btn-ghost" title="Download matches as CSV">⇩ Export Matches</button>
-    <button id="btn-reset"       class="btn btn-danger" title="Wipe everything and reload seed data">↺ Reset</button>
+    <button id="btn-clear"       class="btn btn-danger" title="Delete all your players, clubs, and matches">⌫ Clear All</button>
+    <button id="btn-reset"       class="btn btn-ghost"  title="Reload the demo sample data">↺ Demo data</button>
   </div>
 </header>
 
@@ -833,8 +834,13 @@ $('#file-input').addEventListener('change', async (e) => {
 ============================================================ */
 $('#btn-export-json').addEventListener('click', exportJSON);
 $('#btn-export-csv').addEventListener('click', exportMatchesCSV);
+$('#btn-clear').addEventListener('click', () => {
+  if (!confirm('This permanently deletes ALL your players, clubs, and matches. Continue?')) return;
+  state = { players: [], clubs: [], matches: [], ui: { view: state.ui?.view || 'board' } };
+  save(); render();
+});
 $('#btn-reset').addEventListener('click', () => {
-  if (!confirm('This wipes all your players, clubs, and matches and reloads sample data. Continue?')) return;
+  if (!confirm('Replace your current data with the demo sample data?')) return;
   state = seed(); save(); render();
 });
 $('#btn-add-player').addEventListener('click', () => editPlayer(null));
