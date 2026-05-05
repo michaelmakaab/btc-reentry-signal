@@ -72,18 +72,10 @@
       <button id="btn-add-player" class="ml-auto btn btn-primary text-xs px-2 py-1">+ Add</button>
     </div>
     <div class="p-3 border-b border-slate-800 space-y-2">
-      <input id="player-search" type="search" placeholder="Search name, position, agent…" class="w-full bg-slate-950 border border-slate-800 rounded-md px-2 py-1.5 text-sm" />
-      <div class="flex gap-2 text-xs">
-        <select id="player-filter-pos" class="flex-1 bg-slate-950 border border-slate-800 rounded-md px-2 py-1">
-          <option value="">All positions</option>
-        </select>
-        <select id="player-filter-contract" class="flex-1 bg-slate-950 border border-slate-800 rounded-md px-2 py-1">
-          <option value="">Any contract</option>
-          <option value="6">≤ 6 mo</option>
-          <option value="12">≤ 12 mo</option>
-          <option value="24">≤ 24 mo</option>
-        </select>
-      </div>
+      <input id="player-search" type="search" placeholder="Search name, club, position, notes…" class="w-full bg-slate-950 border border-slate-800 rounded-md px-2 py-1.5 text-sm" />
+      <select id="player-filter-pos" class="w-full bg-slate-950 border border-slate-800 rounded-md px-2 py-1 text-xs">
+        <option value="">All positions</option>
+      </select>
     </div>
     <div id="player-list" class="flex-1 scroll-y p-2 space-y-1.5"></div>
   </section>
@@ -174,11 +166,11 @@ function uid(prefix='id') {
 
 function seed() {
   const players = [
-    { id: uid('p'), name: 'Bukayo Saka',     position: 'RW',  age: 23, foot: 'L', currentClub: 'Arsenal',         contractExpires: '2027-06-30', marketValue: 130, agent: 'CAA Stellar', agentContact: '', salary: '', languages: 'English', notes: '', links: '' },
-    { id: uid('p'), name: 'Florian Wirtz',   position: 'CAM', age: 22, foot: 'R', currentClub: 'Bayer Leverkusen',contractExpires: '2027-06-30', marketValue: 140, agent: 'WSA',         agentContact: '', salary: '', languages: 'German, English', notes: '', links: '' },
-    { id: uid('p'), name: 'Jérémy Doku',     age: 23, position: 'LW',  foot: 'R', currentClub: 'Manchester City', contractExpires: '2028-06-30', marketValue: 70,  agent: 'Roc Nation',  agentContact: '', salary: '', languages: 'French, English', notes: '', links: '' },
-    { id: uid('p'), name: 'Khvicha Kvaratskhelia', age: 24, position: 'LW', foot: 'R', currentClub: 'Napoli',     contractExpires: '2027-06-30', marketValue: 100, agent: '',            agentContact: '', salary: '', languages: 'Georgian, Italian', notes: '', links: '' },
-    { id: uid('p'), name: 'Alessandro Bastoni', age: 25, position: 'CB', foot: 'L', currentClub: 'Inter',         contractExpires: '2028-06-30', marketValue: 80,  agent: '',            agentContact: '', salary: '', languages: 'Italian', notes: '', links: '' },
+    { id: uid('p'), name: 'Bukayo Saka',           position: 'RW',  dob: '2001-09-05', club: 'Arsenal',          notes: '' },
+    { id: uid('p'), name: 'Florian Wirtz',         position: 'CAM', dob: '2003-05-03', club: 'Bayer Leverkusen', notes: '' },
+    { id: uid('p'), name: 'Jérémy Doku',           position: 'LW',  dob: '2002-05-27', club: 'Manchester City',  notes: '' },
+    { id: uid('p'), name: 'Khvicha Kvaratskhelia', position: 'LW',  dob: '2001-02-12', club: 'Napoli',           notes: '' },
+    { id: uid('p'), name: 'Alessandro Bastoni',    position: 'CB',  dob: '1999-04-13', club: 'Inter',            notes: '' },
   ];
   const clubs = [
     { id: uid('c'), name: 'Real Madrid',     country: 'ES', league: 'La Liga',         tier: 'elite', tags: 'champions league, big budget',  notes: '' },
@@ -216,19 +208,19 @@ function save() {
 const $ = (sel, root=document) => root.querySelector(sel);
 const $$ = (sel, root=document) => Array.from(root.querySelectorAll(sel));
 
-function monthsUntil(dateStr) {
-  if (!dateStr) return null;
-  const d = new Date(dateStr); if (isNaN(d)) return null;
+function ageFromDob(dob) {
+  if (!dob) return '';
+  const s = String(dob).trim();
+  if (/^\d{4}$/.test(s)) return new Date().getFullYear() - Number(s);
+  const d = new Date(s);
+  if (isNaN(d)) return '';
   const now = new Date();
-  return Math.round((d - now) / (1000*60*60*24*30.44));
+  let age = now.getFullYear() - d.getFullYear();
+  const m = now.getMonth() - d.getMonth();
+  if (m < 0 || (m === 0 && now.getDate() < d.getDate())) age--;
+  return age;
 }
-function contractColor(months) {
-  if (months == null) return '';
-  if (months <= 6)  return 'bg-rose-500';
-  if (months <= 12) return 'bg-amber-500';
-  if (months <= 24) return 'bg-yellow-500';
-  return 'bg-emerald-500';
-}
+function clubOf(p)  { return p.club || p.currentClub || ''; }
 function flag(country) {
   if (!country || country.length !== 2) return '';
   const cc = country.toUpperCase();
@@ -260,15 +252,10 @@ function ensureMatch(playerId, clubId) {
 function filteredPlayers() {
   const q = ($('#player-search').value || '').toLowerCase().trim();
   const pos = $('#player-filter-pos').value;
-  const cm  = $('#player-filter-contract').value;
   return state.players.filter(p => {
     if (pos && p.position !== pos) return false;
-    if (cm) {
-      const m = monthsUntil(p.contractExpires);
-      if (m == null || m > Number(cm)) return false;
-    }
     if (q) {
-      const blob = `${p.name} ${p.position} ${p.currentClub} ${p.agent} ${p.notes}`.toLowerCase();
+      const blob = `${p.name} ${p.position} ${clubOf(p)} ${p.notes}`.toLowerCase();
       if (!blob.includes(q)) return false;
     }
     return true;
@@ -295,26 +282,20 @@ function renderPlayers() {
   $('#player-count').textContent = `${list.length}/${state.players.length}`;
   const root = $('#player-list');
   root.innerHTML = list.map(p => {
-    const months = monthsUntil(p.contractExpires);
-    const cdot = contractColor(months);
+    const age = ageFromDob(p.dob);
     const matches = matchesFor(p.id).length;
     return `
       <details class="player-item bg-slate-950/60 border border-slate-800 rounded-lg drag" data-id="${p.id}">
         <summary class="flex items-center gap-2 px-2 py-1.5 hover:bg-slate-900 rounded-lg">
-          <span class="w-2 h-2 rounded-full ${cdot}" title="${months ?? '—'} months on contract"></span>
           <span class="font-medium text-sm text-slate-100 truncate flex-1">${escapeHtml(p.name)}</span>
-          <span class="pill bg-slate-800 text-slate-300">${escapeHtml(p.position||'?')}</span>
-          <span class="text-[10px] text-slate-500">${p.age||''}</span>
+          ${p.position?`<span class="pill bg-slate-800 text-slate-300">${escapeHtml(p.position)}</span>`:''}
+          ${age!==''?`<span class="text-[10px] text-slate-500">${age}</span>`:''}
           ${matches ? `<span class="pill bg-blue-900/50 text-blue-300">${matches}</span>` : ''}
         </summary>
         <div class="px-3 pb-3 pt-1 text-xs text-slate-300 space-y-1">
-          <div><span class="text-slate-500">Current:</span> ${escapeHtml(p.currentClub||'—')}</div>
-          <div><span class="text-slate-500">Contract:</span> ${escapeHtml(p.contractExpires||'—')} ${months!=null?`<span class="text-slate-500">(${months} mo)</span>`:''}</div>
-          <div><span class="text-slate-500">Foot:</span> ${escapeHtml(p.foot||'—')} · <span class="text-slate-500">MV:</span> €${p.marketValue||'—'}m</div>
-          <div><span class="text-slate-500">Agent:</span> ${escapeHtml(p.agent||'—')}</div>
-          ${p.agentContact?`<div><span class="text-slate-500">Contact:</span> ${escapeHtml(p.agentContact)}</div>`:''}
-          ${p.languages?`<div><span class="text-slate-500">Languages:</span> ${escapeHtml(p.languages)}</div>`:''}
-          ${p.notes?`<div class="text-slate-400 italic">"${escapeHtml(p.notes)}"</div>`:''}
+          ${clubOf(p)?`<div><span class="text-slate-500">Club:</span> ${escapeHtml(clubOf(p))}</div>`:''}
+          ${p.dob?`<div><span class="text-slate-500">DOB:</span> ${escapeHtml(p.dob)}${age!==''?` <span class="text-slate-500">(${age}y)</span>`:''}</div>`:''}
+          ${p.notes?`<div class="text-slate-400 italic whitespace-pre-wrap">${escapeHtml(p.notes)}</div>`:''}
           <div class="flex gap-2 pt-1">
             <button class="btn btn-ghost text-[11px] px-2 py-0.5" data-act="edit-player" data-id="${p.id}">Edit</button>
             <button class="btn btn-danger text-[11px] px-2 py-0.5" data-act="delete-player" data-id="${p.id}">Delete</button>
@@ -372,8 +353,9 @@ function renderBoard() {
       <div class="player-lane bg-slate-950/40 border border-slate-800 rounded-lg p-2.5" data-player="${p.id}">
         <div class="flex items-center gap-2 mb-2">
           <span class="font-semibold text-sm text-slate-100">${escapeHtml(p.name)}</span>
-          <span class="pill bg-slate-800 text-slate-300">${escapeHtml(p.position||'?')}</span>
-          <span class="text-[11px] text-slate-500 truncate">${escapeHtml(p.currentClub||'')}</span>
+          ${p.position?`<span class="pill bg-slate-800 text-slate-300">${escapeHtml(p.position)}</span>`:''}
+          ${ageFromDob(p.dob)!==''?`<span class="text-[11px] text-slate-500">${ageFromDob(p.dob)}y</span>`:''}
+          <span class="text-[11px] text-slate-500 truncate">${escapeHtml(clubOf(p))}</span>
           <span class="ml-auto text-[10px] text-slate-500">${matchesFor(p.id).length} target${matchesFor(p.id).length===1?'':'s'}</span>
         </div>
         <div class="lane-drop flex flex-wrap items-center gap-1.5 min-h-[32px] rounded-md p-1 -m-1" data-player="${p.id}">
@@ -427,7 +409,7 @@ function renderMatrix() {
     <tr>
       <th class="sticky left-0 z-10 bg-slate-900 text-left p-2 border-b border-r border-slate-800 align-top">
         <div class="font-medium text-slate-100">${escapeHtml(p.name)}</div>
-        <div class="text-[10px] text-slate-500">${escapeHtml(p.position||'')} · ${p.age||''} · ${escapeHtml(p.currentClub||'')}</div>
+        <div class="text-[10px] text-slate-500">${escapeHtml(p.position||'')}${ageFromDob(p.dob)!==''?` · ${ageFromDob(p.dob)}`:''}${clubOf(p)?` · ${escapeHtml(clubOf(p))}`:''}</div>
       </th>
       ${clubs.map(c => {
         const m = matchFor(p.id, c.id);
@@ -503,7 +485,7 @@ document.addEventListener('keydown', e => {
 });
 
 function editPlayer(id) {
-  const p = id ? findPlayer(id) : { id: uid('p'), name:'', position:'', age:'', foot:'', currentClub:'', contractExpires:'', marketValue:'', agent:'', agentContact:'', salary:'', languages:'', notes:'', links:'' };
+  const p = id ? findPlayer(id) : { id: uid('p'), name:'', position:'', dob:'', club:'', notes:'' };
   const isNew = !id;
   openModal(`
     <form id="player-form" class="p-5 space-y-4">
@@ -519,24 +501,11 @@ function editPlayer(id) {
             ${POSITIONS.map(x=>`<option value="${x}" ${p.position===x?'selected':''}>${x}</option>`).join('')}
           </select>
         </div>
-        <div class="field"><label>Age</label><input name="age" type="number" min="14" max="50" value="${escapeAttr(p.age)}" /></div>
-        <div class="field"><label>Preferred foot</label>
-          <select name="foot">
-            <option value="">—</option>
-            <option ${p.foot==='L'?'selected':''}>L</option>
-            <option ${p.foot==='R'?'selected':''}>R</option>
-            <option ${p.foot==='Both'?'selected':''}>Both</option>
-          </select>
+        <div class="field"><label>Date of birth</label>
+          <input name="dob" placeholder="YYYY-MM-DD or just YYYY" value="${escapeAttr(p.dob || '')}" />
         </div>
-        <div class="field"><label>Current club</label><input name="currentClub" value="${escapeAttr(p.currentClub)}" /></div>
-        <div class="field"><label>Contract expires</label><input name="contractExpires" type="date" value="${escapeAttr(p.contractExpires)}" /></div>
-        <div class="field"><label>Market value (€m)</label><input name="marketValue" type="number" min="0" step="0.5" value="${escapeAttr(p.marketValue)}" /></div>
-        <div class="field"><label>Agent</label><input name="agent" value="${escapeAttr(p.agent)}" /></div>
-        <div class="field"><label>Agent contact</label><input name="agentContact" placeholder="email or phone" value="${escapeAttr(p.agentContact)}" /></div>
-        <div class="field"><label>Salary expectation</label><input name="salary" value="${escapeAttr(p.salary)}" /></div>
-        <div class="field col-span-2"><label>Languages</label><input name="languages" value="${escapeAttr(p.languages)}" /></div>
-        <div class="field col-span-2"><label>Links (comma separated URLs)</label><input name="links" value="${escapeAttr(p.links)}" /></div>
-        <div class="field col-span-2"><label>Notes</label><textarea name="notes" rows="3">${escapeHtml(p.notes)}</textarea></div>
+        <div class="field col-span-2"><label>Club</label><input name="club" value="${escapeAttr(clubOf(p))}" /></div>
+        <div class="field col-span-2"><label>Notes</label><textarea name="notes" rows="5" placeholder="Anything you want to remember about this player…">${escapeHtml(p.notes)}</textarea></div>
       </div>
       <div class="flex justify-end gap-2 pt-2">
         ${isNew?'':'<button type="button" class="btn btn-danger mr-auto" data-delete>Delete</button>'}
@@ -549,12 +518,10 @@ function editPlayer(id) {
     form.addEventListener('submit', e => {
       e.preventDefault();
       const fd = new FormData(form);
-      const next = {...p};
-      for (const [k,v] of fd.entries()) next[k] = v.trim();
-      next.age = next.age ? Number(next.age) : '';
-      next.marketValue = next.marketValue ? Number(next.marketValue) : '';
+      const next = { id: p.id };
+      for (const [k,v] of fd.entries()) next[k] = (v||'').trim();
       if (isNew) state.players.push(next);
-      else Object.assign(p, next);
+      else { for (const k of Object.keys(p)) delete p[k]; Object.assign(p, next); }
       save(); render(); closeModal();
     });
     card.querySelectorAll('[data-close]').forEach(b => b.addEventListener('click', closeModal));
@@ -727,14 +694,17 @@ function csvImport(text) {
   const rows = parseCSV(text);
   if (rows.length < 2) return alert('CSV is empty.');
   const headers = rows[0].map(h => h.trim().toLowerCase());
-  const isPlayers = headers.includes('name') && (headers.includes('position') || headers.includes('age') || headers.includes('currentclub') || headers.includes('current club'));
+  const isPlayers = headers.includes('name') && (headers.includes('position') || headers.includes('dob') || headers.includes('date of birth') || headers.includes('club') || headers.includes('current club') || headers.includes('currentclub'));
   const isClubs   = headers.includes('name') && (headers.includes('country') || headers.includes('league') || headers.includes('tier'));
   if (!isPlayers && !isClubs) {
     return alert('Could not detect CSV type. First row must be headers including "name" plus player or club fields.');
   }
-  const get = (row, key) => {
-    const idx = headers.indexOf(key);
-    return idx >= 0 ? (row[idx]||'').trim() : '';
+  const get = (row, ...keys) => {
+    for (const k of keys) {
+      const idx = headers.indexOf(k);
+      if (idx >= 0) return (row[idx]||'').trim();
+    }
+    return '';
   };
   let added = 0;
   for (let i = 1; i < rows.length; i++) {
@@ -744,17 +714,9 @@ function csvImport(text) {
       state.players.push({
         id: uid('p'), name,
         position: get(r,'position'),
-        age: Number(get(r,'age')) || '',
-        foot: get(r,'foot'),
-        currentClub: get(r,'currentclub') || get(r,'current club'),
-        contractExpires: get(r,'contractexpires') || get(r,'contract expires') || get(r,'contract'),
-        marketValue: Number(get(r,'marketvalue') || get(r,'market value')) || '',
-        agent: get(r,'agent'),
-        agentContact: get(r,'agentcontact') || get(r,'agent contact'),
-        salary: get(r,'salary'),
-        languages: get(r,'languages'),
-        notes: get(r,'notes'),
-        links: get(r,'links'),
+        dob: get(r,'dob','date of birth','dateofbirth','yob','year','year of birth'),
+        club: get(r,'club','current club','currentclub'),
+        notes: get(r,'notes','note','comments'),
       });
       added++;
     } else {
@@ -797,11 +759,11 @@ function importJSON(text) {
 }
 
 function exportMatchesCSV() {
-  const lines = ['player,position,age,current_club,contract_expires,club,league,country,status,fit,last_contact,notes'];
+  const lines = ['player,position,dob,age,player_club,target_club,league,country,status,fit,last_contact,notes'];
   for (const m of state.matches) {
     const p = findPlayer(m.playerId), c = findClub(m.clubId);
     if (!p || !c) continue;
-    const row = [p.name, p.position, p.age, p.currentClub, p.contractExpires, c.name, c.league, c.country, m.status, m.fit, m.lastContact, m.notes];
+    const row = [p.name, p.position, p.dob, ageFromDob(p.dob), clubOf(p), c.name, c.league, c.country, m.status, m.fit, m.lastContact, m.notes];
     lines.push(row.map(v => {
       const s = String(v ?? '');
       return /[",\n]/.test(s) ? `"${s.replace(/"/g,'""')}"` : s;
@@ -852,7 +814,6 @@ $$('.view-btn').forEach(b => b.addEventListener('click', () => {
 
 $('#player-search').addEventListener('input', () => { renderPlayers(); if (state.ui.view==='board') renderBoard(); else renderMatrix(); });
 $('#player-filter-pos').addEventListener('change', () => { renderPlayers(); if (state.ui.view==='board') renderBoard(); else renderMatrix(); });
-$('#player-filter-contract').addEventListener('change', () => { renderPlayers(); if (state.ui.view==='board') renderBoard(); else renderMatrix(); });
 $('#club-search').addEventListener('input', () => { renderClubs(); if (state.ui.view==='matrix') renderMatrix(); });
 $('#club-filter-tier').addEventListener('change', () => { renderClubs(); if (state.ui.view==='matrix') renderMatrix(); });
 
