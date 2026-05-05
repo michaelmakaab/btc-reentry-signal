@@ -1,0 +1,927 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Player–Club Matcher</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<script src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.2/Sortable.min.js"></script>
+<style>
+  html, body { height: 100%; }
+  body { background: #0b1220; color: #e2e8f0; font-family: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; }
+  .scroll-y { overflow-y: auto; scrollbar-width: thin; scrollbar-color: #334155 transparent; }
+  .scroll-y::-webkit-scrollbar { width: 8px; height: 8px; }
+  .scroll-y::-webkit-scrollbar-thumb { background: #334155; border-radius: 4px; }
+  .pill { display: inline-flex; align-items: center; gap: 4px; padding: 2px 8px; border-radius: 999px; font-size: 11px; font-weight: 500; }
+  .lane-drop.over { outline: 2px dashed #60a5fa; outline-offset: -2px; background: rgba(96,165,250,.06); }
+  .ghost { opacity: 0.4; }
+  .chosen { transform: scale(1.02); }
+  .drag { cursor: grab; }
+  .drag:active { cursor: grabbing; }
+  .matrix-cell { min-width: 110px; }
+  .matrix-cell:hover .add-hint { opacity: 1; }
+  .add-hint { opacity: 0; transition: opacity .15s; }
+  details > summary { list-style: none; cursor: pointer; }
+  details > summary::-webkit-details-marker { display: none; }
+  .star { color: #475569; cursor: pointer; }
+  .star.on { color: #fbbf24; }
+  input, select, textarea { color-scheme: dark; }
+  .btn { display: inline-flex; align-items: center; gap: 6px; padding: 6px 12px; border-radius: 8px; font-size: 13px; font-weight: 500; transition: background .15s, border-color .15s; }
+  .btn-primary { background: #3b82f6; color: white; }
+  .btn-primary:hover { background: #2563eb; }
+  .btn-ghost { background: transparent; border: 1px solid #334155; color: #cbd5e1; }
+  .btn-ghost:hover { background: #1e293b; border-color: #475569; }
+  .btn-danger { background: transparent; border: 1px solid #7f1d1d; color: #fca5a5; }
+  .btn-danger:hover { background: #450a0a; }
+  .field { display: flex; flex-direction: column; gap: 4px; font-size: 12px; }
+  .field label { color: #94a3b8; font-weight: 500; }
+  .field input, .field select, .field textarea { background: #0f172a; border: 1px solid #1e293b; border-radius: 6px; padding: 6px 8px; font-size: 13px; }
+  .field input:focus, .field select:focus, .field textarea:focus { outline: none; border-color: #3b82f6; }
+  kbd { background: #1e293b; border: 1px solid #334155; padding: 1px 5px; border-radius: 4px; font-size: 11px; font-family: ui-monospace, monospace; }
+</style>
+</head>
+<body class="h-screen flex flex-col">
+
+<!-- Header -->
+<header class="flex items-center gap-3 px-4 py-3 border-b border-slate-800 bg-slate-900/60 backdrop-blur shrink-0">
+  <div class="font-semibold text-base flex items-center gap-2">
+    <span class="text-blue-400">⚽</span> Player–Club Matcher
+  </div>
+  <div class="ml-4 flex items-center gap-1 bg-slate-800 rounded-lg p-1 text-xs">
+    <button data-view="board"  class="view-btn px-3 py-1 rounded-md">Board</button>
+    <button data-view="matrix" class="view-btn px-3 py-1 rounded-md">Matrix</button>
+  </div>
+  <div class="ml-auto flex items-center gap-2">
+    <button id="btn-import-csv"  class="btn btn-ghost" title="Import players or clubs from CSV">⇪ Import CSV</button>
+    <button id="btn-import-json" class="btn btn-ghost" title="Restore from a JSON backup">⇪ Import JSON</button>
+    <button id="btn-export-json" class="btn btn-ghost" title="Download a JSON backup">⇩ Export JSON</button>
+    <button id="btn-export-csv"  class="btn btn-ghost" title="Download matches as CSV">⇩ Export Matches</button>
+    <button id="btn-reset"       class="btn btn-danger" title="Wipe everything and reload seed data">↺ Reset</button>
+  </div>
+</header>
+
+<!-- Main: Board view -->
+<main id="view-board" class="flex-1 grid grid-cols-12 gap-3 p-3 min-h-0">
+
+  <!-- Left: Players -->
+  <section class="col-span-3 flex flex-col min-h-0 bg-slate-900/40 border border-slate-800 rounded-xl">
+    <div class="p-3 border-b border-slate-800 flex items-center gap-2">
+      <h2 class="text-sm font-semibold text-slate-200">Players</h2>
+      <span id="player-count" class="text-xs text-slate-500"></span>
+      <button id="btn-add-player" class="ml-auto btn btn-primary text-xs px-2 py-1">+ Add</button>
+    </div>
+    <div class="p-3 border-b border-slate-800 space-y-2">
+      <input id="player-search" type="search" placeholder="Search name, position, agent…" class="w-full bg-slate-950 border border-slate-800 rounded-md px-2 py-1.5 text-sm" />
+      <div class="flex gap-2 text-xs">
+        <select id="player-filter-pos" class="flex-1 bg-slate-950 border border-slate-800 rounded-md px-2 py-1">
+          <option value="">All positions</option>
+        </select>
+        <select id="player-filter-contract" class="flex-1 bg-slate-950 border border-slate-800 rounded-md px-2 py-1">
+          <option value="">Any contract</option>
+          <option value="6">≤ 6 mo</option>
+          <option value="12">≤ 12 mo</option>
+          <option value="24">≤ 24 mo</option>
+        </select>
+      </div>
+    </div>
+    <div id="player-list" class="flex-1 scroll-y p-2 space-y-1.5"></div>
+  </section>
+
+  <!-- Center: Match Board -->
+  <section class="col-span-6 flex flex-col min-h-0 bg-slate-900/40 border border-slate-800 rounded-xl">
+    <div class="p-3 border-b border-slate-800 flex items-center gap-2">
+      <h2 class="text-sm font-semibold text-slate-200">Match Board</h2>
+      <span id="match-count" class="text-xs text-slate-500"></span>
+      <span class="ml-auto text-xs text-slate-500">Drag clubs from the right onto a player. Click a chip to edit.</span>
+    </div>
+    <div id="board" class="flex-1 scroll-y p-3 space-y-2"></div>
+  </section>
+
+  <!-- Right: Clubs -->
+  <section class="col-span-3 flex flex-col min-h-0 bg-slate-900/40 border border-slate-800 rounded-xl">
+    <div class="p-3 border-b border-slate-800 flex items-center gap-2">
+      <h2 class="text-sm font-semibold text-slate-200">Clubs</h2>
+      <span id="club-count" class="text-xs text-slate-500"></span>
+      <button id="btn-add-club" class="ml-auto btn btn-primary text-xs px-2 py-1">+ Add</button>
+    </div>
+    <div class="p-3 border-b border-slate-800 space-y-2">
+      <input id="club-search" type="search" placeholder="Search club, league, country…" class="w-full bg-slate-950 border border-slate-800 rounded-md px-2 py-1.5 text-sm" />
+      <select id="club-filter-tier" class="w-full bg-slate-950 border border-slate-800 rounded-md px-2 py-1 text-xs">
+        <option value="">Any tier</option>
+        <option value="elite">Elite</option>
+        <option value="top">Top</option>
+        <option value="mid">Mid</option>
+        <option value="dev">Development</option>
+      </select>
+    </div>
+    <div id="club-list" class="flex-1 scroll-y p-2 space-y-1.5"></div>
+  </section>
+</main>
+
+<!-- Main: Matrix view -->
+<main id="view-matrix" class="flex-1 p-3 min-h-0 hidden">
+  <div class="h-full bg-slate-900/40 border border-slate-800 rounded-xl flex flex-col min-h-0">
+    <div class="p-3 border-b border-slate-800 flex items-center gap-2">
+      <h2 class="text-sm font-semibold text-slate-200">Pipeline Matrix</h2>
+      <span class="text-xs text-slate-500">Click a cell to set status. Right-click to clear.</span>
+      <div class="ml-auto flex items-center gap-2 text-xs flex-wrap" id="status-legend"></div>
+    </div>
+    <div class="flex-1 overflow-auto">
+      <table id="matrix" class="w-max text-xs border-collapse"></table>
+    </div>
+  </div>
+</main>
+
+<!-- Modal root -->
+<div id="modal-root" class="fixed inset-0 z-50 hidden items-center justify-center bg-black/60 p-4">
+  <div id="modal-card" class="bg-slate-900 border border-slate-800 rounded-xl w-full max-w-2xl max-h-[90vh] overflow-auto"></div>
+</div>
+
+<input type="file" id="file-input" accept=".csv,.json" class="hidden" />
+
+<footer class="text-center text-xs text-slate-600 py-2 border-t border-slate-800 shrink-0">
+  Stored locally in your browser · <kbd>P</kbd> add player · <kbd>C</kbd> add club · <kbd>1</kbd>/<kbd>2</kbd> switch views
+</footer>
+
+<script>
+/* ============================================================
+   Data model + persistence
+============================================================ */
+const STORAGE_KEY = 'pcm:v1';
+
+const STATUSES = [
+  { id: 'idea',        label: 'Idea',        color: '#64748b', text: '#e2e8f0' },
+  { id: 'contacted',   label: 'Contacted',   color: '#3b82f6', text: '#ffffff' },
+  { id: 'interested',  label: 'Interested',  color: '#a855f7', text: '#ffffff' },
+  { id: 'negotiating', label: 'Negotiating', color: '#f59e0b', text: '#1f2937' },
+  { id: 'done',        label: 'Done',        color: '#10b981', text: '#ffffff' },
+  { id: 'passed',      label: 'Passed',      color: '#475569', text: '#cbd5e1' },
+];
+const STATUS_BY_ID = Object.fromEntries(STATUSES.map(s => [s.id, s]));
+
+const POSITIONS = ['GK','CB','LB','RB','LWB','RWB','CDM','CM','CAM','LM','RM','LW','RW','ST','CF'];
+const TIERS = [
+  { id: 'elite', label: 'Elite' },
+  { id: 'top',   label: 'Top' },
+  { id: 'mid',   label: 'Mid' },
+  { id: 'dev',   label: 'Development' },
+];
+
+function uid(prefix='id') {
+  return prefix + '_' + Math.random().toString(36).slice(2,10);
+}
+
+function seed() {
+  const players = [
+    { id: uid('p'), name: 'Bukayo Saka',     position: 'RW',  age: 23, foot: 'L', currentClub: 'Arsenal',         contractExpires: '2027-06-30', marketValue: 130, agent: 'CAA Stellar', agentContact: '', salary: '', languages: 'English', notes: '', links: '' },
+    { id: uid('p'), name: 'Florian Wirtz',   position: 'CAM', age: 22, foot: 'R', currentClub: 'Bayer Leverkusen',contractExpires: '2027-06-30', marketValue: 140, agent: 'WSA',         agentContact: '', salary: '', languages: 'German, English', notes: '', links: '' },
+    { id: uid('p'), name: 'Jérémy Doku',     age: 23, position: 'LW',  foot: 'R', currentClub: 'Manchester City', contractExpires: '2028-06-30', marketValue: 70,  agent: 'Roc Nation',  agentContact: '', salary: '', languages: 'French, English', notes: '', links: '' },
+    { id: uid('p'), name: 'Khvicha Kvaratskhelia', age: 24, position: 'LW', foot: 'R', currentClub: 'Napoli',     contractExpires: '2027-06-30', marketValue: 100, agent: '',            agentContact: '', salary: '', languages: 'Georgian, Italian', notes: '', links: '' },
+    { id: uid('p'), name: 'Alessandro Bastoni', age: 25, position: 'CB', foot: 'L', currentClub: 'Inter',         contractExpires: '2028-06-30', marketValue: 80,  agent: '',            agentContact: '', salary: '', languages: 'Italian', notes: '', links: '' },
+  ];
+  const clubs = [
+    { id: uid('c'), name: 'Real Madrid',     country: 'ES', league: 'La Liga',         tier: 'elite', tags: 'champions league, big budget',  notes: '' },
+    { id: uid('c'), name: 'Bayern Munich',   country: 'DE', league: 'Bundesliga',      tier: 'elite', tags: 'champions league',              notes: '' },
+    { id: uid('c'), name: 'Manchester City', country: 'GB', league: 'Premier League',  tier: 'elite', tags: 'champions league, big budget',  notes: '' },
+    { id: uid('c'), name: 'Paris SG',        country: 'FR', league: 'Ligue 1',         tier: 'elite', tags: 'champions league',              notes: '' },
+    { id: uid('c'), name: 'Inter',           country: 'IT', league: 'Serie A',         tier: 'top',   tags: 'champions league',              notes: '' },
+    { id: uid('c'), name: 'Atlético Madrid', country: 'ES', league: 'La Liga',         tier: 'top',   tags: 'champions league',              notes: '' },
+    { id: uid('c'), name: 'Newcastle',       country: 'GB', league: 'Premier League',  tier: 'top',   tags: 'big budget',                    notes: '' },
+    { id: uid('c'), name: 'Brighton',        country: 'GB', league: 'Premier League',  tier: 'mid',   tags: 'data-driven, dev pathway',      notes: '' },
+  ];
+  const matches = [];
+  return { players, clubs, matches, ui: { view: 'board' } };
+}
+
+let state = load() ?? seed();
+
+function load() {
+  try {
+    const raw = localStorage.getItem(STORAGE_KEY);
+    if (!raw) return null;
+    const parsed = JSON.parse(raw);
+    if (!parsed.players || !parsed.clubs || !parsed.matches) return null;
+    parsed.ui ??= { view: 'board' };
+    return parsed;
+  } catch { return null; }
+}
+function save() {
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+}
+
+/* ============================================================
+   Helpers
+============================================================ */
+const $ = (sel, root=document) => root.querySelector(sel);
+const $$ = (sel, root=document) => Array.from(root.querySelectorAll(sel));
+
+function monthsUntil(dateStr) {
+  if (!dateStr) return null;
+  const d = new Date(dateStr); if (isNaN(d)) return null;
+  const now = new Date();
+  return Math.round((d - now) / (1000*60*60*24*30.44));
+}
+function contractColor(months) {
+  if (months == null) return '';
+  if (months <= 6)  return 'bg-rose-500';
+  if (months <= 12) return 'bg-amber-500';
+  if (months <= 24) return 'bg-yellow-500';
+  return 'bg-emerald-500';
+}
+function flag(country) {
+  if (!country || country.length !== 2) return '';
+  const cc = country.toUpperCase();
+  return String.fromCodePoint(...[...cc].map(c => 0x1F1E6 + c.charCodeAt(0) - 65));
+}
+function escapeHtml(s) {
+  return String(s ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+}
+function escapeAttr(s) { return escapeHtml(s).replace(/`/g, '&#96;'); }
+
+function findPlayer(id) { return state.players.find(p => p.id === id); }
+function findClub(id)   { return state.clubs.find(c => c.id === id); }
+function matchFor(playerId, clubId) { return state.matches.find(m => m.playerId === playerId && m.clubId === clubId); }
+function matchesFor(playerId) { return state.matches.filter(m => m.playerId === playerId); }
+
+function ensureMatch(playerId, clubId) {
+  let m = matchFor(playerId, clubId);
+  if (!m) {
+    m = { id: uid('m'), playerId, clubId, status: 'idea', fit: 0, lastContact: '', notes: '' };
+    state.matches.push(m);
+    save();
+  }
+  return m;
+}
+
+/* ============================================================
+   Filters
+============================================================ */
+function filteredPlayers() {
+  const q = ($('#player-search').value || '').toLowerCase().trim();
+  const pos = $('#player-filter-pos').value;
+  const cm  = $('#player-filter-contract').value;
+  return state.players.filter(p => {
+    if (pos && p.position !== pos) return false;
+    if (cm) {
+      const m = monthsUntil(p.contractExpires);
+      if (m == null || m > Number(cm)) return false;
+    }
+    if (q) {
+      const blob = `${p.name} ${p.position} ${p.currentClub} ${p.agent} ${p.notes}`.toLowerCase();
+      if (!blob.includes(q)) return false;
+    }
+    return true;
+  });
+}
+function filteredClubs() {
+  const q = ($('#club-search').value || '').toLowerCase().trim();
+  const tier = $('#club-filter-tier').value;
+  return state.clubs.filter(c => {
+    if (tier && c.tier !== tier) return false;
+    if (q) {
+      const blob = `${c.name} ${c.league} ${c.country} ${c.tags} ${c.notes}`.toLowerCase();
+      if (!blob.includes(q)) return false;
+    }
+    return true;
+  });
+}
+
+/* ============================================================
+   Render: Players list (left)
+============================================================ */
+function renderPlayers() {
+  const list = filteredPlayers();
+  $('#player-count').textContent = `${list.length}/${state.players.length}`;
+  const root = $('#player-list');
+  root.innerHTML = list.map(p => {
+    const months = monthsUntil(p.contractExpires);
+    const cdot = contractColor(months);
+    const matches = matchesFor(p.id).length;
+    return `
+      <details class="player-item bg-slate-950/60 border border-slate-800 rounded-lg drag" data-id="${p.id}">
+        <summary class="flex items-center gap-2 px-2 py-1.5 hover:bg-slate-900 rounded-lg">
+          <span class="w-2 h-2 rounded-full ${cdot}" title="${months ?? '—'} months on contract"></span>
+          <span class="font-medium text-sm text-slate-100 truncate flex-1">${escapeHtml(p.name)}</span>
+          <span class="pill bg-slate-800 text-slate-300">${escapeHtml(p.position||'?')}</span>
+          <span class="text-[10px] text-slate-500">${p.age||''}</span>
+          ${matches ? `<span class="pill bg-blue-900/50 text-blue-300">${matches}</span>` : ''}
+        </summary>
+        <div class="px-3 pb-3 pt-1 text-xs text-slate-300 space-y-1">
+          <div><span class="text-slate-500">Current:</span> ${escapeHtml(p.currentClub||'—')}</div>
+          <div><span class="text-slate-500">Contract:</span> ${escapeHtml(p.contractExpires||'—')} ${months!=null?`<span class="text-slate-500">(${months} mo)</span>`:''}</div>
+          <div><span class="text-slate-500">Foot:</span> ${escapeHtml(p.foot||'—')} · <span class="text-slate-500">MV:</span> €${p.marketValue||'—'}m</div>
+          <div><span class="text-slate-500">Agent:</span> ${escapeHtml(p.agent||'—')}</div>
+          ${p.agentContact?`<div><span class="text-slate-500">Contact:</span> ${escapeHtml(p.agentContact)}</div>`:''}
+          ${p.languages?`<div><span class="text-slate-500">Languages:</span> ${escapeHtml(p.languages)}</div>`:''}
+          ${p.notes?`<div class="text-slate-400 italic">"${escapeHtml(p.notes)}"</div>`:''}
+          <div class="flex gap-2 pt-1">
+            <button class="btn btn-ghost text-[11px] px-2 py-0.5" data-act="edit-player" data-id="${p.id}">Edit</button>
+            <button class="btn btn-danger text-[11px] px-2 py-0.5" data-act="delete-player" data-id="${p.id}">Delete</button>
+          </div>
+        </div>
+      </details>`;
+  }).join('') || `<div class="text-xs text-slate-500 p-3 text-center">No players match.</div>`;
+}
+
+/* ============================================================
+   Render: Clubs list (right)
+============================================================ */
+function renderClubs() {
+  const list = filteredClubs();
+  $('#club-count').textContent = `${list.length}/${state.clubs.length}`;
+  const root = $('#club-list');
+  root.innerHTML = list.map(c => `
+    <details class="club-item bg-slate-950/60 border border-slate-800 rounded-lg drag" data-id="${c.id}">
+      <summary class="flex items-center gap-2 px-2 py-1.5 hover:bg-slate-900 rounded-lg">
+        <span class="text-base leading-none">${flag(c.country)}</span>
+        <span class="font-medium text-sm text-slate-100 truncate flex-1">${escapeHtml(c.name)}</span>
+        <span class="pill bg-slate-800 text-slate-300">${escapeHtml((TIERS.find(t=>t.id===c.tier)||{label:c.tier||'—'}).label)}</span>
+      </summary>
+      <div class="px-3 pb-3 pt-1 text-xs text-slate-300 space-y-1">
+        <div><span class="text-slate-500">League:</span> ${escapeHtml(c.league||'—')}</div>
+        ${c.tags?`<div><span class="text-slate-500">Tags:</span> ${escapeHtml(c.tags)}</div>`:''}
+        ${c.notes?`<div class="text-slate-400 italic">"${escapeHtml(c.notes)}"</div>`:''}
+        <div class="flex gap-2 pt-1">
+          <button class="btn btn-ghost text-[11px] px-2 py-0.5" data-act="edit-club" data-id="${c.id}">Edit</button>
+          <button class="btn btn-danger text-[11px] px-2 py-0.5" data-act="delete-club" data-id="${c.id}">Delete</button>
+        </div>
+      </div>
+    </details>`).join('') || `<div class="text-xs text-slate-500 p-3 text-center">No clubs match.</div>`;
+}
+
+/* ============================================================
+   Render: Match Board (center)
+============================================================ */
+function renderBoard() {
+  const players = filteredPlayers();
+  const root = $('#board');
+  root.innerHTML = players.map(p => {
+    const ms = matchesFor(p.id).map(m => {
+      const club = findClub(m.clubId);
+      if (!club) return '';
+      const s = STATUS_BY_ID[m.status] || STATUSES[0];
+      return `
+        <button class="match-chip pill drag" data-match="${m.id}"
+                style="background:${s.color};color:${s.text}" title="${escapeAttr(club.name)} · ${escapeAttr(s.label)}">
+          ${flag(club.country)} ${escapeHtml(club.name)}
+          ${m.fit ? `<span class="ml-1 opacity-80">${'★'.repeat(m.fit)}</span>` : ''}
+        </button>`;
+    }).join('');
+    return `
+      <div class="player-lane bg-slate-950/40 border border-slate-800 rounded-lg p-2.5" data-player="${p.id}">
+        <div class="flex items-center gap-2 mb-2">
+          <span class="font-semibold text-sm text-slate-100">${escapeHtml(p.name)}</span>
+          <span class="pill bg-slate-800 text-slate-300">${escapeHtml(p.position||'?')}</span>
+          <span class="text-[11px] text-slate-500 truncate">${escapeHtml(p.currentClub||'')}</span>
+          <span class="ml-auto text-[10px] text-slate-500">${matchesFor(p.id).length} target${matchesFor(p.id).length===1?'':'s'}</span>
+        </div>
+        <div class="lane-drop flex flex-wrap items-center gap-1.5 min-h-[32px] rounded-md p-1 -m-1" data-player="${p.id}">
+          ${ms || `<span class="text-[11px] text-slate-600 italic px-1">Drop clubs here…</span>`}
+        </div>
+      </div>`;
+  }).join('') || `<div class="text-sm text-slate-500 text-center p-8">No players to show. Add some on the left, or clear filters.</div>`;
+  $('#match-count').textContent = `${state.matches.length} match${state.matches.length===1?'':'es'}`;
+
+  // wire up Sortable on each lane
+  $$('#board .lane-drop').forEach(el => {
+    Sortable.create(el, {
+      group: { name: 'clubs', pull: false, put: true },
+      sort: false,
+      ghostClass: 'ghost',
+      onAdd: (evt) => {
+        const clubId = evt.item.dataset.id;
+        const playerId = el.dataset.player;
+        // remove the cloned DOM node — we'll rerender from state
+        evt.item.parentNode && evt.item.parentNode.removeChild(evt.item);
+        if (clubId && playerId) {
+          ensureMatch(playerId, clubId);
+          renderBoard();
+        }
+      },
+    });
+  });
+}
+
+/* ============================================================
+   Render: Matrix
+============================================================ */
+function renderMatrix() {
+  const players = filteredPlayers();
+  const clubs = filteredClubs();
+  const tbl = $('#matrix');
+  const head = `
+    <thead>
+      <tr>
+        <th class="sticky top-0 left-0 z-20 bg-slate-900 text-left p-2 border-b border-r border-slate-800 min-w-[180px]">Player ↓ / Club →</th>
+        ${clubs.map(c => `<th class="sticky top-0 z-10 bg-slate-900 p-2 border-b border-slate-800 text-left matrix-cell">
+          <div class="flex items-center gap-1">
+            <span>${flag(c.country)}</span>
+            <span class="truncate max-w-[120px]">${escapeHtml(c.name)}</span>
+          </div>
+          <div class="text-[10px] text-slate-500">${escapeHtml(c.league||'')}</div>
+        </th>`).join('')}
+      </tr>
+    </thead>`;
+  const body = `<tbody>${players.map(p => `
+    <tr>
+      <th class="sticky left-0 z-10 bg-slate-900 text-left p-2 border-b border-r border-slate-800 align-top">
+        <div class="font-medium text-slate-100">${escapeHtml(p.name)}</div>
+        <div class="text-[10px] text-slate-500">${escapeHtml(p.position||'')} · ${p.age||''} · ${escapeHtml(p.currentClub||'')}</div>
+      </th>
+      ${clubs.map(c => {
+        const m = matchFor(p.id, c.id);
+        if (m) {
+          const s = STATUS_BY_ID[m.status] || STATUSES[0];
+          return `<td class="p-1 border-b border-slate-800 matrix-cell" data-player="${p.id}" data-club="${c.id}">
+            <button class="match-cell pill w-full justify-center" style="background:${s.color};color:${s.text}" data-match="${m.id}" title="${escapeAttr(s.label)}${m.notes?' · '+escapeAttr(m.notes):''}">
+              ${escapeHtml(s.label)}${m.fit?` ${'★'.repeat(m.fit)}`:''}
+            </button>
+          </td>`;
+        }
+        return `<td class="p-1 border-b border-slate-800 matrix-cell text-center" data-player="${p.id}" data-club="${c.id}">
+          <button class="add-hint text-slate-600 hover:text-blue-400 text-lg leading-none" data-create-match data-player="${p.id}" data-club="${c.id}">+</button>
+        </td>`;
+      }).join('')}
+    </tr>`).join('')}</tbody>`;
+  tbl.innerHTML = head + body;
+
+  // legend
+  $('#status-legend').innerHTML = STATUSES.map(s =>
+    `<span class="pill" style="background:${s.color};color:${s.text}">${s.label}</span>`).join('');
+}
+
+/* ============================================================
+   Render: everything
+============================================================ */
+function renderFilters() {
+  const posSel = $('#player-filter-pos');
+  if (posSel.options.length <= 1) {
+    POSITIONS.forEach(p => {
+      const opt = document.createElement('option');
+      opt.value = p; opt.textContent = p;
+      posSel.appendChild(opt);
+    });
+  }
+}
+function render() {
+  renderFilters();
+  renderPlayers();
+  renderClubs();
+  if (state.ui.view === 'board')  renderBoard();
+  if (state.ui.view === 'matrix') renderMatrix();
+  // view toggles
+  $('#view-board').classList.toggle('hidden', state.ui.view !== 'board');
+  $('#view-board').classList.toggle('grid',   state.ui.view === 'board');
+  $('#view-matrix').classList.toggle('hidden', state.ui.view !== 'matrix');
+  $$('.view-btn').forEach(b => {
+    const on = b.dataset.view === state.ui.view;
+    b.className = `view-btn px-3 py-1 rounded-md ${on ? 'bg-blue-600 text-white' : 'text-slate-400 hover:text-slate-200'}`;
+  });
+}
+
+/* ============================================================
+   Modal: edit player / club / match
+============================================================ */
+function openModal(html, onMount) {
+  const root = $('#modal-root');
+  $('#modal-card').innerHTML = html;
+  root.classList.remove('hidden');
+  root.classList.add('flex');
+  onMount && onMount($('#modal-card'));
+}
+function closeModal() {
+  $('#modal-root').classList.add('hidden');
+  $('#modal-root').classList.remove('flex');
+  $('#modal-card').innerHTML = '';
+}
+$('#modal-root').addEventListener('click', e => {
+  if (e.target.id === 'modal-root') closeModal();
+});
+document.addEventListener('keydown', e => {
+  if (e.key === 'Escape') closeModal();
+});
+
+function editPlayer(id) {
+  const p = id ? findPlayer(id) : { id: uid('p'), name:'', position:'', age:'', foot:'', currentClub:'', contractExpires:'', marketValue:'', agent:'', agentContact:'', salary:'', languages:'', notes:'', links:'' };
+  const isNew = !id;
+  openModal(`
+    <form id="player-form" class="p-5 space-y-4">
+      <div class="flex items-center justify-between">
+        <h3 class="text-lg font-semibold">${isNew?'Add player':'Edit player'}</h3>
+        <button type="button" class="text-slate-400 hover:text-white" data-close>✕</button>
+      </div>
+      <div class="grid grid-cols-2 gap-3">
+        <div class="field col-span-2"><label>Name *</label><input name="name" required value="${escapeAttr(p.name)}" /></div>
+        <div class="field"><label>Position</label>
+          <select name="position">
+            <option value="">—</option>
+            ${POSITIONS.map(x=>`<option value="${x}" ${p.position===x?'selected':''}>${x}</option>`).join('')}
+          </select>
+        </div>
+        <div class="field"><label>Age</label><input name="age" type="number" min="14" max="50" value="${escapeAttr(p.age)}" /></div>
+        <div class="field"><label>Preferred foot</label>
+          <select name="foot">
+            <option value="">—</option>
+            <option ${p.foot==='L'?'selected':''}>L</option>
+            <option ${p.foot==='R'?'selected':''}>R</option>
+            <option ${p.foot==='Both'?'selected':''}>Both</option>
+          </select>
+        </div>
+        <div class="field"><label>Current club</label><input name="currentClub" value="${escapeAttr(p.currentClub)}" /></div>
+        <div class="field"><label>Contract expires</label><input name="contractExpires" type="date" value="${escapeAttr(p.contractExpires)}" /></div>
+        <div class="field"><label>Market value (€m)</label><input name="marketValue" type="number" min="0" step="0.5" value="${escapeAttr(p.marketValue)}" /></div>
+        <div class="field"><label>Agent</label><input name="agent" value="${escapeAttr(p.agent)}" /></div>
+        <div class="field"><label>Agent contact</label><input name="agentContact" placeholder="email or phone" value="${escapeAttr(p.agentContact)}" /></div>
+        <div class="field"><label>Salary expectation</label><input name="salary" value="${escapeAttr(p.salary)}" /></div>
+        <div class="field col-span-2"><label>Languages</label><input name="languages" value="${escapeAttr(p.languages)}" /></div>
+        <div class="field col-span-2"><label>Links (comma separated URLs)</label><input name="links" value="${escapeAttr(p.links)}" /></div>
+        <div class="field col-span-2"><label>Notes</label><textarea name="notes" rows="3">${escapeHtml(p.notes)}</textarea></div>
+      </div>
+      <div class="flex justify-end gap-2 pt-2">
+        ${isNew?'':'<button type="button" class="btn btn-danger mr-auto" data-delete>Delete</button>'}
+        <button type="button" class="btn btn-ghost" data-close>Cancel</button>
+        <button type="submit" class="btn btn-primary">${isNew?'Create':'Save'}</button>
+      </div>
+    </form>
+  `, (card) => {
+    const form = card.querySelector('#player-form');
+    form.addEventListener('submit', e => {
+      e.preventDefault();
+      const fd = new FormData(form);
+      const next = {...p};
+      for (const [k,v] of fd.entries()) next[k] = v.trim();
+      next.age = next.age ? Number(next.age) : '';
+      next.marketValue = next.marketValue ? Number(next.marketValue) : '';
+      if (isNew) state.players.push(next);
+      else Object.assign(p, next);
+      save(); render(); closeModal();
+    });
+    card.querySelectorAll('[data-close]').forEach(b => b.addEventListener('click', closeModal));
+    const del = card.querySelector('[data-delete]');
+    if (del) del.addEventListener('click', () => deletePlayer(p.id));
+  });
+}
+
+function deletePlayer(id) {
+  const p = findPlayer(id);
+  if (!p) return;
+  if (!confirm(`Delete player "${p.name}" and all their match data?`)) return;
+  state.players = state.players.filter(x => x.id !== id);
+  state.matches = state.matches.filter(m => m.playerId !== id);
+  save(); render(); closeModal();
+}
+
+function editClub(id) {
+  const c = id ? findClub(id) : { id: uid('c'), name:'', country:'', league:'', tier:'', tags:'', notes:'' };
+  const isNew = !id;
+  openModal(`
+    <form id="club-form" class="p-5 space-y-4">
+      <div class="flex items-center justify-between">
+        <h3 class="text-lg font-semibold">${isNew?'Add club':'Edit club'}</h3>
+        <button type="button" class="text-slate-400 hover:text-white" data-close>✕</button>
+      </div>
+      <div class="grid grid-cols-2 gap-3">
+        <div class="field col-span-2"><label>Name *</label><input name="name" required value="${escapeAttr(c.name)}" /></div>
+        <div class="field"><label>Country (2-letter)</label><input name="country" maxlength="2" value="${escapeAttr(c.country)}" placeholder="GB, ES, DE…" /></div>
+        <div class="field"><label>League</label><input name="league" value="${escapeAttr(c.league)}" /></div>
+        <div class="field"><label>Tier</label>
+          <select name="tier">
+            <option value="">—</option>
+            ${TIERS.map(t => `<option value="${t.id}" ${c.tier===t.id?'selected':''}>${t.label}</option>`).join('')}
+          </select>
+        </div>
+        <div class="field"><label>Tags (comma separated)</label><input name="tags" value="${escapeAttr(c.tags)}" /></div>
+        <div class="field col-span-2"><label>Notes</label><textarea name="notes" rows="3">${escapeHtml(c.notes)}</textarea></div>
+      </div>
+      <div class="flex justify-end gap-2 pt-2">
+        ${isNew?'':'<button type="button" class="btn btn-danger mr-auto" data-delete>Delete</button>'}
+        <button type="button" class="btn btn-ghost" data-close>Cancel</button>
+        <button type="submit" class="btn btn-primary">${isNew?'Create':'Save'}</button>
+      </div>
+    </form>
+  `, (card) => {
+    const form = card.querySelector('#club-form');
+    form.addEventListener('submit', e => {
+      e.preventDefault();
+      const fd = new FormData(form);
+      const next = {...c};
+      for (const [k,v] of fd.entries()) next[k] = v.trim();
+      next.country = (next.country||'').toUpperCase();
+      if (isNew) state.clubs.push(next);
+      else Object.assign(c, next);
+      save(); render(); closeModal();
+    });
+    card.querySelectorAll('[data-close]').forEach(b => b.addEventListener('click', closeModal));
+    const del = card.querySelector('[data-delete]');
+    if (del) del.addEventListener('click', () => deleteClub(c.id));
+  });
+}
+
+function deleteClub(id) {
+  const c = findClub(id);
+  if (!c) return;
+  if (!confirm(`Delete club "${c.name}" and remove it from all matches?`)) return;
+  state.clubs = state.clubs.filter(x => x.id !== id);
+  state.matches = state.matches.filter(m => m.clubId !== id);
+  save(); render(); closeModal();
+}
+
+function editMatch(matchId) {
+  const m = state.matches.find(x => x.id === matchId);
+  if (!m) return;
+  const p = findPlayer(m.playerId);
+  const c = findClub(m.clubId);
+  openModal(`
+    <form id="match-form" class="p-5 space-y-4">
+      <div class="flex items-center justify-between">
+        <div>
+          <div class="text-xs text-slate-500">Match</div>
+          <h3 class="text-lg font-semibold">${escapeHtml(p?.name||'?')} → ${flag(c?.country||'')} ${escapeHtml(c?.name||'?')}</h3>
+        </div>
+        <button type="button" class="text-slate-400 hover:text-white" data-close>✕</button>
+      </div>
+      <div class="grid grid-cols-2 gap-3">
+        <div class="field"><label>Status</label>
+          <select name="status">
+            ${STATUSES.map(s=>`<option value="${s.id}" ${m.status===s.id?'selected':''}>${s.label}</option>`).join('')}
+          </select>
+        </div>
+        <div class="field"><label>Last contact</label><input name="lastContact" type="date" value="${escapeAttr(m.lastContact)}" /></div>
+        <div class="field col-span-2"><label>Fit</label>
+          <div class="flex items-center gap-1 text-2xl select-none" id="fit-stars">
+            ${[1,2,3,4,5].map(i => `<span class="star ${i<=m.fit?'on':''}" data-fit="${i}">★</span>`).join('')}
+            <button type="button" class="ml-2 text-xs text-slate-500 hover:text-slate-200" data-fit="0">clear</button>
+          </div>
+          <input type="hidden" name="fit" value="${m.fit||0}" />
+        </div>
+        <div class="field col-span-2"><label>Notes</label><textarea name="notes" rows="4">${escapeHtml(m.notes)}</textarea></div>
+      </div>
+      <div class="flex justify-end gap-2 pt-2">
+        <button type="button" class="btn btn-danger mr-auto" data-delete>Remove match</button>
+        <button type="button" class="btn btn-ghost" data-close>Cancel</button>
+        <button type="submit" class="btn btn-primary">Save</button>
+      </div>
+    </form>
+  `, (card) => {
+    const form = card.querySelector('#match-form');
+    const fitInput = form.querySelector('input[name=fit]');
+    card.querySelectorAll('#fit-stars [data-fit]').forEach(el => {
+      el.addEventListener('click', () => {
+        const v = Number(el.dataset.fit);
+        fitInput.value = v;
+        card.querySelectorAll('#fit-stars .star').forEach((s,i) => s.classList.toggle('on', i < v));
+      });
+    });
+    form.addEventListener('submit', e => {
+      e.preventDefault();
+      const fd = new FormData(form);
+      m.status = fd.get('status');
+      m.lastContact = fd.get('lastContact');
+      m.fit = Number(fd.get('fit')) || 0;
+      m.notes = (fd.get('notes')||'').trim();
+      save(); render(); closeModal();
+    });
+    card.querySelectorAll('[data-close]').forEach(b => b.addEventListener('click', closeModal));
+    card.querySelector('[data-delete]').addEventListener('click', () => {
+      if (!confirm('Remove this player–club match?')) return;
+      state.matches = state.matches.filter(x => x.id !== m.id);
+      save(); render(); closeModal();
+    });
+  });
+}
+
+function cycleStatus(matchId) {
+  const m = state.matches.find(x => x.id === matchId);
+  if (!m) return;
+  const idx = STATUSES.findIndex(s => s.id === m.status);
+  m.status = STATUSES[(idx + 1) % STATUSES.length].id;
+  save(); render();
+}
+
+/* ============================================================
+   Import / Export
+============================================================ */
+function parseCSV(text) {
+  // simple RFC4180-ish parser, handles quoted fields with commas/newlines
+  const rows = []; let row = []; let cur = ''; let inQ = false;
+  for (let i = 0; i < text.length; i++) {
+    const ch = text[i];
+    if (inQ) {
+      if (ch === '"' && text[i+1] === '"') { cur += '"'; i++; }
+      else if (ch === '"') inQ = false;
+      else cur += ch;
+    } else {
+      if (ch === '"') inQ = true;
+      else if (ch === ',') { row.push(cur); cur = ''; }
+      else if (ch === '\n') { row.push(cur); rows.push(row); row = []; cur = ''; }
+      else if (ch === '\r') { /* skip */ }
+      else cur += ch;
+    }
+  }
+  if (cur.length || row.length) { row.push(cur); rows.push(row); }
+  return rows.filter(r => r.length && r.some(c => c.trim() !== ''));
+}
+
+function csvImport(text) {
+  const rows = parseCSV(text);
+  if (rows.length < 2) return alert('CSV is empty.');
+  const headers = rows[0].map(h => h.trim().toLowerCase());
+  const isPlayers = headers.includes('name') && (headers.includes('position') || headers.includes('age') || headers.includes('currentclub') || headers.includes('current club'));
+  const isClubs   = headers.includes('name') && (headers.includes('country') || headers.includes('league') || headers.includes('tier'));
+  if (!isPlayers && !isClubs) {
+    return alert('Could not detect CSV type. First row must be headers including "name" plus player or club fields.');
+  }
+  const get = (row, key) => {
+    const idx = headers.indexOf(key);
+    return idx >= 0 ? (row[idx]||'').trim() : '';
+  };
+  let added = 0;
+  for (let i = 1; i < rows.length; i++) {
+    const r = rows[i];
+    if (isPlayers) {
+      const name = get(r,'name'); if (!name) continue;
+      state.players.push({
+        id: uid('p'), name,
+        position: get(r,'position'),
+        age: Number(get(r,'age')) || '',
+        foot: get(r,'foot'),
+        currentClub: get(r,'currentclub') || get(r,'current club'),
+        contractExpires: get(r,'contractexpires') || get(r,'contract expires') || get(r,'contract'),
+        marketValue: Number(get(r,'marketvalue') || get(r,'market value')) || '',
+        agent: get(r,'agent'),
+        agentContact: get(r,'agentcontact') || get(r,'agent contact'),
+        salary: get(r,'salary'),
+        languages: get(r,'languages'),
+        notes: get(r,'notes'),
+        links: get(r,'links'),
+      });
+      added++;
+    } else {
+      const name = get(r,'name'); if (!name) continue;
+      state.clubs.push({
+        id: uid('c'), name,
+        country: (get(r,'country')||'').toUpperCase(),
+        league: get(r,'league'),
+        tier: get(r,'tier').toLowerCase(),
+        tags: get(r,'tags'),
+        notes: get(r,'notes'),
+      });
+      added++;
+    }
+  }
+  save(); render();
+  alert(`Imported ${added} ${isPlayers?'player':'club'}${added===1?'':'s'}.`);
+}
+
+function exportJSON() {
+  const blob = new Blob([JSON.stringify(state, null, 2)], { type: 'application/json' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url; a.download = `player-club-matcher_${new Date().toISOString().slice(0,10)}.json`;
+  a.click();
+  URL.revokeObjectURL(url);
+}
+
+function importJSON(text) {
+  try {
+    const data = JSON.parse(text);
+    if (!data.players || !data.clubs || !data.matches) throw new Error('Missing fields');
+    if (!confirm(`Replace all current data with ${data.players.length} players, ${data.clubs.length} clubs, ${data.matches.length} matches?`)) return;
+    state = data;
+    state.ui ??= { view: 'board' };
+    save(); render();
+  } catch (e) {
+    alert('Invalid JSON: ' + e.message);
+  }
+}
+
+function exportMatchesCSV() {
+  const lines = ['player,position,age,current_club,contract_expires,club,league,country,status,fit,last_contact,notes'];
+  for (const m of state.matches) {
+    const p = findPlayer(m.playerId), c = findClub(m.clubId);
+    if (!p || !c) continue;
+    const row = [p.name, p.position, p.age, p.currentClub, p.contractExpires, c.name, c.league, c.country, m.status, m.fit, m.lastContact, m.notes];
+    lines.push(row.map(v => {
+      const s = String(v ?? '');
+      return /[",\n]/.test(s) ? `"${s.replace(/"/g,'""')}"` : s;
+    }).join(','));
+  }
+  const blob = new Blob([lines.join('\n')], { type: 'text/csv' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url; a.download = `matches_${new Date().toISOString().slice(0,10)}.csv`;
+  a.click();
+  URL.revokeObjectURL(url);
+}
+
+/* ============================================================
+   File input handling
+============================================================ */
+let fileMode = null; // 'csv' | 'json'
+$('#btn-import-csv').addEventListener('click', () => { fileMode = 'csv'; $('#file-input').click(); });
+$('#btn-import-json').addEventListener('click', () => { fileMode = 'json'; $('#file-input').click(); });
+$('#file-input').addEventListener('change', async (e) => {
+  const f = e.target.files[0]; if (!f) return;
+  const text = await f.text();
+  if (fileMode === 'csv') csvImport(text);
+  else if (fileMode === 'json') importJSON(text);
+  e.target.value = '';
+});
+
+/* ============================================================
+   Top-bar actions
+============================================================ */
+$('#btn-export-json').addEventListener('click', exportJSON);
+$('#btn-export-csv').addEventListener('click', exportMatchesCSV);
+$('#btn-reset').addEventListener('click', () => {
+  if (!confirm('This wipes all your players, clubs, and matches and reloads sample data. Continue?')) return;
+  state = seed(); save(); render();
+});
+$('#btn-add-player').addEventListener('click', () => editPlayer(null));
+$('#btn-add-club').addEventListener('click', () => editClub(null));
+
+$$('.view-btn').forEach(b => b.addEventListener('click', () => {
+  state.ui.view = b.dataset.view; save(); render();
+}));
+
+$('#player-search').addEventListener('input', () => { renderPlayers(); if (state.ui.view==='board') renderBoard(); else renderMatrix(); });
+$('#player-filter-pos').addEventListener('change', () => { renderPlayers(); if (state.ui.view==='board') renderBoard(); else renderMatrix(); });
+$('#player-filter-contract').addEventListener('change', () => { renderPlayers(); if (state.ui.view==='board') renderBoard(); else renderMatrix(); });
+$('#club-search').addEventListener('input', () => { renderClubs(); if (state.ui.view==='matrix') renderMatrix(); });
+$('#club-filter-tier').addEventListener('change', () => { renderClubs(); if (state.ui.view==='matrix') renderMatrix(); });
+
+/* ============================================================
+   Click delegation: edits, deletes, match cells
+============================================================ */
+document.addEventListener('click', (e) => {
+  const t = e.target.closest('[data-act], [data-create-match], .match-chip, .match-cell');
+  if (!t) return;
+  const act = t.dataset.act;
+  if (act === 'edit-player')   { e.preventDefault(); editPlayer(t.dataset.id); return; }
+  if (act === 'delete-player') { e.preventDefault(); deletePlayer(t.dataset.id); return; }
+  if (act === 'edit-club')     { e.preventDefault(); editClub(t.dataset.id); return; }
+  if (act === 'delete-club')   { e.preventDefault(); deleteClub(t.dataset.id); return; }
+  if (t.dataset.createMatch !== undefined) {
+    const m = ensureMatch(t.dataset.player, t.dataset.club);
+    editMatch(m.id);
+    return;
+  }
+  if (t.classList.contains('match-chip') || t.classList.contains('match-cell')) {
+    e.preventDefault();
+    if (e.shiftKey) cycleStatus(t.dataset.match);
+    else editMatch(t.dataset.match);
+  }
+});
+
+document.addEventListener('contextmenu', (e) => {
+  const t = e.target.closest('.match-chip, .match-cell');
+  if (!t) return;
+  e.preventDefault();
+  const id = t.dataset.match;
+  const m = state.matches.find(x => x.id === id);
+  if (!m) return;
+  if (confirm('Remove this match?')) {
+    state.matches = state.matches.filter(x => x.id !== id);
+    save(); render();
+  }
+});
+
+/* ============================================================
+   Drag sources: clubs list, players list (player to player swap)
+============================================================ */
+let clubSortable = null;
+function wireDragSources() {
+  const clubList = $('#club-list');
+  if (!clubList) return;
+  if (clubSortable) clubSortable.destroy();
+  clubSortable = Sortable.create(clubList, {
+    group: { name: 'clubs', pull: 'clone', put: false },
+    sort: false,
+    ghostClass: 'ghost',
+    chosenClass: 'chosen',
+    draggable: '.club-item',
+  });
+}
+
+/* ============================================================
+   Keyboard shortcuts
+============================================================ */
+document.addEventListener('keydown', (e) => {
+  if (e.target.matches('input,textarea,select')) return;
+  if (e.key === 'p' || e.key === 'P') { e.preventDefault(); editPlayer(null); }
+  if (e.key === 'c' || e.key === 'C') { e.preventDefault(); editClub(null); }
+  if (e.key === '1') { state.ui.view = 'board';  save(); render(); }
+  if (e.key === '2') { state.ui.view = 'matrix'; save(); render(); }
+});
+
+/* ============================================================
+   Boot
+============================================================ */
+render();
+wireDragSources();
+// Re-wire drag sources after each render of the club list (children change)
+const clubObs = new MutationObserver(() => wireDragSources());
+clubObs.observe($('#club-list'), { childList: true });
+</script>
+</body>
+</html>
