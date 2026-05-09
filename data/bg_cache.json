@@ -1,20 +1,20 @@
 {
   "mvrv_zscore": {
-    "value": 0.925,
-    "date": "2026-05-07",
-    "fetched_at": 1778230919.0037584,
+    "value": 0.8836,
+    "date": "2026-05-08",
+    "fetched_at": 1778317476.4378574,
     "consecutive_failures": 0
   },
   "nupl": {
-    "value": 0.3292,
-    "date": "2026-05-07",
-    "fetched_at": 1778230919.0037584,
+    "value": 0.3295,
+    "date": "2026-05-08",
+    "fetched_at": 1778317476.4378574,
     "consecutive_failures": 0
   },
   "sopr": {
-    "value": 1.0002,
-    "date": "2026-05-07",
-    "fetched_at": 1778230919.0037584,
+    "value": 1.0004,
+    "date": "2026-05-08",
+    "fetched_at": 1778317476.4378574,
     "consecutive_failures": 0
   },
   "supply_profit": {
@@ -24,9 +24,9 @@
     "consecutive_failures": 0
   },
   "reserve_risk": {
-    "value": 0.0006638149,
-    "date": "2026-05-07",
-    "fetched_at": 1778230919.0037584,
+    "value": 0.0006647635,
+    "date": "2026-05-08",
+    "fetched_at": 1778317476.4378574,
     "consecutive_failures": 0
   },
   "ssr": {
@@ -54,27 +54,27 @@
     "consecutive_failures": 17
   },
   "rhodl_ratio": {
-    "value": 1478.5883533333,
-    "date": "2026-05-06",
-    "fetched_at": 1778148689.4051569,
+    "value": 1498.4402233333,
+    "date": "2026-05-08",
+    "fetched_at": 1778317476.4378574,
     "consecutive_failures": 0
   },
   "nvts": {
-    "value": 331.94,
-    "date": "2026-05-06",
-    "fetched_at": 1778148689.4051569,
+    "value": 316.39,
+    "date": "2026-05-08",
+    "fetched_at": 1778317476.4378574,
     "consecutive_failures": 0
   },
   "thermocap_mult": {
-    "value": 18.3839,
-    "date": "2026-05-06",
-    "fetched_at": 1778148689.4051569,
+    "value": 18.1064,
+    "date": "2026-05-08",
+    "fetched_at": 1778317476.4378574,
     "consecutive_failures": 0
   },
   "sth_sopr": {
-    "value": 1.0046,
-    "date": "2026-05-06",
-    "fetched_at": 1778148689.4051569,
+    "value": 1.0022,
+    "date": "2026-05-08",
+    "fetched_at": 1778317476.4378574,
     "consecutive_failures": 0
   },
   "exchange_netflow": {
