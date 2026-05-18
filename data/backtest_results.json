@@ -3,7 +3,7 @@
     "start_date": "2017-01-01",
     "end_date": "2026-05-17",
     "total_days": 3424,
-    "computed_at": "2026-05-17T09:25:44.004304+00:00"
+    "computed_at": "2026-05-18T11:34:34.388694+00:00"
   },
   "daily": [
     {
@@ -126658,12 +126658,12 @@
       "return_365d": null
     },
     {
-      "score": 32.9,
+      "score": 38.4,
       "zone": "WATCHING",
       "domains": {
         "onChain": {
-          "score": 0,
-          "count": 0
+          "score": 3.5,
+          "count": 6
         },
         "miner": {
           "score": 0,
@@ -126674,19 +126674,19 @@
           "count": 5
         },
         "sentiment": {
-          "score": 2.0,
-          "count": 3
+          "score": 2.9,
+          "count": 5
         },
         "exchange": {
-          "score": 0,
-          "count": 0
+          "score": 6.0,
+          "count": 1
         },
         "cycle": {
           "score": 6.0,
           "count": 1
         }
       },
-      "indicators_available": 9,
+      "indicators_available": 18,
       "date": "2026-05-17",
       "price": 78140.84,
       "return_30d": null,
