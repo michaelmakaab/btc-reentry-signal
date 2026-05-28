@@ -1,20 +1,20 @@
 {
   "mvrv_zscore": {
-    "value": 0.7886,
-    "date": "2026-05-26",
-    "fetched_at": 1779881109.121741,
+    "value": 0.742,
+    "date": "2026-05-27",
+    "fetched_at": 1779967555.6320565,
     "consecutive_failures": 0
   },
   "nupl": {
-    "value": 0.2927,
-    "date": "2026-05-26",
-    "fetched_at": 1779881109.121741,
+    "value": 0.2779,
+    "date": "2026-05-27",
+    "fetched_at": 1779967555.6320565,
     "consecutive_failures": 0
   },
   "sopr": {
-    "value": 0.9988,
-    "date": "2026-05-26",
-    "fetched_at": 1779881109.121741,
+    "value": 0.9959,
+    "date": "2026-05-27",
+    "fetched_at": 1779967555.6320565,
     "consecutive_failures": 0
   },
   "supply_profit": {
@@ -24,9 +24,9 @@
     "consecutive_failures": 0
   },
   "reserve_risk": {
-    "value": 0.0006222666,
-    "date": "2026-05-26",
-    "fetched_at": 1779881109.121741,
+    "value": 0.0006088473,
+    "date": "2026-05-27",
+    "fetched_at": 1779967555.6320565,
     "consecutive_failures": 0
   },
   "ssr": {
@@ -54,27 +54,27 @@
     "consecutive_failures": 17
   },
   "rhodl_ratio": {
-    "value": 1360.42686,
-    "date": "2026-05-24",
-    "fetched_at": 1779709181.1235297,
+    "value": 1247.4237366667,
+    "date": "2026-05-27",
+    "fetched_at": 1779967555.6320565,
     "consecutive_failures": 0
   },
   "nvts": {
-    "value": 235.87,
-    "date": "2026-05-24",
-    "fetched_at": 1779709181.1235297,
+    "value": 226.95,
+    "date": "2026-05-27",
+    "fetched_at": 1779967555.6320565,
     "consecutive_failures": 0
   },
   "thermocap_mult": {
-    "value": 17.3041,
-    "date": "2026-05-24",
-    "fetched_at": 1779709181.1235297,
+    "value": 16.6553,
+    "date": "2026-05-27",
+    "fetched_at": 1779967555.6320565,
     "consecutive_failures": 0
   },
   "sth_sopr": {
-    "value": 1.0014,
-    "date": "2026-05-24",
-    "fetched_at": 1779709181.1235297,
+    "value": 0.9965,
+    "date": "2026-05-27",
+    "fetched_at": 1779967555.6320565,
     "consecutive_failures": 0
   },
   "exchange_netflow": {
