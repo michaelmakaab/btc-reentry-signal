@@ -1,20 +1,20 @@
 {
   "mvrv_zscore": {
-    "value": 0.6694,
-    "date": "2026-06-01",
-    "fetched_at": 1780401307.4080532,
+    "value": 0.597,
+    "date": "2026-06-02",
+    "fetched_at": 1780489581.5776498,
     "consecutive_failures": 0
   },
   "nupl": {
-    "value": 0.2504,
-    "date": "2026-06-01",
-    "fetched_at": 1780401307.4080532,
+    "value": 0.1995,
+    "date": "2026-06-02",
+    "fetched_at": 1780489581.5776498,
     "consecutive_failures": 0
   },
   "sopr": {
-    "value": 0.9881,
-    "date": "2026-06-01",
-    "fetched_at": 1780401307.4080532,
+    "value": 0.9741,
+    "date": "2026-06-02",
+    "fetched_at": 1780489581.5776498,
     "consecutive_failures": 0
   },
   "supply_profit": {
@@ -24,9 +24,9 @@
     "consecutive_failures": 0
   },
   "reserve_risk": {
-    "value": 0.0005833132,
-    "date": "2026-06-01",
-    "fetched_at": 1780401307.4080532,
+    "value": 0.0005447401,
+    "date": "2026-06-02",
+    "fetched_at": 1780489581.5776498,
     "consecutive_failures": 0
   },
   "ssr": {
@@ -54,27 +54,27 @@
     "consecutive_failures": 17
   },
   "rhodl_ratio": {
-    "value": 1190.07149,
-    "date": "2026-05-31",
-    "fetched_at": 1780320225.4850612,
+    "value": 1199.1511666667,
+    "date": "2026-06-02",
+    "fetched_at": 1780489581.5776498,
     "consecutive_failures": 0
   },
   "nvts": {
-    "value": 210.05,
-    "date": "2026-05-31",
-    "fetched_at": 1780320225.4850612,
+    "value": 187.26,
+    "date": "2026-06-02",
+    "fetched_at": 1780489581.5776498,
     "consecutive_failures": 0
   },
   "thermocap_mult": {
-    "value": 16.4699,
-    "date": "2026-05-31",
-    "fetched_at": 1780320225.4850612,
+    "value": 14.931,
+    "date": "2026-06-02",
+    "fetched_at": 1780489581.5776498,
     "consecutive_failures": 0
   },
   "sth_sopr": {
-    "value": 0.9995,
-    "date": "2026-05-31",
-    "fetched_at": 1780320225.4850612,
+    "value": 0.9819,
+    "date": "2026-06-02",
+    "fetched_at": 1780489581.5776498,
     "consecutive_failures": 0
   },
   "exchange_netflow": {
