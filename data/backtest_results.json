@@ -1,9 +1,9 @@
 {
   "meta": {
     "start_date": "2017-01-01",
-    "end_date": "2026-06-11",
-    "total_days": 3449,
-    "computed_at": "2026-06-11T12:00:53.438530+00:00"
+    "end_date": "2026-06-12",
+    "total_days": 3450,
+    "computed_at": "2026-06-12T11:32:10.626273+00:00"
   },
   "daily": [
     {
@@ -114149,7 +114149,7 @@
       "return_30d": 8.2,
       "return_90d": 2.6,
       "return_180d": -16.6,
-      "return_365d": null
+      "return_365d": -41.5
     },
     {
       "score": 9.9,
@@ -120993,7 +120993,7 @@
       "price": 90280.87,
       "return_30d": 1.0,
       "return_90d": -21.4,
-      "return_180d": null,
+      "return_180d": -29.6,
       "return_365d": null
     },
     {
@@ -124322,7 +124322,7 @@
       "date": "2026-03-14",
       "price": 70966.24,
       "return_30d": -0.3,
-      "return_90d": null,
+      "return_90d": -10.5,
       "return_180d": null,
       "return_365d": null
     },
@@ -126541,7 +126541,7 @@
       "indicators_available": 20,
       "date": "2026-05-13",
       "price": 80491.45,
-      "return_30d": null,
+      "return_30d": -21.1,
       "return_90d": null,
       "return_180d": null,
       "return_365d": null
@@ -127361,7 +127361,7 @@
       "return_365d": null
     },
     {
-      "score": 59.4,
+      "score": 58.5,
       "zone": "ACCUMULATE",
       "domains": {
         "onChain": {
@@ -127369,8 +127369,8 @@
           "count": 6
         },
         "miner": {
-          "score": 5.0,
-          "count": 1
+          "score": 4.4,
+          "count": 2
         },
         "technical": {
           "score": 4.7,
@@ -127389,7 +127389,7 @@
           "count": 1
         }
       },
-      "indicators_available": 19,
+      "indicators_available": 20,
       "date": "2026-06-05",
       "price": 63812.6,
       "return_30d": null,
@@ -127583,7 +127583,44 @@
       "return_365d": null
     },
     {
-      "score": 56.8,
+      "score": 59.0,
+      "zone": "ACCUMULATE",
+      "domains": {
+        "onChain": {
+          "score": 6.2,
+          "count": 6
+        },
+        "miner": {
+          "score": 5.0,
+          "count": 1
+        },
+        "technical": {
+          "score": 5.8,
+          "count": 5
+        },
+        "sentiment": {
+          "score": 6.2,
+          "count": 5
+        },
+        "exchange": {
+          "score": 6.0,
+          "count": 1
+        },
+        "cycle": {
+          "score": 6.0,
+          "count": 1
+        }
+      },
+      "indicators_available": 19,
+      "date": "2026-06-11",
+      "price": 61450.38,
+      "return_30d": null,
+      "return_90d": null,
+      "return_180d": null,
+      "return_365d": null
+    },
+    {
+      "score": 51.9,
       "zone": "ACCUMULATE",
       "domains": {
         "onChain": {
@@ -127595,7 +127632,7 @@
           "count": 0
         },
         "technical": {
-          "score": 5.8,
+          "score": 4.7,
           "count": 5
         },
         "sentiment": {
@@ -127612,8 +127649,8 @@
         }
       },
       "indicators_available": 9,
-      "date": "2026-06-11",
-      "price": 61450.38,
+      "date": "2026-06-12",
+      "price": 63547.89,
       "return_30d": null,
       "return_90d": null,
       "return_180d": null,
@@ -127823,7 +127860,7 @@
       "max_365d": 120.0
     },
     "ACCUMULATE": {
-      "days": 419,
+      "days": 420,
       "avg_30d": 6.4,
       "median_30d": 4.8,
       "win_rate_30d": 63.1,
@@ -127853,12 +127890,12 @@
       "min_30d": -48.4,
       "max_30d": 66.1,
       "avg_90d": 12.4,
-      "median_90d": 4.7,
-      "win_rate_90d": 55.2,
+      "median_90d": 4.6,
+      "win_rate_90d": 55.1,
       "min_90d": -54.0,
       "max_90d": 245.7,
       "avg_180d": 48.4,
-      "median_180d": 26.1,
+      "median_180d": 25.7,
       "win_rate_180d": 61.2,
       "min_180d": -56.7,
       "max_180d": 473.9,
@@ -127885,8 +127922,8 @@
       "win_rate_180d": 56.1,
       "min_180d": -66.2,
       "max_180d": 641.5,
-      "avg_365d": 81.0,
-      "median_365d": 8.7,
+      "avg_365d": 80.9,
+      "median_365d": 8.5,
       "win_rate_365d": 52.7,
       "min_365d": -83.2,
       "max_365d": 1687.0
