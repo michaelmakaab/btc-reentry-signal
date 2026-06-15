@@ -1,50 +1,50 @@
 {
   "mvrv_zscore": {
-    "value": 0.351,
-    "date": "2026-06-13",
-    "fetched_at": 1781433653.828966,
+    "value": 0.3786,
+    "date": "2026-06-14",
+    "fetched_at": 1781530968.8204854,
     "consecutive_failures": 0
   },
   "nupl": {
-    "value": 0.1765,
-    "date": "2026-06-13",
-    "fetched_at": 1781433653.828966,
+    "value": 0.1911,
+    "date": "2026-06-14",
+    "fetched_at": 1781530968.8204854,
     "consecutive_failures": 0
   },
   "sopr": {
-    "value": 0.9997,
-    "date": "2026-06-13",
-    "fetched_at": 1781433653.828966,
+    "value": 1.001,
+    "date": "2026-06-14",
+    "fetched_at": 1781530968.8204854,
     "consecutive_failures": 0
   },
   "supply_profit": {
-    "value": 10451931.00290854,
-    "date": "2026-06-11",
-    "fetched_at": 1781263903.2259939,
+    "value": 10878194.24045164,
+    "date": "2026-06-14",
+    "fetched_at": 1781530968.8204854,
     "consecutive_failures": 0
   },
   "reserve_risk": {
-    "value": 0.0005225844,
-    "date": "2026-06-13",
-    "fetched_at": 1781433653.828966,
+    "value": 0.0005318754,
+    "date": "2026-06-14",
+    "fetched_at": 1781530968.8204854,
     "consecutive_failures": 0
   },
   "ssr": {
-    "value": 4.911747,
-    "date": "2026-06-11",
-    "fetched_at": 1781263903.2259939,
+    "value": 5.074477,
+    "date": "2026-06-14",
+    "fetched_at": 1781530968.8204854,
     "consecutive_failures": 0
   },
   "realized_price": {
-    "value": 53052.12,
-    "date": "2026-06-11",
-    "fetched_at": 1781263903.2259939,
+    "value": 53047.99,
+    "date": "2026-06-14",
+    "fetched_at": 1781530968.8204854,
     "consecutive_failures": 0
   },
   "lth_sopr": {
-    "value": 0.6806,
-    "date": "2026-06-11",
-    "fetched_at": 1781263903.2259939,
+    "value": 1.3927,
+    "date": "2026-06-14",
+    "fetched_at": 1781530968.8204854,
     "consecutive_failures": 0
   },
   "exchange_reserve": {
