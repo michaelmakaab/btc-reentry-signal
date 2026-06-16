@@ -1,20 +1,20 @@
 {
   "mvrv_zscore": {
-    "value": 0.3786,
-    "date": "2026-06-14",
-    "fetched_at": 1781530968.8204854,
+    "value": 0.4178,
+    "date": "2026-06-15",
+    "fetched_at": 1781613744.0357995,
     "consecutive_failures": 0
   },
   "nupl": {
-    "value": 0.1911,
-    "date": "2026-06-14",
-    "fetched_at": 1781530968.8204854,
+    "value": 0.201,
+    "date": "2026-06-15",
+    "fetched_at": 1781613744.0357995,
     "consecutive_failures": 0
   },
   "sopr": {
-    "value": 1.001,
-    "date": "2026-06-14",
-    "fetched_at": 1781530968.8204854,
+    "value": 0.9964,
+    "date": "2026-06-15",
+    "fetched_at": 1781613744.0357995,
     "consecutive_failures": 0
   },
   "supply_profit": {
@@ -24,9 +24,9 @@
     "consecutive_failures": 0
   },
   "reserve_risk": {
-    "value": 0.0005318754,
-    "date": "2026-06-14",
-    "fetched_at": 1781530968.8204854,
+    "value": 0.0005378954,
+    "date": "2026-06-15",
+    "fetched_at": 1781613744.0357995,
     "consecutive_failures": 0
   },
   "ssr": {
@@ -54,27 +54,27 @@
     "consecutive_failures": 17
   },
   "rhodl_ratio": {
-    "value": 1157.4918933333,
-    "date": "2026-06-13",
-    "fetched_at": 1781433653.828966,
+    "value": 1140.17449,
+    "date": "2026-06-15",
+    "fetched_at": 1781613744.0357995,
     "consecutive_failures": 0
   },
   "nvts": {
-    "value": 148.51,
-    "date": "2026-06-13",
-    "fetched_at": 1781433653.828966,
+    "value": 149.29,
+    "date": "2026-06-15",
+    "fetched_at": 1781613744.0357995,
     "consecutive_failures": 0
   },
   "thermocap_mult": {
-    "value": 14.3607,
-    "date": "2026-06-13",
-    "fetched_at": 1781433653.828966,
+    "value": 14.7857,
+    "date": "2026-06-15",
+    "fetched_at": 1781613744.0357995,
     "consecutive_failures": 0
   },
   "sth_sopr": {
-    "value": 0.9997,
-    "date": "2026-06-13",
-    "fetched_at": 1781433653.828966,
+    "value": 1.0028,
+    "date": "2026-06-15",
+    "fetched_at": 1781613744.0357995,
     "consecutive_failures": 0
   },
   "exchange_netflow": {
