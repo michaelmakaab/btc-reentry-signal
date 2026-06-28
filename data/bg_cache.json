@@ -1,20 +1,20 @@
 {
   "mvrv_zscore": {
-    "value": 0.232,
-    "date": "2026-06-26",
-    "fetched_at": 1782554010.3536787,
+    "value": 0.2406,
+    "date": "2026-06-27",
+    "fetched_at": 1782641836.0457315,
     "consecutive_failures": 0
   },
   "nupl": {
-    "value": 0.1203,
-    "date": "2026-06-26",
-    "fetched_at": 1782554010.3536787,
+    "value": 0.12,
+    "date": "2026-06-27",
+    "fetched_at": 1782641836.0457315,
     "consecutive_failures": 0
   },
   "sopr": {
-    "value": 0.9849,
-    "date": "2026-06-26",
-    "fetched_at": 1782554010.3536787,
+    "value": 0.9996,
+    "date": "2026-06-27",
+    "fetched_at": 1782641836.0457315,
     "consecutive_failures": 0
   },
   "supply_profit": {
@@ -24,9 +24,9 @@
     "consecutive_failures": 0
   },
   "reserve_risk": {
-    "value": 0.0004839036,
-    "date": "2026-06-26",
-    "fetched_at": 1782554010.3536787,
+    "value": 0.0004835084,
+    "date": "2026-06-27",
+    "fetched_at": 1782641836.0457315,
     "consecutive_failures": 0
   },
   "ssr": {
@@ -54,27 +54,27 @@
     "consecutive_failures": 17
   },
   "rhodl_ratio": {
-    "value": 1067.0931466667,
-    "date": "2026-06-25",
-    "fetched_at": 1782470410.9217262,
+    "value": 1058.8520466667,
+    "date": "2026-06-27",
+    "fetched_at": 1782641836.0457315,
     "consecutive_failures": 0
   },
   "nvts": {
-    "value": 118.8,
-    "date": "2026-06-25",
-    "fetched_at": 1782470410.9217262,
+    "value": 115.65,
+    "date": "2026-06-27",
+    "fetched_at": 1782641836.0457315,
     "consecutive_failures": 0
   },
   "thermocap_mult": {
-    "value": 13.3044,
-    "date": "2026-06-25",
-    "fetched_at": 1782470410.9217262,
+    "value": 13.3396,
+    "date": "2026-06-27",
+    "fetched_at": 1782641836.0457315,
     "consecutive_failures": 0
   },
   "sth_sopr": {
-    "value": 0.9875,
-    "date": "2026-06-25",
-    "fetched_at": 1782470410.9217262,
+    "value": 0.9997,
+    "date": "2026-06-27",
+    "fetched_at": 1782641836.0457315,
     "consecutive_failures": 0
   },
   "exchange_netflow": {
