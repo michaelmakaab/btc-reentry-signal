@@ -1,20 +1,20 @@
 {
   "mvrv_zscore": {
-    "value": 0.2399,
-    "date": "2026-06-28",
-    "fetched_at": 1782735531.4695308,
+    "value": 0.2284,
+    "date": "2026-06-29",
+    "fetched_at": 1782816322.3264344,
     "consecutive_failures": 0
   },
   "nupl": {
-    "value": 0.1149,
-    "date": "2026-06-28",
-    "fetched_at": 1782735531.4695308,
+    "value": 0.1251,
+    "date": "2026-06-29",
+    "fetched_at": 1782816322.3264344,
     "consecutive_failures": 0
   },
   "sopr": {
-    "value": 0.9946,
-    "date": "2026-06-28",
-    "fetched_at": 1782735531.4695308,
+    "value": 0.9834,
+    "date": "2026-06-29",
+    "fetched_at": 1782816322.3264344,
     "consecutive_failures": 0
   },
   "supply_profit": {
@@ -24,9 +24,9 @@
     "consecutive_failures": 0
   },
   "reserve_risk": {
-    "value": 0.0004804189,
-    "date": "2026-06-28",
-    "fetched_at": 1782735531.4695308,
+    "value": 0.0004852791,
+    "date": "2026-06-29",
+    "fetched_at": 1782816322.3264344,
     "consecutive_failures": 0
   },
   "ssr": {
@@ -54,27 +54,27 @@
     "consecutive_failures": 17
   },
   "rhodl_ratio": {
-    "value": 1058.8520466667,
-    "date": "2026-06-27",
-    "fetched_at": 1782641836.0457315,
+    "value": 1032.7712333333,
+    "date": "2026-06-29",
+    "fetched_at": 1782816322.3264344,
     "consecutive_failures": 0
   },
   "nvts": {
-    "value": 115.65,
-    "date": "2026-06-27",
-    "fetched_at": 1782641836.0457315,
+    "value": 114.12,
+    "date": "2026-06-29",
+    "fetched_at": 1782816322.3264344,
     "consecutive_failures": 0
   },
   "thermocap_mult": {
-    "value": 13.3396,
-    "date": "2026-06-27",
-    "fetched_at": 1782641836.0457315,
+    "value": 13.3905,
+    "date": "2026-06-29",
+    "fetched_at": 1782816322.3264344,
     "consecutive_failures": 0
   },
   "sth_sopr": {
-    "value": 0.9997,
-    "date": "2026-06-27",
-    "fetched_at": 1782641836.0457315,
+    "value": 0.9934,
+    "date": "2026-06-29",
+    "fetched_at": 1782816322.3264344,
     "consecutive_failures": 0
   },
   "exchange_netflow": {
