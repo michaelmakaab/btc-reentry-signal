@@ -1,20 +1,20 @@
 {
   "mvrv_zscore": {
-    "value": 0.3469,
-    "date": "2026-08-02",
-    "fetched_at": 1785754831.748708,
+    "value": 0.3705,
+    "date": "2026-08-03",
+    "fetched_at": 1785838972.8219776,
     "consecutive_failures": 0
   },
   "nupl": {
-    "value": 0.1757,
-    "date": "2026-08-02",
-    "fetched_at": 1785754831.748708,
+    "value": 0.1759,
+    "date": "2026-08-03",
+    "fetched_at": 1785838972.8219776,
     "consecutive_failures": 0
   },
   "sopr": {
-    "value": 0.9989,
-    "date": "2026-08-02",
-    "fetched_at": 1785754831.748708,
+    "value": 0.9966,
+    "date": "2026-08-03",
+    "fetched_at": 1785838972.8219776,
     "consecutive_failures": 0
   },
   "supply_profit": {
@@ -24,9 +24,9 @@
     "consecutive_failures": 0
   },
   "reserve_risk": {
-    "value": 0.0005025763,
-    "date": "2026-08-02",
-    "fetched_at": 1785754831.748708,
+    "value": 0.000502308,
+    "date": "2026-08-03",
+    "fetched_at": 1785838972.8219776,
     "consecutive_failures": 0
   },
   "ssr": {
@@ -54,27 +54,27 @@
     "consecutive_failures": 17
   },
   "rhodl_ratio": {
-    "value": 919.7642666667,
-    "date": "2026-08-01",
-    "fetched_at": 1785663943.0576077,
+    "value": 933.5289,
+    "date": "2026-08-03",
+    "fetched_at": 1785838972.8219776,
     "consecutive_failures": 0
   },
   "nvts": {
-    "value": 88.51,
-    "date": "2026-08-01",
-    "fetched_at": 1785663943.0576077,
+    "value": 89.52,
+    "date": "2026-08-03",
+    "fetched_at": 1785838972.8219776,
     "consecutive_failures": 0
   },
   "thermocap_mult": {
-    "value": 13.8276,
-    "date": "2026-08-01",
-    "fetched_at": 1785663943.0576077,
+    "value": 13.9726,
+    "date": "2026-08-03",
+    "fetched_at": 1785838972.8219776,
     "consecutive_failures": 0
   },
   "sth_sopr": {
-    "value": 0.9971,
-    "date": "2026-08-01",
-    "fetched_at": 1785663943.0576077,
+    "value": 0.9986,
+    "date": "2026-08-03",
+    "fetched_at": 1785838972.8219776,
     "consecutive_failures": 0
   },
   "exchange_netflow": {
