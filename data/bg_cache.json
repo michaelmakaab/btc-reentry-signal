@@ -1,20 +1,20 @@
 {
   "mvrv_zscore": {
-    "value": 0.4103,
-    "date": "2026-08-06",
-    "fetched_at": 1786092135.770994,
+    "value": 0.3984,
+    "date": "2026-08-07",
+    "fetched_at": 1786177427.0911422,
     "consecutive_failures": 0
   },
   "nupl": {
-    "value": 0.1863,
-    "date": "2026-08-06",
-    "fetched_at": 1786092135.770994,
+    "value": 0.1939,
+    "date": "2026-08-07",
+    "fetched_at": 1786177427.0911422,
     "consecutive_failures": 0
   },
   "sopr": {
-    "value": 1.0014,
-    "date": "2026-08-06",
-    "fetched_at": 1786092135.770994,
+    "value": 0.996,
+    "date": "2026-08-07",
+    "fetched_at": 1786177427.0911422,
     "consecutive_failures": 0
   },
   "supply_profit": {
@@ -24,9 +24,9 @@
     "consecutive_failures": 0
   },
   "reserve_risk": {
-    "value": 0.0005078364,
-    "date": "2026-08-06",
-    "fetched_at": 1786092135.770994,
+    "value": 0.0005122565,
+    "date": "2026-08-07",
+    "fetched_at": 1786177427.0911422,
     "consecutive_failures": 0
   },
   "ssr": {
@@ -54,27 +54,27 @@
     "consecutive_failures": 17
   },
   "rhodl_ratio": {
-    "value": 956.9403433333,
-    "date": "2026-08-05",
-    "fetched_at": 1786011634.518655,
+    "value": 970.0770766667,
+    "date": "2026-08-07",
+    "fetched_at": 1786177427.0911422,
     "consecutive_failures": 0
   },
   "nvts": {
-    "value": 91.22,
-    "date": "2026-08-05",
-    "fetched_at": 1786011634.518655,
+    "value": 90.72,
+    "date": "2026-08-06",
+    "fetched_at": 1786177427.0911422,
     "consecutive_failures": 0
   },
   "thermocap_mult": {
-    "value": 14.2193,
-    "date": "2026-08-05",
-    "fetched_at": 1786011634.518655,
+    "value": 14.2668,
+    "date": "2026-08-07",
+    "fetched_at": 1786177427.0911422,
     "consecutive_failures": 0
   },
   "sth_sopr": {
-    "value": 1.0011,
-    "date": "2026-08-05",
-    "fetched_at": 1786011634.518655,
+    "value": 1.0003,
+    "date": "2026-08-07",
+    "fetched_at": 1786177427.0911422,
     "consecutive_failures": 0
   },
   "exchange_netflow": {
