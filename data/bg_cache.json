@@ -1,20 +1,20 @@
 {
   "mvrv_zscore": {
-    "value": 0.3592,
-    "date": "2026-08-16",
-    "fetched_at": 1786955213.2647398,
+    "value": 0.3541,
+    "date": "2026-08-17",
+    "fetched_at": 1787041137.711384,
     "consecutive_failures": 0
   },
   "nupl": {
-    "value": 0.1694,
-    "date": "2026-08-16",
-    "fetched_at": 1786955213.2647398,
+    "value": 0.1902,
+    "date": "2026-08-17",
+    "fetched_at": 1787041137.711384,
     "consecutive_failures": 0
   },
   "sopr": {
-    "value": 0.9934,
-    "date": "2026-08-16",
-    "fetched_at": 1786955213.2647398,
+    "value": 0.999,
+    "date": "2026-08-17",
+    "fetched_at": 1787041137.711384,
     "consecutive_failures": 0
   },
   "supply_profit": {
@@ -24,9 +24,9 @@
     "consecutive_failures": 0
   },
   "reserve_risk": {
-    "value": 0.0004942848,
-    "date": "2026-08-16",
-    "fetched_at": 1786955213.2647398,
+    "value": 0.0005065227,
+    "date": "2026-08-17",
+    "fetched_at": 1787041137.711384,
     "consecutive_failures": 0
   },
   "ssr": {
@@ -54,27 +54,27 @@
     "consecutive_failures": 17
   },
   "rhodl_ratio": {
-    "value": 920.23331,
-    "date": "2026-08-15",
-    "fetched_at": 1786867958.0960152,
+    "value": 889.2910533333,
+    "date": "2026-08-17",
+    "fetched_at": 1787041137.711384,
     "consecutive_failures": 0
   },
   "nvts": {
-    "value": 90.23,
-    "date": "2026-08-14",
-    "fetched_at": 1786867958.0960152,
+    "value": 93.83,
+    "date": "2026-08-17",
+    "fetched_at": 1787041137.711384,
     "consecutive_failures": 0
   },
   "thermocap_mult": {
-    "value": 13.8307,
-    "date": "2026-08-15",
-    "fetched_at": 1786867958.0960152,
+    "value": 14.1178,
+    "date": "2026-08-17",
+    "fetched_at": 1787041137.711384,
     "consecutive_failures": 0
   },
   "sth_sopr": {
-    "value": 0.9996,
-    "date": "2026-08-15",
-    "fetched_at": 1786867958.0960152,
+    "value": 1.0012,
+    "date": "2026-08-17",
+    "fetched_at": 1787041137.711384,
     "consecutive_failures": 0
   },
   "exchange_netflow": {
