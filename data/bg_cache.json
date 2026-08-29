@@ -18,9 +18,9 @@
     "consecutive_failures": 0
   },
   "supply_profit": {
-    "value": 14178549.87833711,
-    "date": "2026-08-26",
-    "fetched_at": 1787855152.795406,
+    "value": 13640432.42017102,
+    "date": "2026-08-28",
+    "fetched_at": 1788009889.4805827,
     "consecutive_failures": 0
   },
   "reserve_risk": {
@@ -30,21 +30,21 @@
     "consecutive_failures": 0
   },
   "ssr": {
-    "value": 6.218652,
-    "date": "2026-08-26",
-    "fetched_at": 1787855152.795406,
+    "value": 6.115712,
+    "date": "2026-08-28",
+    "fetched_at": 1788009889.4805827,
     "consecutive_failures": 0
   },
   "realized_price": {
-    "value": 52556.76,
-    "date": "2026-08-26",
-    "fetched_at": 1787855152.795406,
+    "value": 52634.95,
+    "date": "2026-08-28",
+    "fetched_at": 1788009889.4805827,
     "consecutive_failures": 0
   },
   "lth_sopr": {
-    "value": 0.9236,
-    "date": "2026-08-26",
-    "fetched_at": 1787855152.795406,
+    "value": 1.0657,
+    "date": "2026-08-28",
+    "fetched_at": 1788009889.4805827,
     "consecutive_failures": 0
   },
   "exchange_reserve": {
