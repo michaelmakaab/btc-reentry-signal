@@ -1,20 +1,20 @@
 {
   "mvrv_zscore": {
-    "value": 0.8486,
-    "date": "2026-08-30",
-    "fetched_at": 1788190354.1181765,
+    "value": 0.8514,
+    "date": "2026-08-31",
+    "fetched_at": 1788266934.5441506,
     "consecutive_failures": 0
   },
   "nupl": {
-    "value": 0.3281,
-    "date": "2026-08-30",
-    "fetched_at": 1788190354.1181765,
+    "value": 0.3295,
+    "date": "2026-08-31",
+    "fetched_at": 1788266934.5441506,
     "consecutive_failures": 0
   },
   "sopr": {
-    "value": 1.0029,
-    "date": "2026-08-30",
-    "fetched_at": 1788190354.1181765,
+    "value": 1.0046,
+    "date": "2026-08-31",
+    "fetched_at": 1788266934.5441506,
     "consecutive_failures": 0
   },
   "supply_profit": {
@@ -24,9 +24,9 @@
     "consecutive_failures": 0
   },
   "reserve_risk": {
-    "value": 0.000610377,
-    "date": "2026-08-30",
-    "fetched_at": 1788190354.1181765,
+    "value": 0.0006116741,
+    "date": "2026-08-31",
+    "fetched_at": 1788266934.5441506,
     "consecutive_failures": 0
   },
   "ssr": {
@@ -54,27 +54,27 @@
     "consecutive_failures": 17
   },
   "rhodl_ratio": {
-    "value": 1008.4851633333,
-    "date": "2026-08-29",
-    "fetched_at": 1788096068.5162437,
+    "value": 1015.73714,
+    "date": "2026-08-31",
+    "fetched_at": 1788266934.5441506,
     "consecutive_failures": 0
   },
   "nvts": {
-    "value": 110.08,
-    "date": "2026-08-29",
-    "fetched_at": 1788096068.5162437,
+    "value": 112.14,
+    "date": "2026-08-31",
+    "fetched_at": 1788266934.5441506,
     "consecutive_failures": 0
   },
   "thermocap_mult": {
-    "value": 17.0768,
-    "date": "2026-08-29",
-    "fetched_at": 1788096068.5162437,
+    "value": 17.1356,
+    "date": "2026-08-31",
+    "fetched_at": 1788266934.5441506,
     "consecutive_failures": 0
   },
   "sth_sopr": {
-    "value": 1.0007,
-    "date": "2026-08-29",
-    "fetched_at": 1788096068.5162437,
+    "value": 1.0045,
+    "date": "2026-08-31",
+    "fetched_at": 1788266934.5441506,
     "consecutive_failures": 0
   },
   "exchange_netflow": {
