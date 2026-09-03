@@ -1,20 +1,20 @@
 {
   "mvrv_zscore": {
-    "value": 0.8577,
-    "date": "2026-09-01",
-    "fetched_at": 1788351506.5539434,
+    "value": 0.8197,
+    "date": "2026-09-02",
+    "fetched_at": 1788437785.79585,
     "consecutive_failures": 0
   },
   "nupl": {
-    "value": 0.32,
-    "date": "2026-09-01",
-    "fetched_at": 1788351506.5539434,
+    "value": 0.3169,
+    "date": "2026-09-02",
+    "fetched_at": 1788437785.79585,
     "consecutive_failures": 0
   },
   "sopr": {
-    "value": 1.0024,
-    "date": "2026-09-01",
-    "fetched_at": 1788351506.5539434,
+    "value": 1.0009,
+    "date": "2026-09-02",
+    "fetched_at": 1788437785.79585,
     "consecutive_failures": 0
   },
   "supply_profit": {
@@ -24,9 +24,9 @@
     "consecutive_failures": 0
   },
   "reserve_risk": {
-    "value": 0.0006025081,
-    "date": "2026-09-01",
-    "fetched_at": 1788351506.5539434,
+    "value": 0.0005998843,
+    "date": "2026-09-02",
+    "fetched_at": 1788437785.79585,
     "consecutive_failures": 0
   },
   "ssr": {
@@ -54,27 +54,27 @@
     "consecutive_failures": 17
   },
   "rhodl_ratio": {
-    "value": 1015.73714,
-    "date": "2026-08-31",
-    "fetched_at": 1788266934.5441506,
+    "value": 1006.4420066667,
+    "date": "2026-09-02",
+    "fetched_at": 1788437785.79585,
     "consecutive_failures": 0
   },
   "nvts": {
-    "value": 112.14,
-    "date": "2026-08-31",
-    "fetched_at": 1788266934.5441506,
+    "value": 110.44,
+    "date": "2026-09-02",
+    "fetched_at": 1788437785.79585,
     "consecutive_failures": 0
   },
   "thermocap_mult": {
-    "value": 17.1356,
-    "date": "2026-08-31",
-    "fetched_at": 1788266934.5441506,
+    "value": 16.8141,
+    "date": "2026-09-02",
+    "fetched_at": 1788437785.79585,
     "consecutive_failures": 0
   },
   "sth_sopr": {
-    "value": 1.0045,
-    "date": "2026-08-31",
-    "fetched_at": 1788266934.5441506,
+    "value": 1.0017,
+    "date": "2026-09-02",
+    "fetched_at": 1788437785.79585,
     "consecutive_failures": 0
   },
   "exchange_netflow": {
