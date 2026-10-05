@@ -1,6 +1,6 @@
 {
   "mvrvZScore": {
-    "value": 1.0281,
+    "value": 1.0316,
     "live": true,
     "thresholds": {
       "deepBottom": -1.0,
@@ -11,7 +11,7 @@
     "desc": "Below 0 = undervalued. Below -1 = deep bottom zone"
   },
   "nupl": {
-    "value": 0.3706,
+    "value": 0.3637,
     "zone": "Optimism",
     "live": true,
     "thresholds": {
@@ -23,15 +23,15 @@
     "desc": "Below 0 = network at unrealized loss = capitulation"
   },
   "realizedPrice": {
-    "value": 53124.0,
-    "ratio": 1.6039,
-    "percentAbove": 60.4,
+    "value": 53158.0,
+    "ratio": 1.6016,
+    "percentAbove": 60.2,
     "live": true,
     "desc": "Price below realized price = market at aggregate loss = bottom zone"
   },
   "supplyInProfit": {
-    "value": 75.5,
-    "absolute": 14945623.0,
+    "value": 79.8,
+    "absolute": 15809033.0,
     "live": true,
     "thresholds": {
       "deepBottom": 45,
@@ -41,7 +41,7 @@
     "desc": "Below 50% = more supply at loss than profit = cycle bottom signal"
   },
   "reserveRisk": {
-    "value": 0.0006463733,
+    "value": 0.0006597595,
     "live": true,
     "thresholds": {
       "greenZone": 0.002,
@@ -51,7 +51,7 @@
     "desc": "Below 0.002 = high conviction, low risk = ideal accumulation"
   },
   "ssr": {
-    "value": 6.65,
+    "value": 6.79,
     "live": true,
     "thresholds": {
       "highBuyingPower": 5,
@@ -77,13 +77,13 @@
   },
   "hashRibbon": {
     "signal": "RECOVERY",
-    "ma30d": 943584434.0,
-    "ma60d": 924644096.0,
+    "ma30d": 945221520.0,
+    "ma60d": 925516937.0,
     "live": true,
     "desc": "Buy signal = 30d hash MA crosses above 60d after capitulation"
   },
   "puellMultiple": {
-    "value": 0.9861,
+    "value": 1.0557,
     "live": true,
     "thresholds": {
       "deepGreen": 0.3,
@@ -94,8 +94,8 @@
     "desc": "Below 0.5 = miner capitulation = accumulation zone"
   },
   "mayerMultiple": {
-    "value": 1.1929,
-    "sma200d": 71427.0,
+    "value": 1.1907,
+    "sma200d": 71503.0,
     "live": true,
     "thresholds": {
       "deepBottom": 0.6,
@@ -106,66 +106,66 @@
     "desc": "Price / 200-day MA. Below 0.8 = oversold"
   },
   "wma200": {
-    "value": 65955.0,
-    "ratio": 1.2919,
-    "percentAbove": 29.2,
+    "value": 66235.0,
+    "ratio": 1.2854,
+    "percentAbove": 28.5,
     "live": true,
     "desc": "Historic cycle floor. Price at or below = major buy zone"
   },
   "piCycleBottom": {
     "signal": "ABOVE",
-    "ema150": 74122.0,
-    "threshold": 41430.0,
+    "ema150": 74286.0,
+    "threshold": 41413.0,
     "live": true,
     "desc": "150d EMA below 471d SMA x 0.475 = cycle bottom"
   },
   "cycleTiming": {
-    "daysSinceATH": 362,
+    "daysSinceATH": 363,
     "avgDaysToBottom": 383,
-    "cycleProgress": 0.945,
+    "cycleProgress": 0.948,
     "estimatedBottom": "2026-10-25",
-    "drawdownPct": -31.7,
+    "drawdownPct": -31.8,
     "athPrice": 124776.68,
     "live": true,
-    "desc": "Day 362 of ~383. Est. bottom: Oct 2026"
+    "desc": "Day 363 of ~383. Est. bottom: Oct 2026"
   },
   "rainbowChart": {
     "currentBand": "Accumulate",
     "bands": {
-      "Fire Sale": 23854,
-      "BUY!": 38763,
-      "Accumulate": 61127,
-      "Still Cheap": 93181,
-      "HODL!": 137907,
-      "Is this a bubble?": 204998,
-      "FOMO intensifies": 298178,
-      "Sell. Seriously.": 432358,
-      "Max Bubble": 633629
+      "Fire Sale": 23878,
+      "BUY!": 38802,
+      "Accumulate": 61188,
+      "Still Cheap": 93275,
+      "HODL!": 138047,
+      "Is this a bubble?": 205204,
+      "FOMO intensifies": 298479,
+      "Sell. Seriously.": 432795,
+      "Max Bubble": 634268
     },
     "live": true,
     "desc": "Logarithmic regression bands. Lower = deeper value"
   },
   "sopr": {
-    "value": 1.0022,
+    "value": 1.0052,
     "live": true,
     "desc": "Below 1.0 = sellers at a loss = capitulation"
   },
   "lthSopr": {
-    "value": 1.288,
+    "value": 1.0521,
     "live": true,
     "desc": "Long-term holders selling at loss = extreme capitulation"
   },
   "fearGreed": {
-    "current": 65,
+    "current": 70,
     "label": "Greed",
-    "avg30d": 67.6,
+    "avg30d": 67.5,
     "extremeFearDays": 0,
     "live": true,
     "desc": "Sustained extreme fear (< 25) = contrarian buy"
   },
   "fundingRates": {
-    "current": 2.4e-05,
-    "avg10d": 2.4e-05,
+    "current": 2.6e-05,
+    "avg10d": 2.6e-05,
     "negativePeriods": 0,
     "live": true,
     "desc": "Negative = shorts paying longs = bearish positioning"
@@ -176,31 +176,31 @@
     "desc": "Network Value to Transactions. Low = undervalued network"
   },
   "exchangeReserves": {
-    "value": 2673624.0,
+    "value": 2675689.0,
     "live": true,
     "source": "Coin Metrics",
     "desc": "Coins on exchanges. Declining = accumulation (bullish)"
   },
   "exchangeNetflow": {
-    "value": -4940.53,
+    "value": -2162.98,
     "live": true,
     "source": "Coin Metrics",
     "desc": "Negative = outflows = coins leaving exchanges = accumulation"
   },
   "openInterest": {
-    "value": 28391.0,
+    "value": 28623.0,
     "changePct30d": null,
     "live": true,
     "source": "Binance",
     "desc": "Total derivatives positions. Large decline = leverage reset = healthier market"
   },
   "_halving": {
-    "blockHeight": 969855,
+    "blockHeight": 970048,
     "nextBlock": 1050000,
-    "blocksLeft": 80145,
-    "estDays": 557,
-    "estDate": "2028-04-13",
-    "progress": 0.6184,
+    "blocksLeft": 79952,
+    "estDays": 555,
+    "estDate": "2028-04-12",
+    "progress": 0.6193,
     "reward": 3.125,
     "nextReward": 1.5625
   },
@@ -691,12 +691,12 @@
         -32.0
       ],
       [
-        362,
-        -32.1
+        363,
+        -30.7
       ]
     ],
     "athDate": "2025-10-07",
-    "daysSinceATH": 362,
+    "daysSinceATH": 363,
     "cycles": {
       "2013": {
         "label": "2013-15",
@@ -973,20 +973,16 @@
     }
   },
   "_meta": {
-    "computedAt": "2026-10-04T13:31:14.484735+00:00",
-    "currentPrice": 85205.0,
-    "currentDate": "2026-10-04",
+    "computedAt": "2026-10-05T16:28:06.868116+00:00",
+    "currentPrice": 85137.0,
+    "currentDate": "2026-10-05",
     "priceSource": "CoinGecko",
     "priceSources": {
-      "CoinGecko": 85205.0,
-      "OKX": 85251.7
+      "CoinGecko": 85137.0,
+      "OKX": 85157.8
     }
   },
   "_priceHistory": [
-    {
-      "d": "2026-04-08",
-      "p": 71950
-    },
     {
       "d": "2026-04-09",
       "p": 71130
@@ -1702,10 +1698,14 @@
     {
       "d": "2026-10-04",
       "p": 84744
+    },
+    {
+      "d": "2026-10-05",
+      "p": 86488
     }
   ],
   "_composite": {
-    "score": 31.2,
+    "score": 30.5,
     "zone": "WATCHING",
     "zoneLabel": "WATCHING",
     "zoneColor": "#FB923C",
@@ -1755,7 +1755,7 @@
         "contribution": 7.8
       },
       "miner": {
-        "score": 3.6,
+        "score": 2.7,
         "weight": 0.15,
         "items": [
           {
@@ -1765,13 +1765,13 @@
           },
           {
             "name": "Puell Multiple",
-            "score": 3,
+            "score": 1,
             "weight": 1.5
           }
         ],
         "label": "Miner Health",
         "effectiveWeight": 0.15,
-        "contribution": 5.4
+        "contribution": 4.1
       },
       "technical": {
         "score": 2.1,
@@ -1808,7 +1808,7 @@
         "contribution": 4.2
       },
       "sentiment": {
-        "score": 1.0,
+        "score": 1.4,
         "weight": 0.15,
         "items": [
           {
@@ -1818,7 +1818,7 @@
           },
           {
             "name": "LTH-SOPR",
-            "score": 0,
+            "score": 2,
             "weight": 1.5
           },
           {
@@ -1839,7 +1839,7 @@
         ],
         "label": "Sentiment & Positioning",
         "effectiveWeight": 0.15,
-        "contribution": 1.5
+        "contribution": 2.1
       },
       "exchange": {
         "score": 5.0,
