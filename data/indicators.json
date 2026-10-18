@@ -1,6 +1,6 @@
 {
   "mvrvZScore": {
-    "value": 0.9714,
+    "value": 0.9949,
     "live": true,
     "thresholds": {
       "deepBottom": -1.0,
@@ -11,7 +11,7 @@
     "desc": "Below 0 = undervalued. Below -1 = deep bottom zone"
   },
   "nupl": {
-    "value": 0.3566,
+    "value": 0.3618,
     "zone": "Optimism",
     "live": true,
     "thresholds": {
@@ -24,8 +24,8 @@
   },
   "realizedPrice": {
     "value": 53420.0,
-    "ratio": 1.5253,
-    "percentAbove": 52.5,
+    "ratio": 1.5352,
+    "percentAbove": 53.5,
     "live": true,
     "desc": "Price below realized price = market at aggregate loss = bottom zone"
   },
@@ -41,7 +41,7 @@
     "desc": "Below 50% = more supply at loss than profit = cycle bottom signal"
   },
   "reserveRisk": {
-    "value": 0.0006175793,
+    "value": 0.0006161559,
     "live": true,
     "thresholds": {
       "greenZone": 0.002,
@@ -61,12 +61,12 @@
     "desc": "Low SSR = stablecoins have high buying power vs BTC = dry powder"
   },
   "rhodlRatio": {
-    "value": 1049.1113033333,
+    "value": 1064.19778,
     "live": true,
     "desc": "Low = long-term holders dominate = bottom zone. Avoids false positives"
   },
   "thermocapMultiple": {
-    "value": 17.6189,
+    "value": 17.4654,
     "live": true,
     "thresholds": {
       "bottom": 4,
@@ -94,7 +94,7 @@
     "desc": "Below 0.5 = miner capitulation = accumulation zone"
   },
   "mayerMultiple": {
-    "value": 1.1285,
+    "value": 1.1358,
     "sma200d": 72206.0,
     "live": true,
     "thresholds": {
@@ -106,9 +106,9 @@
     "desc": "Price / 200-day MA. Below 0.8 = oversold"
   },
   "wma200": {
-    "value": 66738.0,
-    "ratio": 1.2209,
-    "percentAbove": 22.1,
+    "value": 66624.0,
+    "ratio": 1.231,
+    "percentAbove": 23.1,
     "live": true,
     "desc": "Historic cycle floor. Price at or below = major buy zone"
   },
@@ -120,33 +120,33 @@
     "desc": "150d EMA below 471d SMA x 0.475 = cycle bottom"
   },
   "cycleTiming": {
-    "daysSinceATH": 375,
+    "daysSinceATH": 376,
     "avgDaysToBottom": 383,
-    "cycleProgress": 0.979,
+    "cycleProgress": 0.982,
     "estimatedBottom": "2026-10-25",
-    "drawdownPct": -34.7,
+    "drawdownPct": -34.3,
     "athPrice": 124776.68,
     "live": true,
-    "desc": "Day 375 of ~383. Est. bottom: Oct 2026"
+    "desc": "Day 376 of ~383. Est. bottom: Oct 2026"
   },
   "rainbowChart": {
     "currentBand": "Accumulate",
     "bands": {
-      "Fire Sale": 24133,
-      "BUY!": 39216,
-      "Accumulate": 61840,
-      "Still Cheap": 94268,
-      "HODL!": 139517,
-      "Is this a bubble?": 207390,
-      "FOMO intensifies": 301658,
-      "Sell. Seriously.": 437405,
-      "Max Bubble": 641024
+      "Fire Sale": 24155,
+      "BUY!": 39251,
+      "Accumulate": 61896,
+      "Still Cheap": 94354,
+      "HODL!": 139644,
+      "Is this a bubble?": 207579,
+      "FOMO intensifies": 301934,
+      "Sell. Seriously.": 437804,
+      "Max Bubble": 641609
     },
     "live": true,
     "desc": "Logarithmic regression bands. Lower = deeper value"
   },
   "sopr": {
-    "value": 1.0049,
+    "value": 1.0047,
     "live": true,
     "desc": "Below 1.0 = sellers at a loss = capitulation"
   },
@@ -156,51 +156,51 @@
     "desc": "Long-term holders selling at loss = extreme capitulation"
   },
   "fearGreed": {
-    "current": 55,
-    "label": "Greed",
-    "avg30d": 67.3,
+    "current": 53,
+    "label": "Neutral",
+    "avg30d": 67.2,
     "extremeFearDays": 0,
     "live": true,
     "desc": "Sustained extreme fear (< 25) = contrarian buy"
   },
   "fundingRates": {
-    "current": 0.0001,
-    "avg10d": 0.0001,
+    "current": 4.6e-05,
+    "avg10d": 4.6e-05,
     "negativePeriods": 0,
     "live": true,
     "desc": "Negative = shorts paying longs = bearish positioning"
   },
   "nvtSignal": {
-    "value": 103.67,
+    "value": 104.98,
     "live": true,
     "desc": "Network Value to Transactions. Low = undervalued network"
   },
   "exchangeReserves": {
-    "value": 2677737.0,
+    "value": 2679804.0,
     "live": true,
     "source": "Coin Metrics",
     "desc": "Coins on exchanges. Declining = accumulation (bullish)"
   },
   "exchangeNetflow": {
-    "value": -1724.75,
+    "value": 2050.48,
     "live": true,
     "source": "Coin Metrics",
     "desc": "Negative = outflows = coins leaving exchanges = accumulation"
   },
   "openInterest": {
-    "value": 30553.0,
+    "value": 30402.0,
     "changePct30d": null,
     "live": true,
     "source": "Binance",
     "desc": "Total derivatives positions. Large decline = leverage reset = healthier market"
   },
   "_halving": {
-    "blockHeight": 971852,
+    "blockHeight": 971992,
     "nextBlock": 1050000,
-    "blocksLeft": 78148,
-    "estDays": 543,
+    "blocksLeft": 78008,
+    "estDays": 542,
     "estDate": "2028-04-12",
-    "progress": 0.6279,
+    "progress": 0.6285,
     "reward": 3.125,
     "nextReward": 1.5625
   },
@@ -712,7 +712,7 @@
       ]
     ],
     "athDate": "2025-10-07",
-    "daysSinceATH": 375,
+    "daysSinceATH": 376,
     "cycles": {
       "2013": {
         "label": "2013-15",
@@ -989,13 +989,13 @@
     }
   },
   "_meta": {
-    "computedAt": "2026-10-17T11:47:11.434190+00:00",
-    "currentPrice": 81483.0,
+    "computedAt": "2026-10-18T12:12:40.090649+00:00",
+    "currentPrice": 82012.0,
     "currentDate": "2026-10-15",
     "priceSource": "CoinGecko",
     "priceSources": {
-      "CoinGecko": 81483.0,
-      "OKX": 81598.3
+      "CoinGecko": 82012.0,
+      "OKX": 82089.7
     }
   },
   "_priceHistory": [
@@ -1721,7 +1721,7 @@
     }
   ],
   "_composite": {
-    "score": 31.7,
+    "score": 28.1,
     "zone": "WATCHING",
     "zoneLabel": "WATCHING",
     "zoneColor": "#FB923C",
@@ -1858,12 +1858,12 @@
         "contribution": 1.5
       },
       "exchange": {
-        "score": 5.0,
+        "score": 1.4,
         "weight": 0.1,
         "items": [
           {
             "name": "Exchange Netflow",
-            "score": 8,
+            "score": 0,
             "weight": 2
           },
           {
@@ -1879,7 +1879,7 @@
         ],
         "label": "Exchange & Liquidity",
         "effectiveWeight": 0.1,
-        "contribution": 5.0
+        "contribution": 1.4
       },
       "cycle": {
         "score": 7.0,
