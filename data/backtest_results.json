@@ -1,9 +1,9 @@
 {
   "meta": {
     "start_date": "2017-01-01",
-    "end_date": "2026-10-25",
-    "total_days": 3585,
-    "computed_at": "2026-10-25T12:48:11.409674+00:00"
+    "end_date": "2026-10-26",
+    "total_days": 3586,
+    "computed_at": "2026-10-26T14:36:45.624238+00:00"
   },
   "daily": [
     {
@@ -119181,7 +119181,7 @@
       "return_30d": -20.9,
       "return_90d": -19.8,
       "return_180d": -29.9,
-      "return_365d": null
+      "return_365d": -28.3
     },
     {
       "score": 14.5,
@@ -126025,7 +126025,7 @@
       "price": 76347.25,
       "return_30d": -3.7,
       "return_90d": -16.6,
-      "return_180d": null,
+      "return_180d": 4.8,
       "return_365d": null
     },
     {
@@ -129354,7 +129354,7 @@
       "date": "2026-07-28",
       "price": 63710.94,
       "return_30d": 24.0,
-      "return_90d": null,
+      "return_90d": 25.6,
       "return_180d": null,
       "return_365d": null
     },
@@ -131573,7 +131573,7 @@
       "indicators_available": 20,
       "date": "2026-09-26",
       "price": 84087.22,
-      "return_30d": null,
+      "return_30d": -4.8,
       "return_90d": null,
       "return_180d": null,
       "return_365d": null
@@ -132393,12 +132393,12 @@
       "return_365d": null
     },
     {
-      "score": 33.7,
+      "score": 25.4,
       "zone": "WATCHING",
       "domains": {
         "onChain": {
-          "score": 6.0,
-          "count": 2
+          "score": 2.9,
+          "count": 5
         },
         "miner": {
           "score": 2.7,
@@ -132409,8 +132409,8 @@
           "count": 5
         },
         "sentiment": {
-          "score": 0.3,
-          "count": 3
+          "score": 1.0,
+          "count": 5
         },
         "exchange": {
           "score": 0.0,
@@ -132421,7 +132421,7 @@
           "count": 2
         }
       },
-      "indicators_available": 15,
+      "indicators_available": 20,
       "date": "2026-10-19",
       "price": 82027.16,
       "return_30d": null,
@@ -132615,7 +132615,44 @@
       "return_365d": null
     },
     {
-      "score": 33.4,
+      "score": 37.1,
+      "zone": "WATCHING",
+      "domains": {
+        "onChain": {
+          "score": 6.0,
+          "count": 3
+        },
+        "miner": {
+          "score": 2.7,
+          "count": 2
+        },
+        "technical": {
+          "score": 2.3,
+          "count": 5
+        },
+        "sentiment": {
+          "score": 0.3,
+          "count": 3
+        },
+        "exchange": {
+          "score": 0.0,
+          "count": 1
+        },
+        "cycle": {
+          "score": 10.0,
+          "count": 1
+        }
+      },
+      "indicators_available": 15,
+      "date": "2026-10-25",
+      "price": 80771.9,
+      "return_30d": null,
+      "return_90d": null,
+      "return_180d": null,
+      "return_365d": null
+    },
+    {
+      "score": 36.1,
       "zone": "WATCHING",
       "domains": {
         "onChain": {
@@ -132631,7 +132668,7 @@
           "count": 5
         },
         "sentiment": {
-          "score": 0.3,
+          "score": 1.1,
           "count": 3
         },
         "exchange": {
@@ -132644,8 +132681,8 @@
         }
       },
       "indicators_available": 9,
-      "date": "2026-10-25",
-      "price": 80771.9,
+      "date": "2026-10-26",
+      "price": 80022.79,
       "return_30d": null,
       "return_90d": null,
       "return_180d": null,
@@ -132864,8 +132901,8 @@
       "min_30d": -42.9,
       "max_30d": 43.1,
       "avg_90d": 27.8,
-      "median_90d": 20.8,
-      "win_rate_90d": 66.7,
+      "median_90d": 21.0,
+      "win_rate_90d": 66.8,
       "min_90d": -36.1,
       "max_90d": 200.8,
       "avg_180d": 73.6,
@@ -132880,10 +132917,10 @@
       "max_365d": 1085.3
     },
     "WATCHING": {
-      "days": 1303,
+      "days": 1304,
       "avg_30d": 3.4,
       "median_30d": 2.0,
-      "win_rate_30d": 55.9,
+      "win_rate_30d": 55.8,
       "min_30d": -48.4,
       "max_30d": 66.1,
       "avg_90d": 11.2,
@@ -132919,8 +132956,8 @@
       "win_rate_180d": 56.1,
       "min_180d": -66.2,
       "max_180d": 641.5,
-      "avg_365d": 72.1,
-      "median_365d": -4.0,
+      "avg_365d": 72.0,
+      "median_365d": -4.2,
       "win_rate_365d": 48.7,
       "min_365d": -83.2,
       "max_365d": 1687.0
