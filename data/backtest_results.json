@@ -3,7 +3,7 @@
     "start_date": "2017-01-01",
     "end_date": "2026-10-29",
     "total_days": 3589,
-    "computed_at": "2026-10-30T14:37:23.970527+00:00"
+    "computed_at": "2026-10-31T13:56:09.876732+00:00"
   },
   "daily": [
     {
@@ -132578,7 +132578,7 @@
       "return_365d": null
     },
     {
-      "score": 36.1,
+      "score": 36.5,
       "zone": "WATCHING",
       "domains": {
         "onChain": {
@@ -132598,15 +132598,15 @@
           "count": 3
         },
         "exchange": {
-          "score": 2.0,
-          "count": 1
+          "score": 2.4,
+          "count": 2
         },
         "cycle": {
           "score": 7.0,
           "count": 2
         }
       },
-      "indicators_available": 15,
+      "indicators_available": 16,
       "date": "2026-10-24",
       "price": 81069.69,
       "return_30d": null,
