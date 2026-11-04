@@ -1,20 +1,20 @@
 {
   "mvrv_zscore": {
-    "value": 0.8725,
-    "date": "2026-10-27",
-    "fetched_at": 1793719823.8545494,
+    "value": 0.8833,
+    "date": "2026-10-28",
+    "fetched_at": 1793807298.0605004,
     "consecutive_failures": 0
   },
   "nupl": {
-    "value": 0.3323,
-    "date": "2026-10-27",
-    "fetched_at": 1793719823.8545494,
+    "value": 0.3349,
+    "date": "2026-10-28",
+    "fetched_at": 1793807298.0605004,
     "consecutive_failures": 0
   },
   "sopr": {
-    "value": 1.0,
-    "date": "2026-10-27",
-    "fetched_at": 1793719823.8545494,
+    "value": 1.0032,
+    "date": "2026-10-28",
+    "fetched_at": 1793807298.0605004,
     "consecutive_failures": 0
   },
   "supply_profit": {
@@ -24,9 +24,9 @@
     "consecutive_failures": 0
   },
   "reserve_risk": {
-    "value": 0.0005751538,
-    "date": "2026-11-02",
-    "fetched_at": 1793719823.8545494,
+    "value": 0.0005814499,
+    "date": "2026-11-03",
+    "fetched_at": 1793807298.0605004,
     "consecutive_failures": 0
   },
   "ssr": {
@@ -54,27 +54,27 @@
     "consecutive_failures": 17
   },
   "rhodl_ratio": {
-    "value": 1097.7829333333,
-    "date": "2026-11-01",
-    "fetched_at": 1793640525.8452845,
+    "value": 1107.9592366667,
+    "date": "2026-11-03",
+    "fetched_at": 1793807298.0605004,
     "consecutive_failures": 0
   },
   "nvts": {
-    "value": 95.33,
-    "date": "2026-10-26",
-    "fetched_at": 1793640525.8452845,
+    "value": 97.08,
+    "date": "2026-10-28",
+    "fetched_at": 1793807298.0605004,
     "consecutive_failures": 0
   },
   "thermocap_mult": {
-    "value": 16.4478,
-    "date": "2026-11-01",
-    "fetched_at": 1793640525.8452845,
+    "value": 16.3559,
+    "date": "2026-11-03",
+    "fetched_at": 1793807298.0605004,
     "consecutive_failures": 0
   },
   "sth_sopr": {
-    "value": 0.9992,
-    "date": "2026-10-26",
-    "fetched_at": 1793640525.8452845,
+    "value": 1.0022,
+    "date": "2026-10-28",
+    "fetched_at": 1793807298.0605004,
     "consecutive_failures": 0
   },
   "exchange_netflow": {
