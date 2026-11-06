@@ -1,9 +1,9 @@
 {
   "meta": {
     "start_date": "2017-01-01",
-    "end_date": "2026-10-29",
-    "total_days": 3589,
-    "computed_at": "2026-11-05T15:51:03.704145+00:00"
+    "end_date": "2026-10-31",
+    "total_days": 3591,
+    "computed_at": "2026-11-06T15:25:54.051472+00:00"
   },
   "daily": [
     {
@@ -119329,7 +119329,7 @@
       "return_30d": -17.4,
       "return_90d": -19.0,
       "return_180d": -29.7,
-      "return_365d": null
+      "return_365d": -29.3
     },
     {
       "score": 14.4,
@@ -119366,7 +119366,7 @@
       "return_30d": -16.1,
       "return_90d": -17.7,
       "return_180d": -29.5,
-      "return_365d": null
+      "return_365d": -28.7
     },
     {
       "score": 15.5,
@@ -126173,7 +126173,7 @@
       "price": 78670.21,
       "return_30d": -9.3,
       "return_90d": -20.2,
-      "return_180d": null,
+      "return_180d": -1.1,
       "return_365d": null
     },
     {
@@ -126210,7 +126210,7 @@
       "price": 78543.1,
       "return_30d": -15.1,
       "return_90d": -20.1,
-      "return_180d": null,
+      "return_180d": -1.7,
       "return_365d": null
     },
     {
@@ -129502,7 +129502,7 @@
       "date": "2026-08-01",
       "price": 62811.4,
       "return_30d": 23.7,
-      "return_90d": null,
+      "return_90d": 23.8,
       "return_180d": null,
       "return_365d": null
     },
@@ -129539,7 +129539,7 @@
       "date": "2026-08-02",
       "price": 62760.11,
       "return_30d": 25.2,
-      "return_90d": null,
+      "return_90d": 23.0,
       "return_180d": null,
       "return_365d": null
     },
@@ -131721,7 +131721,7 @@
       "indicators_available": 20,
       "date": "2026-09-30",
       "price": 83629.12,
-      "return_30d": null,
+      "return_30d": -7.0,
       "return_90d": null,
       "return_180d": null,
       "return_365d": null
@@ -131758,7 +131758,7 @@
       "indicators_available": 19,
       "date": "2026-10-01",
       "price": 83570.96,
-      "return_30d": null,
+      "return_30d": -7.6,
       "return_90d": null,
       "return_180d": null,
       "return_365d": null
@@ -132763,7 +132763,7 @@
       "return_365d": null
     },
     {
-      "score": 42.2,
+      "score": 41.2,
       "zone": "WATCHING",
       "domains": {
         "onChain": {
@@ -132771,8 +132771,8 @@
           "count": 4
         },
         "miner": {
-          "score": 0,
-          "count": 0
+          "score": 3.6,
+          "count": 2
         },
         "technical": {
           "score": 2.1,
@@ -132791,9 +132791,83 @@
           "count": 1
         }
       },
-      "indicators_available": 14,
+      "indicators_available": 16,
       "date": "2026-10-29",
       "price": 81275.48,
+      "return_30d": null,
+      "return_90d": null,
+      "return_180d": null,
+      "return_365d": null
+    },
+    {
+      "score": 32.7,
+      "zone": "WATCHING",
+      "domains": {
+        "onChain": {
+          "score": 3.7,
+          "count": 4
+        },
+        "miner": {
+          "score": 2.7,
+          "count": 2
+        },
+        "technical": {
+          "score": 2.3,
+          "count": 5
+        },
+        "sentiment": {
+          "score": 3.1,
+          "count": 4
+        },
+        "exchange": {
+          "score": 1.3,
+          "count": 2
+        },
+        "cycle": {
+          "score": 7.0,
+          "count": 2
+        }
+      },
+      "indicators_available": 19,
+      "date": "2026-10-30",
+      "price": 77782.24,
+      "return_30d": null,
+      "return_90d": null,
+      "return_180d": null,
+      "return_365d": null
+    },
+    {
+      "score": 46.9,
+      "zone": "WATCHING",
+      "domains": {
+        "onChain": {
+          "score": 4.2,
+          "count": 5
+        },
+        "miner": {
+          "score": 0,
+          "count": 0
+        },
+        "technical": {
+          "score": 2.9,
+          "count": 5
+        },
+        "sentiment": {
+          "score": 2.3,
+          "count": 5
+        },
+        "exchange": {
+          "score": 8.0,
+          "count": 1
+        },
+        "cycle": {
+          "score": 10.0,
+          "count": 1
+        }
+      },
+      "indicators_available": 17,
+      "date": "2026-10-31",
+      "price": 77195.55,
       "return_30d": null,
       "return_90d": null,
       "return_180d": null,
@@ -133013,7 +133087,7 @@
       "max_30d": 43.1,
       "avg_90d": 27.8,
       "median_90d": 21.0,
-      "win_rate_90d": 66.8,
+      "win_rate_90d": 66.9,
       "min_90d": -36.1,
       "max_90d": 200.8,
       "avg_180d": 73.6,
@@ -133028,20 +133102,20 @@
       "max_365d": 1085.3
     },
     "WATCHING": {
-      "days": 1307,
+      "days": 1309,
       "avg_30d": 3.4,
-      "median_30d": 2.0,
-      "win_rate_30d": 55.7,
+      "median_30d": 1.9,
+      "win_rate_30d": 55.6,
       "min_30d": -48.4,
       "max_30d": 66.1,
       "avg_90d": 11.2,
-      "median_90d": 2.6,
+      "median_90d": 2.7,
       "win_rate_90d": 53.3,
       "min_90d": -54.0,
       "max_90d": 245.7,
-      "avg_180d": 43.0,
-      "median_180d": 16.9,
-      "win_rate_180d": 59.4,
+      "avg_180d": 42.9,
+      "median_180d": 16.8,
+      "win_rate_180d": 59.3,
       "min_180d": -56.7,
       "max_180d": 473.9,
       "avg_365d": 154.5,
@@ -133067,9 +133141,9 @@
       "win_rate_180d": 56.1,
       "min_180d": -66.2,
       "max_180d": 641.5,
-      "avg_365d": 71.9,
-      "median_365d": -4.2,
-      "win_rate_365d": 48.6,
+      "avg_365d": 71.7,
+      "median_365d": -4.5,
+      "win_rate_365d": 48.5,
       "min_365d": -83.2,
       "max_365d": 1687.0
     }
