@@ -1,20 +1,20 @@
 {
   "mvrv_zscore": {
-    "value": 0.7132,
-    "date": "2026-11-06",
-    "fetched_at": 1794584619.2963572,
+    "value": 0.7119,
+    "date": "2026-11-07",
+    "fetched_at": 1794666848.0787947,
     "consecutive_failures": 0
   },
   "nupl": {
-    "value": 0.2902,
-    "date": "2026-11-06",
-    "fetched_at": 1794584619.2963572,
+    "value": 0.2896,
+    "date": "2026-11-07",
+    "fetched_at": 1794666848.0787947,
     "consecutive_failures": 0
   },
   "sopr": {
-    "value": 0.9934,
-    "date": "2026-11-06",
-    "fetched_at": 1794584619.2963572,
+    "value": 0.9963,
+    "date": "2026-11-07",
+    "fetched_at": 1794666848.0787947,
     "consecutive_failures": 0
   },
   "supply_profit": {
@@ -24,9 +24,9 @@
     "consecutive_failures": 0
   },
   "reserve_risk": {
-    "value": 0.0005318804,
-    "date": "2026-11-12",
-    "fetched_at": 1794584619.2963572,
+    "value": 0.0005083386,
+    "date": "2026-11-13",
+    "fetched_at": 1794666848.0787947,
     "consecutive_failures": 0
   },
   "ssr": {
@@ -54,27 +54,27 @@
     "consecutive_failures": 17
   },
   "rhodl_ratio": {
-    "value": 1088.45033,
-    "date": "2026-11-11",
-    "fetched_at": 1794500542.7737896,
+    "value": 1075.59544,
+    "date": "2026-11-13",
+    "fetched_at": 1794666848.0787947,
     "consecutive_failures": 0
   },
   "nvts": {
-    "value": 87.68,
-    "date": "2026-11-05",
-    "fetched_at": 1794500542.7737896,
+    "value": 86.91,
+    "date": "2026-11-07",
+    "fetched_at": 1794666848.0787947,
     "consecutive_failures": 0
   },
   "thermocap_mult": {
-    "value": 15.5482,
-    "date": "2026-11-11",
-    "fetched_at": 1794500542.7737896,
+    "value": 14.3438,
+    "date": "2026-11-13",
+    "fetched_at": 1794666848.0787947,
     "consecutive_failures": 0
   },
   "sth_sopr": {
-    "value": 0.9988,
-    "date": "2026-11-05",
-    "fetched_at": 1794500542.7737896,
+    "value": 0.9965,
+    "date": "2026-11-07",
+    "fetched_at": 1794666848.0787947,
     "consecutive_failures": 0
   },
   "exchange_netflow": {
