@@ -3,7 +3,7 @@
     "start_date": "2017-01-01",
     "end_date": "2026-11-16",
     "total_days": 3607,
-    "computed_at": "2026-11-16T11:50:06.225183+00:00"
+    "computed_at": "2026-11-16T12:20:54.405435+00:00"
   },
   "daily": [
     {
@@ -133170,12 +133170,12 @@
       "return_365d": null
     },
     {
-      "score": 42.1,
+      "score": 41.8,
       "zone": "WATCHING",
       "domains": {
         "onChain": {
-          "score": 4.2,
-          "count": 4
+          "score": 3.3,
+          "count": 5
         },
         "miner": {
           "score": 3.6,
@@ -133186,8 +133186,8 @@
           "count": 5
         },
         "sentiment": {
-          "score": 3.6,
-          "count": 3
+          "score": 5.2,
+          "count": 4
         },
         "exchange": {
           "score": 5.9,
@@ -133198,7 +133198,7 @@
           "count": 2
         }
       },
-      "indicators_available": 18,
+      "indicators_available": 20,
       "date": "2026-11-09",
       "price": 74707.15,
       "return_30d": null,
@@ -133392,12 +133392,12 @@
       "return_365d": null
     },
     {
-      "score": 57.4,
+      "score": 57.1,
       "zone": "ACCUMULATE",
       "domains": {
         "onChain": {
-          "score": 6.7,
-          "count": 2
+          "score": 6.6,
+          "count": 4
         },
         "miner": {
           "score": 2.7,
@@ -133420,7 +133420,7 @@
           "count": 2
         }
       },
-      "indicators_available": 15,
+      "indicators_available": 17,
       "date": "2026-11-15",
       "price": 64119.34,
       "return_30d": null,
