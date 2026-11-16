@@ -24,8 +24,8 @@
   },
   "realizedPrice": {
     "value": 53876.0,
-    "ratio": 1.1869,
-    "percentAbove": 18.7,
+    "ratio": 1.2043,
+    "percentAbove": 20.4,
     "live": true,
     "desc": "Price below realized price = market at aggregate loss = bottom zone"
   },
@@ -94,7 +94,7 @@
     "desc": "Below 0.5 = miner capitulation = accumulation zone"
   },
   "mayerMultiple": {
-    "value": 0.8769,
+    "value": 0.8897,
     "sma200d": 72922.0,
     "live": true,
     "thresholds": {
@@ -107,8 +107,8 @@
   },
   "wma200": {
     "value": 68144.0,
-    "ratio": 0.9384,
-    "percentAbove": -6.2,
+    "ratio": 0.9521,
+    "percentAbove": -4.8,
     "live": true,
     "desc": "Historic cycle floor. Price at or below = major buy zone"
   },
@@ -124,7 +124,7 @@
     "avgDaysToBottom": 383,
     "cycleProgress": 1.0,
     "estimatedBottom": "2026-10-25",
-    "drawdownPct": -48.8,
+    "drawdownPct": -48.0,
     "athPrice": 124776.68,
     "live": true,
     "desc": "Day 405 of ~383. Est. bottom: Oct 2026"
@@ -132,15 +132,15 @@
   "rainbowChart": {
     "currentBand": "Accumulate",
     "bands": {
-      "Fire Sale": 24790,
-      "BUY!": 40283,
-      "Accumulate": 63523,
-      "Still Cheap": 96835,
-      "HODL!": 143315,
-      "Is this a bubble?": 213036,
-      "FOMO intensifies": 309871,
-      "Sell. Seriously.": 449312,
-      "Max Bubble": 658475
+      "Fire Sale": 24794,
+      "BUY!": 40291,
+      "Accumulate": 63536,
+      "Still Cheap": 96853,
+      "HODL!": 143343,
+      "Is this a bubble?": 213077,
+      "FOMO intensifies": 309930,
+      "Sell. Seriously.": 449399,
+      "Max Bubble": 658602
     },
     "live": true,
     "desc": "Logarithmic regression bands. Lower = deeper value"
@@ -164,8 +164,8 @@
     "desc": "Sustained extreme fear (< 25) = contrarian buy"
   },
   "fundingRates": {
-    "current": 1.7e-05,
-    "avg10d": 1.7e-05,
+    "current": 5.7e-05,
+    "avg10d": 5.7e-05,
     "negativePeriods": 0,
     "live": true,
     "desc": "Negative = shorts paying longs = bearish positioning"
@@ -188,19 +188,19 @@
     "desc": "Negative = outflows = coins leaving exchanges = accumulation"
   },
   "openInterest": {
-    "value": 32640.0,
+    "value": 31582.0,
     "changePct30d": null,
     "live": true,
     "source": "Binance",
     "desc": "Total derivatives positions. Large decline = leverage reset = healthier market"
   },
   "_halving": {
-    "blockHeight": 976125,
+    "blockHeight": 976161,
     "nextBlock": 1050000,
-    "blocksLeft": 73875,
+    "blocksLeft": 73839,
     "estDays": 513,
     "estDate": "2028-04-12",
-    "progress": 0.6482,
+    "progress": 0.6484,
     "reward": 3.125,
     "nextReward": 1.5625
   },
@@ -1029,13 +1029,13 @@
     }
   },
   "_meta": {
-    "computedAt": "2026-11-16T12:20:52.648423+00:00",
-    "currentPrice": 63947.0,
+    "computedAt": "2026-11-16T17:32:12.559391+00:00",
+    "currentPrice": 64880.0,
     "currentDate": "2026-11-16",
     "priceSource": "CoinGecko",
     "priceSources": {
-      "CoinGecko": 63947.0,
-      "OKX": 63996.0
+      "CoinGecko": 64880.0,
+      "OKX": 64832.3
     }
   },
   "_priceHistory": [
@@ -1761,13 +1761,13 @@
     }
   ],
   "_composite": {
-    "score": 51.5,
+    "score": 50.6,
     "zone": "ACCUMULATE",
     "zoneLabel": "HIGH STRESS",
     "zoneColor": "#EAB308",
     "domains": {
       "onChain": {
-        "score": 5.0,
+        "score": 4.7,
         "weight": 0.3,
         "items": [
           {
@@ -1782,7 +1782,7 @@
           },
           {
             "name": "Realized Price",
-            "score": 4,
+            "score": 2,
             "weight": 2
           },
           {
@@ -1808,7 +1808,7 @@
         ],
         "label": "On-Chain Valuation",
         "effectiveWeight": 0.3,
-        "contribution": 15.0
+        "contribution": 14.1
       },
       "miner": {
         "score": 2.7,
