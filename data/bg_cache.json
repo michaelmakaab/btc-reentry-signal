@@ -1,20 +1,20 @@
 {
   "mvrv_zscore": {
-    "value": 0.6928,
-    "date": "2026-11-09",
-    "fetched_at": 1794829777.6190336,
+    "value": 0.6457,
+    "date": "2026-11-10",
+    "fetched_at": 1794935230.9076195,
     "consecutive_failures": 0
   },
   "nupl": {
-    "value": 0.2843,
-    "date": "2026-11-09",
-    "fetched_at": 1794829777.6190336,
+    "value": 0.2702,
+    "date": "2026-11-10",
+    "fetched_at": 1794935230.9076195,
     "consecutive_failures": 0
   },
   "sopr": {
-    "value": 0.9947,
-    "date": "2026-11-09",
-    "fetched_at": 1794829777.6190336,
+    "value": 0.9949,
+    "date": "2026-11-10",
+    "fetched_at": 1794935230.9076195,
     "consecutive_failures": 0
   },
   "supply_profit": {
@@ -24,9 +24,9 @@
     "consecutive_failures": 0
   },
   "reserve_risk": {
-    "value": 0.0004858864,
-    "date": "2026-11-15",
-    "fetched_at": 1794829777.6190336,
+    "value": 0.0004823197,
+    "date": "2026-11-16",
+    "fetched_at": 1794935230.9076195,
     "consecutive_failures": 0
   },
   "ssr": {
@@ -54,27 +54,27 @@
     "consecutive_failures": 17
   },
   "rhodl_ratio": {
-    "value": 1071.6424233333,
-    "date": "2026-11-15",
-    "fetched_at": 1794829777.6190336,
+    "value": 1071.8236533333,
+    "date": "2026-11-16",
+    "fetched_at": 1794935230.9076195,
     "consecutive_failures": 0
   },
   "nvts": {
-    "value": 85.84,
-    "date": "2026-11-09",
-    "fetched_at": 1794829777.6190336,
+    "value": 84.19,
+    "date": "2026-11-10",
+    "fetched_at": 1794935230.9076195,
     "consecutive_failures": 0
   },
   "thermocap_mult": {
-    "value": 13.7119,
-    "date": "2026-11-15",
-    "fetched_at": 1794829777.6190336,
+    "value": 13.6107,
+    "date": "2026-11-16",
+    "fetched_at": 1794935230.9076195,
     "consecutive_failures": 0
   },
   "sth_sopr": {
-    "value": 0.9973,
-    "date": "2026-11-09",
-    "fetched_at": 1794829777.6190336,
+    "value": 0.9944,
+    "date": "2026-11-10",
+    "fetched_at": 1794935230.9076195,
     "consecutive_failures": 0
   },
   "exchange_netflow": {
