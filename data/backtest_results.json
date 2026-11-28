@@ -3,7 +3,7 @@
     "start_date": "2017-01-01",
     "end_date": "2026-11-27",
     "total_days": 3618,
-    "computed_at": "2026-11-27T17:41:03.580929+00:00"
+    "computed_at": "2026-11-28T16:26:17.934035+00:00"
   },
   "daily": [
     {
@@ -133614,12 +133614,12 @@
       "return_365d": null
     },
     {
-      "score": 70.2,
+      "score": 64.4,
       "zone": "ACCUMULATE",
       "domains": {
         "onChain": {
-          "score": 9.1,
-          "count": 3
+          "score": 6.7,
+          "count": 6
         },
         "miner": {
           "score": 3.6,
@@ -133630,8 +133630,8 @@
           "count": 5
         },
         "sentiment": {
-          "score": 5.3,
-          "count": 3
+          "score": 6.2,
+          "count": 5
         },
         "exchange": {
           "score": 8.0,
@@ -133642,7 +133642,7 @@
           "count": 1
         }
       },
-      "indicators_available": 15,
+      "indicators_available": 20,
       "date": "2026-11-21",
       "price": 58786.67,
       "return_30d": null,
@@ -133836,12 +133836,12 @@
       "return_365d": null
     },
     {
-      "score": 67.7,
-      "zone": "ACCUMULATE",
+      "score": 77.4,
+      "zone": "STRONG_BUY",
       "domains": {
         "onChain": {
-          "score": 0,
-          "count": 0
+          "score": 9.1,
+          "count": 3
         },
         "miner": {
           "score": 0,
@@ -133856,15 +133856,15 @@
           "count": 3
         },
         "exchange": {
-          "score": 0,
-          "count": 0
+          "score": 8.0,
+          "count": 1
         },
         "cycle": {
           "score": 10.0,
           "count": 1
         }
       },
-      "indicators_available": 9,
+      "indicators_available": 13,
       "date": "2026-11-27",
       "price": 60500.92,
       "return_30d": null,
@@ -133910,6 +133910,30 @@
         "date": "2025-10-07",
         "return_pct": 3671.8,
         "days": 2489
+      }
+    },
+    {
+      "entry_date": "2026-11-27",
+      "entry_price": 60500.92,
+      "entry_score": 77.4,
+      "peak_score": 77.4,
+      "peak_score_date": "2026-11-27",
+      "peak_score_price": 60500.92,
+      "last_date": "2026-11-27",
+      "signal_days": 1,
+      "duration_days": 0,
+      "trajectory": {},
+      "peak_1y": {
+        "price": 0,
+        "date": "2026-11-27",
+        "return_pct": 0,
+        "days": 0
+      },
+      "peak_all": {
+        "price": 0,
+        "date": "2026-11-27",
+        "return_pct": 0,
+        "days": 0
       }
     }
   ],
@@ -134056,7 +134080,7 @@
   ],
   "zone_stats": {
     "STRONG_BUY": {
-      "days": 2,
+      "days": 3,
       "avg_30d": 11.9,
       "median_30d": 13.9,
       "win_rate_30d": 100.0,
@@ -134079,7 +134103,7 @@
       "max_365d": 120.0
     },
     "ACCUMULATE": {
-      "days": 479,
+      "days": 478,
       "avg_30d": 6.4,
       "median_30d": 4.2,
       "win_rate_30d": 64.6,
